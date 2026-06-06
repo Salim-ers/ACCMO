@@ -6,3 +6,6 @@ out
 *.log
 .DS_Store
 tsconfig.tsbuildinfo
+
+# Contient la clé API 21st.dev (magic-mcp) — ne jamais committer
+.mcp.json

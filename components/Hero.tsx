@@ -1,25 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import { LINKS } from "@/lib/site";
 import FadeIn from "@/components/FadeIn";
 import AnimatedHeading from "@/components/AnimatedHeading";
 
-const VIDEO_URL =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4";
-
 export default function Hero() {
   return (
     <section id="accueil" className="relative h-screen w-full overflow-hidden bg-black text-white">
-      {/* Vidéo de fond plein écran — aucun voile ni dégradé par-dessus */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src={VIDEO_URL} type="video/mp4" />
-      </video>
+      {/* Photo de la mosquée en fond plein écran */}
+      <Image
+        src="/photos/mosquee-exterieur.png"
+        alt="Façade et minaret de la Grande Mosquée de Creil"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[70%_center]"
+      />
+      {/* Dégradé bas pour la lisibilité du texte blanc */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/10" aria-hidden />
 
       {/* Contenu (poussé en bas du viewport) */}
       <div className="relative z-10 flex h-full flex-col px-6 md:px-12 lg:px-16">

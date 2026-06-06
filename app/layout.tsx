@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Plus_Jakarta_Sans, Amiri, Bricolage_Grotesque } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans, Amiri, Bricolage_Grotesque, Unbounded } from "next/font/google";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -14,6 +14,13 @@ const heading = Bricolage_Grotesque({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   variable: "--font-heading",
+  display: "swap",
+});
+// Police « haut de gamme » géométrique pour les méga-titres (hero, preloader).
+const mega = Unbounded({
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-mega",
   display: "swap",
 });
 const body = Plus_Jakarta_Sans({
@@ -86,7 +93,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${heading.variable} ${body.variable} ${arabic.variable}`}>
+    <html lang="fr" className={`${display.variable} ${heading.variable} ${mega.variable} ${body.variable} ${arabic.variable}`}>
       <body>
         <script
           type="application/ld+json"

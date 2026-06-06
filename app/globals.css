@@ -12,14 +12,24 @@ html {
 }
 
 body {
-  @apply bg-sand-100 text-ink font-sans antialiased;
+  @apply bg-sand-50 text-ink font-sans antialiased;
   text-rendering: optimizeLegibility;
-  /* Fond : vraie mosaïque de la mosquée, fondue dans le crème (entre crème et zellige). */
-  background-image:
-    linear-gradient(rgba(245, 238, 224, 0.82), rgba(245, 238, 224, 0.82)),
-    url("/photos/mosaique-fond.png");
-  background-size: auto, 300px;
-  background-repeat: repeat;
+  /* Fond épuré (aucun motif) : place nette au 3D et aux photos. */
+  background-color: #fbf8f2;
+}
+
+/* Verre dépoli (glassmorphism) — cartes/barres modernes. */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.glass-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(20, 32, 27, 0.06);
 }
 
 /* Liens d'évitement / focus accessibles */

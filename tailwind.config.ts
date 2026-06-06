@@ -21,6 +21,7 @@ const config: Config = {
           700: "#1a4f3a",
           800: "#163f30",
           900: "#0f2b21",
+          950: "#081710",
         },
         sand: {
           50: "#fbf8f2",
@@ -49,6 +50,7 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],
         heading: ["var(--font-heading)", "var(--font-display)", "sans-serif"],
+        mega: ["var(--font-mega)", "var(--font-heading)", "sans-serif"],
         sans: ["var(--font-body)", "system-ui", "sans-serif"],
         arabic: ["var(--font-arabic)", "serif"],
       },

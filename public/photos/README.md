@@ -7,9 +7,10 @@ le motif zellige + le dégradé vert servent de repli : le site reste soigné.
 
 | Fichier                     | Où il apparaît                | Photo conseillée                          |
 | --------------------------- | ----------------------------- | ----------------------------------------- |
-| `mosquee-exterieur.jpg`     | Hero (haut de page)           | Façade + minaret (extérieur)              |
-| `mosquee-interieur.jpg`     | Bloc « Visite virtuelle 360° »| Salle de prière (tapis, colonnes, lustre) |
-| `mosquee-mihrab.jpg`        | Bandeau « Faire un don »      | Mihrab / minbar (carrelage zellige)       |
+| `mosquee-exterieur.png`     | Hero (haut de page)           | Façade + minaret (extérieur)              |
+| `mosquee-interieur.png`     | Bloc « Visite virtuelle 360° »| Salle de prière (tapis, colonnes, lustre) |
+| `mosquee-mihrab.png`        | Bandeau « Faire un don »      | Mihrab / minbar (carrelage zellige)       |
+| `mosaique-fond.png`         | Fond mosaïque de tout le site | Carrelage zellige (motif répété)          |
 
 ## Conseils
 

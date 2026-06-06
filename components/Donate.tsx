@@ -9,7 +9,7 @@ export default function Donate() {
       <Reveal y={36}>
         <div
           className="photo-bg relative overflow-hidden rounded-3xl px-6 py-14 text-center text-sand-50 sm:px-12"
-          style={{ "--photo": "url('/photos/mosquee-mihrab.jpg')" } as CSSProperties}
+          style={{ "--photo": "url('/photos/mosquee-mihrab.png')" } as CSSProperties}
         >
           <div className="pattern-svg pointer-events-none absolute inset-0 opacity-30" aria-hidden />
           <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold-500/20 blur-3xl animate-float-slow" aria-hidden />

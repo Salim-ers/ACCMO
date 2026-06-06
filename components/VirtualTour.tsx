@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { LINKS } from "@/lib/site";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
@@ -31,10 +31,11 @@ export default function VirtualTour() {
             <button
               type="button"
               onClick={() => setActive(true)}
-              className="pattern-geo group flex h-full w-full flex-col items-center justify-center gap-4 text-sand-50"
+              className="photo-bg group flex h-full w-full flex-col items-center justify-center gap-4 text-sand-50"
+              style={{ "--photo": "url('/photos/mosquee-interieur.jpg')" } as CSSProperties}
               aria-label="Lancer la visite virtuelle 360°"
             >
-              <span className="pointer-events-none absolute inset-0 bg-emerald-900/40" aria-hidden />
+              <span className="pattern-svg pointer-events-none absolute inset-0 opacity-40" aria-hidden />
               <span className="relative inline-flex h-20 w-20 items-center justify-center rounded-full bg-gold-500 text-emerald-900 shadow-lift transition group-hover:scale-110">
                 <Icon.cube width={34} height={34} />
               </span>

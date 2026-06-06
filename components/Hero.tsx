@@ -1,10 +1,16 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { LINKS } from "@/lib/site";
+import { LINKS, DISCIPLINES } from "@/lib/site";
 import { Icon } from "@/components/Icons";
+
+const STATS = [
+  { k: 5, suffix: "", v: "prières / jour" },
+  { k: 30, suffix: "+", v: "ans au service" },
+  { k: 360, suffix: "°", v: "visite immersive" },
+];
 
 export default function Hero() {
   const root = useRef<HTMLDivElement | null>(null);
@@ -13,6 +19,7 @@ export default function Hero() {
     () => {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reduce) return;
+
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.from("[data-hero='arch']", { scaleY: 0.6, opacity: 0, transformOrigin: "bottom", duration: 1.1 })
         .from("[data-hero='bismillah']", { opacity: 0, y: 12, duration: 0.6 }, "-=0.6")
@@ -28,6 +35,22 @@ export default function Hero() {
         yoyo: true,
         repeat: -1,
       });
+
+      // Compteurs animés des statistiques
+      STATS.forEach((s, i) => {
+        const el = root.current?.querySelector<HTMLElement>(`[data-count='${i}']`);
+        if (!el) return;
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: s.k,
+          duration: 1.6,
+          delay: 0.8,
+          ease: "power2.out",
+          onUpdate: () => {
+            el.textContent = Math.round(obj.val) + s.suffix;
+          },
+        });
+      });
     },
     { scope: root }
   );
@@ -36,13 +59,17 @@ export default function Hero() {
     <section
       id="accueil"
       ref={root}
-      className="pattern-geo relative overflow-hidden text-sand-50"
+      className="photo-bg relative overflow-hidden text-sand-50"
+      style={{ "--photo": "url('/photos/mosquee-exterieur.jpg')" } as CSSProperties}
     >
-      {/* dégradé d'ambiance */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-emerald-900/40 via-transparent to-emerald-900/80" aria-hidden />
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-gold-500/20 blur-3xl" aria-hidden />
+      {/* Motif géométrique en filigrane (visible surtout sans photo) */}
+      <div className="pattern-svg pointer-events-none absolute inset-0 opacity-40" aria-hidden />
 
-      <div className="container-x relative flex min-h-[88vh] flex-col items-center justify-center pt-28 pb-20 text-center">
+      {/* Orbes dorées / émeraude flottantes pour la profondeur */}
+      <div className="pointer-events-none absolute -top-24 left-[15%] h-[420px] w-[420px] rounded-full bg-gold-500/25 blur-3xl animate-float-slow" aria-hidden />
+      <div className="pointer-events-none absolute bottom-10 right-[12%] h-[320px] w-[320px] rounded-full bg-emerald-400/20 blur-3xl animate-float" aria-hidden />
+
+      <div className="container-x relative flex min-h-[92vh] flex-col items-center justify-center pt-28 pb-28 text-center">
         {/* Arche / mihrab décoratif */}
         <svg
           data-hero="arch"
@@ -65,16 +92,29 @@ export default function Hero() {
           </defs>
         </svg>
 
-        <p data-hero="bismillah" className="font-arabic text-2xl text-gold-400 mb-6">
+        <p data-hero="bismillah" className="font-arabic text-2xl text-gold-400 mb-6 drop-shadow">
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </p>
 
-        <h1 className="relative font-display text-4xl sm:text-6xl font-semibold leading-tight">
+        <span
+          data-hero="line"
+          className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold-400/40 bg-emerald-900/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-300 backdrop-blur"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-400" />
+          </span>
+          Apprendre · Comprendre · Pratiquer
+        </span>
+
+        <h1 className="relative font-display text-4xl sm:text-6xl font-semibold leading-tight drop-shadow-sm">
           <span data-hero="line" className="block">Grande Mosquée</span>
-          <span data-hero="line" className="block text-gold-400">de Creil — Essalam</span>
+          <span data-hero="line" className="block bg-gradient-to-r from-gold-300 via-gold-400 to-gold-300 bg-clip-text text-transparent">
+            de Creil — Essalam
+          </span>
         </h1>
 
-        <p data-hero="line" className="mt-6 max-w-xl text-base sm:text-lg text-sand-100/85">
+        <p data-hero="line" className="mt-6 max-w-xl text-base sm:text-lg text-sand-100/90">
           Un lieu de prière, de savoir et de solidarité au cœur de Creil.
           Bienvenue dans votre maison spirituelle.
         </p>
@@ -83,23 +123,45 @@ export default function Hero() {
           <a data-hero="cta" href="#horaires" className="btn-gold">
             <Icon.clock width={18} height={18} /> Horaires de prière
           </a>
-          <a data-hero="cta" href={LINKS.visiteVirtuelle} target="_blank" rel="noopener noreferrer" className="btn-ghost !text-sand-50 !ring-white/30">
+          <a data-hero="cta" href={LINKS.visiteVirtuelle} target="_blank" rel="noopener noreferrer" className="btn-ghost !text-sand-50 !ring-white/30 hover:!bg-white/10">
             <Icon.cube width={18} height={18} /> Visite virtuelle
           </a>
         </div>
 
         <dl className="mt-14 grid grid-cols-3 gap-6 sm:gap-12 text-center">
-          {[
-            { k: "5", v: "prières / jour" },
-            { k: "+30", v: "ans au service" },
-            { k: "360°", v: "visite immersive" },
-          ].map((s) => (
+          {STATS.map((s, i) => (
             <div data-hero="stat" key={s.v}>
-              <dt className="font-display text-3xl sm:text-4xl text-gold-400">{s.k}</dt>
-              <dd className="text-xs sm:text-sm uppercase tracking-wider text-sand-100/70">{s.v}</dd>
+              <dt
+                data-count={i}
+                className="font-display text-3xl sm:text-4xl text-gold-400"
+              >
+                0{s.suffix}
+              </dt>
+              <dd className="text-xs sm:text-sm uppercase tracking-wider text-sand-100/75">{s.v}</dd>
             </div>
           ))}
         </dl>
+
+        {/* Indicateur de défilement */}
+        <a
+          href="#horaires"
+          aria-label="Faire défiler vers le contenu"
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 text-sand-100/70 animate-bob-down"
+        >
+          <Icon.arrow width={24} height={24} className="rotate-90" />
+        </a>
+      </div>
+
+      {/* Bandeau défilant des disciplines (clin d'œil à l'affiche) */}
+      <div className="relative border-t border-white/10 bg-emerald-900/60 py-4 backdrop-blur-sm">
+        <div className="marquee-track gap-10 px-5" aria-hidden>
+          {[...DISCIPLINES, ...DISCIPLINES].map((d, i) => (
+            <span key={i} className="flex shrink-0 items-center gap-10 text-sm font-semibold uppercase tracking-widest text-sand-100/80">
+              {d}
+              <span className="text-gold-400">◆</span>
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );

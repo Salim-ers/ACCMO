@@ -22,7 +22,7 @@ export default function Services() {
               href={s.href}
               data-svc
               {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="group card flex flex-col gap-4 p-7 transition hover:-translate-y-1 hover:shadow-lift"
+              className="group card-glow flex flex-col gap-4 p-7 hover:-translate-y-1 hover:shadow-lift"
             >
               <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-900/5 transition group-hover:bg-emerald-600 group-hover:text-sand-50">
                 <Ico width={22} height={22} />

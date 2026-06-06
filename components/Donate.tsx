@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { LINKS } from "@/lib/site";
 import Reveal from "@/components/Reveal";
 import { Icon } from "@/components/Icons";
@@ -6,8 +7,12 @@ export default function Donate() {
   return (
     <section id="dons" className="container-x py-20 sm:py-28">
       <Reveal y={36}>
-        <div className="pattern-geo relative overflow-hidden rounded-3xl px-6 py-14 text-center text-sand-50 sm:px-12">
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold-500/20 blur-3xl" aria-hidden />
+        <div
+          className="photo-bg relative overflow-hidden rounded-3xl px-6 py-14 text-center text-sand-50 sm:px-12"
+          style={{ "--photo": "url('/photos/mosquee-mihrab.jpg')" } as CSSProperties}
+        >
+          <div className="pattern-svg pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold-500/20 blur-3xl animate-float-slow" aria-hidden />
           <span className="eyebrow !text-gold-400">
             <span className="h-px w-6 bg-gold-500" aria-hidden /> Soutenir
           </span>

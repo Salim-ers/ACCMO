@@ -115,6 +115,18 @@ export const EVENTS = [
   },
 ];
 
+// --- Disciplines enseignées (bandeau défilant du hero) ---
+export const DISCIPLINES = [
+  "Arabe",
+  "Coran",
+  "Tajwid",
+  "Éducation islamique",
+  "Sciences religieuses",
+  "Aqida",
+  "Fiqh",
+  "Sîra",
+];
+
 export const PRAYER_LABELS: Record<string, string> = {
   Fajr: "Fajr",
   Sunrise: "Chourouk",

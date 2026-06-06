@@ -14,6 +14,8 @@ html {
 body {
   @apply bg-sand-50 text-ink font-sans antialiased;
   text-rendering: optimizeLegibility;
+  /* Fond zellige (carrelage mosaïque) très discret sur toute la page. */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='60,30 41.6,34.8 51.2,51.2 34.8,41.6 30,60 25.2,41.6 8.8,51.2 18.4,34.8 0,30 18.4,25.2 8.8,8.8 25.2,18.4 30,0 34.8,18.4 51.2,8.8 41.6,25.2' fill='%231a4f3a' fill-opacity='0.035' stroke='%231a4f3a' stroke-opacity='0.09' stroke-width='1'/%3E%3Cpolygon points='0,-4 4,0 0,4 -4,0' fill='%23c69a3c' fill-opacity='0.18'/%3E%3Cpolygon points='60,-4 64,0 60,4 56,0' fill='%23c69a3c' fill-opacity='0.18'/%3E%3Cpolygon points='0,56 4,60 0,64 -4,60' fill='%23c69a3c' fill-opacity='0.18'/%3E%3Cpolygon points='60,56 64,60 60,64 56,60' fill='%23c69a3c' fill-opacity='0.18'/%3E%3C/svg%3E");
 }
 
 /* Liens d'évitement / focus accessibles */
@@ -23,14 +25,76 @@ body {
   border-radius: 4px;
 }
 
-/* Motif géométrique islamique subtil en arrière-plan */
+/* Zellige sombre — étoiles à 8 branches sur fond vert profond (sections sombres). */
 .pattern-geo {
   background-color: theme("colors.emerald.900");
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3Cpath d='M30 12l18 18-18 18-18-18z'/%3E%3Ccircle cx='30' cy='30' r='6'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='60,30 41.6,34.8 51.2,51.2 34.8,41.6 30,60 25.2,41.6 8.8,51.2 18.4,34.8 0,30 18.4,25.2 8.8,8.8 25.2,18.4 30,0 34.8,18.4 51.2,8.8 41.6,25.2' fill='%23ffffff' fill-opacity='0.025' stroke='%23d4af56' stroke-opacity='0.16' stroke-width='1'/%3E%3Cpolygon points='0,-4 4,0 0,4 -4,0' fill='%23d4af56' fill-opacity='0.30'/%3E%3Cpolygon points='60,-4 64,0 60,4 56,0' fill='%23d4af56' fill-opacity='0.30'/%3E%3Cpolygon points='0,56 4,60 0,64 -4,60' fill='%23d4af56' fill-opacity='0.30'/%3E%3Cpolygon points='60,56 64,60 60,64 56,60' fill='%23d4af56' fill-opacity='0.30'/%3E%3C/svg%3E");
 }
 
+/* Zellige clair — étoiles vertes sur fond crème (sections claires). */
 .pattern-light {
-  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231a4f3a' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M24 0l24 24-24 24L0 24z'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='60,30 41.6,34.8 51.2,51.2 34.8,41.6 30,60 25.2,41.6 8.8,51.2 18.4,34.8 0,30 18.4,25.2 8.8,8.8 25.2,18.4 30,0 34.8,18.4 51.2,8.8 41.6,25.2' fill='%231a4f3a' fill-opacity='0.05' stroke='%231a4f3a' stroke-opacity='0.10' stroke-width='1'/%3E%3Cpolygon points='0,-4 4,0 0,4 -4,0' fill='%23c69a3c' fill-opacity='0.25'/%3E%3Cpolygon points='60,-4 64,0 60,4 56,0' fill='%23c69a3c' fill-opacity='0.25'/%3E%3Cpolygon points='0,56 4,60 0,64 -4,60' fill='%23c69a3c' fill-opacity='0.25'/%3E%3Cpolygon points='60,56 64,60 60,64 56,60' fill='%23c69a3c' fill-opacity='0.25'/%3E%3C/svg%3E");
+}
+
+/* Zellige seul (sans fond opaque) — à superposer sur une photo. */
+.pattern-svg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='60,30 41.6,34.8 51.2,51.2 34.8,41.6 30,60 25.2,41.6 8.8,51.2 18.4,34.8 0,30 18.4,25.2 8.8,8.8 25.2,18.4 30,0 34.8,18.4 51.2,8.8 41.6,25.2' fill='none' stroke='%23ffffff' stroke-opacity='0.14' stroke-width='1'/%3E%3Cpolygon points='0,-4 4,0 0,4 -4,0' fill='%23d4af56' fill-opacity='0.45'/%3E%3Cpolygon points='60,-4 64,0 60,4 56,0' fill='%23d4af56' fill-opacity='0.45'/%3E%3Cpolygon points='0,56 4,60 0,64 -4,60' fill='%23d4af56' fill-opacity='0.45'/%3E%3Cpolygon points='60,56 64,60 60,64 56,60' fill='%23d4af56' fill-opacity='0.45'/%3E%3C/svg%3E");
+}
+
+/* =============================================================
+   Fonds photo en calques.
+   Dépose tes photos dans /public/photos (voir le README de ce dossier).
+   Si la photo est absente, le dégradé vert + le motif géométrique
+   restent affichés : le rendu est toujours soigné.
+   ============================================================= */
+.photo-bg {
+  background-color: theme("colors.emerald.900");
+  position: relative;
+  isolation: isolate;
+}
+.photo-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--photo);
+  background-size: cover;
+  background-position: center;
+  /* Léger zoom lent « ken burns » pour le dynamisme. */
+  animation: kenburns 22s ease-out alternate infinite;
+}
+/* Voile vert émeraude pour la lisibilité du texte par-dessus la photo. */
+.photo-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(15, 43, 33, 0.55) 0%, rgba(15, 43, 33, 0.82) 100%),
+    radial-gradient(120% 120% at 80% 0%, rgba(31, 99, 71, 0.35) 0%, transparent 55%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-bg::before {
+    animation: none;
+  }
+}
+
+/* Dégradé vert/crème animé (mesh d'ambiance). */
+.mesh-emerald {
+  background: linear-gradient(120deg, #0f2b21, #1a4f3a, #163f30, #1f6347);
+  background-size: 300% 300%;
+}
+
+/* Bandeau défilant (marquee) des disciplines. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
 
 /* Conteneur centré */
@@ -45,16 +109,57 @@ body {
 
 /* Bouton primaire */
 .btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none;
+  @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none;
 }
 .btn-primary {
   @apply btn bg-emerald-600 text-sand-50 hover:bg-emerald-700 hover:-translate-y-0.5 shadow-soft;
 }
 .btn-gold {
-  @apply btn bg-gold-500 text-emerald-900 hover:bg-gold-400 hover:-translate-y-0.5;
+  @apply btn bg-gold-500 text-emerald-900 hover:bg-gold-400 hover:-translate-y-0.5 shadow-soft;
 }
 .btn-ghost {
   @apply btn ring-1 ring-emerald-900/15 text-emerald-800 hover:bg-emerald-50;
+}
+
+/* Reflet lumineux qui balaie les boutons pleins au survol. */
+.btn-primary::after,
+.btn-gold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+.btn-primary:hover::after,
+.btn-gold:hover::after {
+  transform: translateX(120%);
+}
+
+/* Carte à liseré dégradé doré au survol. */
+.card-glow {
+  @apply relative rounded-2xl bg-white shadow-soft ring-1 ring-emerald-900/5 transition;
+}
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(140deg, theme("colors.gold.400"), transparent 40%, theme("colors.emerald.400") 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card-glow:hover::before {
+  opacity: 1;
 }
 
 /* Titre eyebrow */

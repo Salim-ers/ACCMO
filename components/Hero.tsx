@@ -60,7 +60,7 @@ export default function Hero() {
       id="accueil"
       ref={root}
       className="photo-bg relative overflow-hidden text-sand-50"
-      style={{ "--photo": "url('/photos/mosquee-exterieur.jpg')" } as CSSProperties}
+      style={{ "--photo": "url('/photos/mosquee-exterieur.png')" } as CSSProperties}
     >
       {/* Motif géométrique en filigrane (visible surtout sans photo) */}
       <div className="pattern-svg pointer-events-none absolute inset-0 opacity-40" aria-hidden />
@@ -107,12 +107,20 @@ export default function Hero() {
           Apprendre · Comprendre · Pratiquer
         </span>
 
-        <h1 className="relative font-display text-4xl sm:text-6xl font-semibold leading-tight drop-shadow-sm">
-          <span data-hero="line" className="block">Grande Mosquée</span>
-          <span data-hero="line" className="block bg-gradient-to-r from-gold-300 via-gold-400 to-gold-300 bg-clip-text text-transparent">
-            de Creil — Essalam
+        <h1 className="relative font-heading font-extrabold uppercase leading-[0.92] tracking-tight [text-shadow:0_4px_30px_rgba(0,0,0,0.45)]">
+          <span data-hero="line" className="block text-4xl text-sand-50 sm:text-6xl lg:text-7xl">
+            Grande Mosquée
+          </span>
+          <span data-hero="line" className="title-shine block text-5xl sm:text-7xl lg:text-8xl">
+            de Creil
           </span>
         </h1>
+
+        <div data-hero="line" className="mt-5 flex items-center gap-3 text-gold-300">
+          <span className="h-px w-10 bg-gold-400/70" aria-hidden />
+          <span className="font-display text-lg italic tracking-wide">Essalam · ACCMO</span>
+          <span className="h-px w-10 bg-gold-400/70" aria-hidden />
+        </div>
 
         <p data-hero="line" className="mt-6 max-w-xl text-base sm:text-lg text-sand-100/90">
           Un lieu de prière, de savoir et de solidarité au cœur de Creil.

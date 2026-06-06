@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Plus_Jakarta_Sans, Amiri } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans, Amiri, Bricolage_Grotesque } from "next/font/google";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -7,6 +7,13 @@ const display = Fraunces({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-display",
+  display: "swap",
+});
+// Police d'affichage forte et moderne pour les grands titres.
+const heading = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-heading",
   display: "swap",
 });
 const body = Plus_Jakarta_Sans({
@@ -79,7 +86,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${body.variable} ${arabic.variable}`}>
+    <html lang="fr" className={`${display.variable} ${heading.variable} ${body.variable} ${arabic.variable}`}>
       <body>
         <script
           type="application/ld+json"

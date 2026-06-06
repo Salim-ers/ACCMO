@@ -39,12 +39,20 @@ export default function Preloader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
         >
+          {/* Mosaïque zellige en fond */}
+          <Image
+            src="/photos/mosaique-zellige.png"
+            alt=""
+            fill
+            aria-hidden
+            className="object-cover opacity-30"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(8,23,16,0.45)_0%,rgba(8,23,16,0.92)_70%)]" aria-hidden />
           {/* halo doré */}
           <div className="pointer-events-none absolute h-[520px] w-[520px] rounded-full bg-gold-500/15 blur-3xl" aria-hidden />
-          <div className="pattern-svg pointer-events-none absolute inset-0 opacity-[0.07]" aria-hidden />
 
           {/* Logo + anneaux qui tournent */}
-          <div className="relative mb-8 grid place-items-center">
+          <div className="relative z-10 mb-8 grid place-items-center">
             <motion.span
               className="absolute h-32 w-32 rounded-full border border-gold-400/40 border-t-gold-400"
               animate={{ rotate: 360 }}
@@ -72,7 +80,7 @@ export default function Preloader() {
           </div>
 
           <motion.p
-            className="font-arabic text-xl text-gold-400"
+            className="relative z-10 font-arabic text-xl text-gold-400"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -81,7 +89,7 @@ export default function Preloader() {
           </motion.p>
 
           <motion.h1
-            className="mt-3 text-center font-mega text-lg font-bold uppercase tracking-[0.2em] sm:text-2xl"
+            className="relative z-10 mt-3 text-center font-mega text-lg font-bold uppercase tracking-[0.2em] sm:text-2xl"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, duration: 0.6 }}
@@ -90,14 +98,14 @@ export default function Preloader() {
           </motion.h1>
 
           {/* Barre de progression */}
-          <div className="mt-10 h-[3px] w-56 overflow-hidden rounded-full bg-white/10">
+          <div className="relative z-10 mt-10 h-[3px] w-56 overflow-hidden rounded-full bg-white/10">
             <motion.div
               className="h-full bg-gradient-to-r from-gold-500 to-gold-300"
               animate={{ width: `${pct}%` }}
               transition={{ ease: "easeOut", duration: 0.2 }}
             />
           </div>
-          <p className="mt-3 font-mega text-xs tracking-widest text-sand-100/60">{pct}%</p>
+          <p className="relative z-10 mt-3 font-mega text-xs tracking-widest text-sand-100/60">{pct}%</p>
         </motion.div>
       )}
     </AnimatePresence>

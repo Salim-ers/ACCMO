@@ -23,8 +23,8 @@ export default function Hero() {
       {/* Contenu (poussé en bas du viewport) */}
       <div className="relative z-10 flex h-full flex-col px-6 md:px-12 lg:px-16">
         <div className="flex flex-1 flex-col justify-end pb-12 lg:pb-16">
-          <div className="lg:grid lg:grid-cols-2 lg:items-end">
-            {/* Colonne gauche — contenu principal */}
+          <div>
+            {/* Contenu principal */}
             <div>
               <AnimatedHeading
                 text={"Grande Mosquée de Creil\nPrière, savoir & solidarité."}
@@ -60,19 +60,6 @@ export default function Hero() {
                 </div>
               </FadeIn>
             </div>
-
-            {/* Colonne droite — tag */}
-            <FadeIn
-              delay={1400}
-              duration={1000}
-              className="mt-8 flex items-end justify-start lg:mt-0 lg:justify-end"
-            >
-              <div className="liquid-glass rounded-xl border border-white/20 px-6 py-3">
-                <span className="text-lg font-light md:text-xl lg:text-2xl">
-                  Prière · Savoir · Solidarité.
-                </span>
-              </div>
-            </FadeIn>
           </div>
         </div>
       </div>

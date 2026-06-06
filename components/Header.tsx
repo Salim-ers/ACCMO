@@ -87,14 +87,14 @@ export default function Header() {
             alt="Logo de la Grande Mosquée de Creil"
             width={44}
             height={44}
-            className="rounded-full ring-1 ring-emerald-900/10"
+            className="rounded-full ring-1 ring-white/20"
             priority
           />
           <span className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display text-base font-semibold text-emerald-800">
+            <span className={`font-display text-base font-semibold transition-colors ${scrolled ? "text-emerald-800" : "text-sand-50"}`}>
               Mosquée de Creil
             </span>
-            <span className="text-[11px] uppercase tracking-widest text-emerald-600/80">
+            <span className={`text-[11px] uppercase tracking-widest transition-colors ${scrolled ? "text-emerald-600/80" : "text-gold-300"}`}>
               Essalam · ACCMO
             </span>
           </span>
@@ -107,7 +107,11 @@ export default function Header() {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="rounded-full px-3.5 py-2 text-sm font-medium text-emerald-800/90 transition hover:bg-emerald-50 hover:text-emerald-900"
+                  className={`rounded-full px-3.5 py-2 text-sm font-medium transition ${
+                    scrolled
+                      ? "text-emerald-800/90 hover:bg-emerald-50 hover:text-emerald-900"
+                      : "text-sand-50/90 hover:bg-white/10 hover:text-white"
+                  }`}
                 >
                   {item.label}
                 </a>
@@ -123,7 +127,9 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full ring-1 ring-emerald-900/15 text-emerald-800"
+            className={`lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full ring-1 transition ${
+              scrolled ? "ring-emerald-900/15 text-emerald-800" : "ring-white/30 text-sand-50"
+            }`}
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}

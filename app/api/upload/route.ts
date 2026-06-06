@@ -12,7 +12,10 @@ export async function POST(req: Request) {
   }
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
-      { error: "Stockage d'images non configuré (Vercel Blob). Collez plutôt une URL d'image." },
+      {
+        error:
+          "Photos non actives : connecte un store Blob sur Vercel PUIS redéploie (Deployments → Redeploy). En attendant, colle une URL d'image.",
+      },
       { status: 501 }
     );
   }

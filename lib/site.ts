@@ -36,6 +36,7 @@ export const LINKS = {
 
 // --- Navigation principale ---
 export const NAV = [
+  { label: "La mosquée", href: "#apropos" },
   { label: "Horaires", href: "#horaires" },
   { label: "Annonces", href: "#annonces" },
   { label: "Services", href: "#services" },

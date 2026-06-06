@@ -1,6 +1,7 @@
 import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import About from "@/components/About";
 import PrayerTimes from "@/components/PrayerTimes";
 import Announcements from "@/components/Announcements";
 import Services from "@/components/Services";
@@ -17,6 +18,7 @@ export default function Home() {
       <Header />
       <main id="contenu">
         <Hero />
+        <About />
         <PrayerTimes />
         <Announcements />
         <Services />

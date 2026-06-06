@@ -25,12 +25,26 @@ export type Announcement = {
 
 const DATA_FILE = path.join(process.cwd(), "data", "announcements.json");
 const KV_KEY = "annonces:list";
-const useKV = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+
+// Accepte un store « Vercel KV » OU « Upstash Redis » (noms de variables différents).
+const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+const useKV = !!(KV_URL && KV_TOKEN);
+
+/** Indique si un stockage persistant (KV) est configuré. */
+export function hasPersistentStore(): boolean {
+  return useKV;
+}
+
+async function kvClient() {
+  const { createClient } = await import("@vercel/kv");
+  return createClient({ url: KV_URL as string, token: KV_TOKEN as string });
+}
 
 async function readAll(): Promise<Announcement[]> {
   if (useKV) {
-    const { kv } = await import("@vercel/kv");
-    const data = await kv.get<Announcement[]>(KV_KEY);
+    const c = await kvClient();
+    const data = await c.get<Announcement[]>(KV_KEY);
     return Array.isArray(data) ? data : [];
   }
   try {
@@ -44,8 +58,8 @@ async function readAll(): Promise<Announcement[]> {
 
 async function writeAll(items: Announcement[]): Promise<void> {
   if (useKV) {
-    const { kv } = await import("@vercel/kv");
-    await kv.set(KV_KEY, items);
+    const c = await kvClient();
+    await c.set(KV_KEY, items);
     return;
   }
   await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });

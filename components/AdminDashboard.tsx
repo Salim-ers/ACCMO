@@ -115,18 +115,32 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
 
   async function remove(id: string) {
     if (!confirm("Supprimer définitivement cette annonce ?")) return;
+    setErrors([]);
     const res = await fetch(`/api/announcements/${id}`, { method: "DELETE" });
-    if (res.ok) await refresh();
+    if (res.ok) {
+      await refresh();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setErrors([data.error || (data.errors?.[0] ?? "Suppression impossible.")]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   // Bascule rapide publier/dépublier ou à la une depuis la liste.
   async function toggle(a: Announcement, field: "published" | "featured") {
+    setErrors([]);
     const res = await fetch(`/api/announcements/${a.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...a, [field]: !a[field] }),
     });
-    if (res.ok) await refresh();
+    if (res.ok) {
+      await refresh();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setErrors([data.error || (data.errors?.[0] ?? "Modification impossible.")]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   async function logout() {
@@ -143,7 +157,10 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
           <h1 className="font-display text-3xl font-semibold text-emerald-900">
             Gestion des annonces
           </h1>
-          <p className="text-sm text-emerald-800/60">{items.length} annonce(s)</p>
+          <p className="text-sm text-emerald-800/60">
+            {items.length} annonce(s) · « Dépublier » masque l&apos;annonce du site mais la
+            conserve (réactivable chaque année).
+          </p>
         </div>
         <div className="flex gap-2">
           <a href="/" target="_blank" className="btn-ghost !py-2.5">Voir le site</a>

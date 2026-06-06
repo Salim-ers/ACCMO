@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
-import { getAll, getPublished, create } from "@/lib/announcements";
+import { getAll, getPublished, create, hasPersistentStore } from "@/lib/announcements";
 import { isAuthenticated } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** Message d'erreur clair selon la cause probable. */
+function storageError() {
+  if (process.env.VERCEL && !hasPersistentStore()) {
+    return "Stockage non configuré. Sur Vercel : Storage → Create → KV (puis redéployez).";
+  }
+  return "Impossible d'enregistrer. Réessayez.";
+}
 
 // GET : public -> annonces publiées ; admin connecté -> toutes.
 export async function GET() {
@@ -24,9 +32,14 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
-  const result = await create(body as Record<string, unknown>);
-  if (!result.ok) {
-    return NextResponse.json({ errors: result.errors }, { status: 422 });
+  try {
+    const result = await create(body as Record<string, unknown>);
+    if (!result.ok) {
+      return NextResponse.json({ errors: result.errors }, { status: 422 });
+    }
+    return NextResponse.json(result.item, { status: 201 });
+  } catch (e) {
+    console.error("create announcement failed:", e);
+    return NextResponse.json({ error: storageError() }, { status: 500 });
   }
-  return NextResponse.json(result.item, { status: 201 });
 }

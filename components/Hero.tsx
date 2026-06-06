@@ -22,8 +22,7 @@ export default function Hero() {
       if (reduce) return;
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.2 });
-      tl.from("[data-hero='bismillah']", { opacity: 0, y: 12, duration: 0.6 })
-        .from("[data-hero='line']", { opacity: 0, y: 34, duration: 0.7, stagger: 0.12 }, "-=0.3")
+      tl.from("[data-hero='line']", { opacity: 0, y: 34, duration: 0.7, stagger: 0.12 })
         .from("[data-hero='cta']", { opacity: 0, y: 20, duration: 0.6, stagger: 0.1 }, "-=0.3")
         .from("[data-hero='stat']", { opacity: 0, y: 16, duration: 0.5, stagger: 0.08 }, "-=0.2");
 
@@ -67,17 +66,6 @@ export default function Hero() {
       <div className="pointer-events-none absolute -top-32 right-0 h-[520px] w-[520px] rounded-full bg-gold-500/15 blur-3xl animate-float-slow" aria-hidden />
 
       <div className="container-x relative flex min-h-screen flex-col justify-center pt-28 pb-28">
-        <span
-          data-hero="bismillah"
-          className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-gold-400/40 bg-emerald-900/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-300 backdrop-blur"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-400" />
-          </span>
-          Apprendre · Comprendre · Pratiquer
-        </span>
-
         <h1 className="font-mega font-bold leading-[0.98] tracking-tight [text-shadow:0_6px_40px_rgba(0,0,0,0.6)]">
           <span data-hero="line" className="block text-4xl text-sand-50 sm:text-6xl lg:text-7xl">
             Grande

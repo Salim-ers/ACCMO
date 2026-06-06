@@ -1,17 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import dynamic from "next/dynamic";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { LINKS, DISCIPLINES } from "@/lib/site";
 import { Icon } from "@/components/Icons";
-
-// Le canvas 3D est strictement côté client (WebGL).
-const MinaretScene = dynamic(() => import("@/components/MinaretScene"), {
-  ssr: false,
-  loading: () => null,
-});
 
 const STATS = [
   { k: 5, suffix: "", v: "prières / jour" },
@@ -57,23 +51,25 @@ export default function Hero() {
       ref={root}
       className="relative min-h-screen overflow-hidden bg-emerald-950 text-sand-50"
     >
-      {/* Ambiance dégradée */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950" aria-hidden />
+      {/* Photo de la mosquée (minaret) en fond */}
+      <Image
+        src="/photos/mosquee-exterieur.png"
+        alt="Façade et minaret de la Grande Mosquée de Creil"
+        fill
+        priority
+        sizes="100vw"
+        className="animate-kenburns object-cover object-[75%_center]"
+      />
+
+      {/* Voiles pour la lisibilité du texte */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-950 via-emerald-950/70 to-emerald-950/20" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-emerald-950 to-transparent" aria-hidden />
       <div className="pointer-events-none absolute -top-32 right-0 h-[520px] w-[520px] rounded-full bg-gold-500/15 blur-3xl animate-float-slow" aria-hidden />
 
-      {/* Scène 3D du minaret (plein écran, draggable) */}
-      <div className="absolute inset-0 sm:left-1/4" aria-hidden>
-        <MinaretScene />
-      </div>
-
-      {/* Voile pour la lisibilité du texte à gauche */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-950 via-emerald-950/70 to-transparent" aria-hidden />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-emerald-950 to-transparent" aria-hidden />
-
-      <div className="container-x pointer-events-none relative flex min-h-screen flex-col justify-center pt-28 pb-28">
+      <div className="container-x relative flex min-h-screen flex-col justify-center pt-28 pb-28">
         <span
           data-hero="bismillah"
-          className="pointer-events-auto mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-gold-400/40 bg-emerald-900/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-300 backdrop-blur"
+          className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-gold-400/40 bg-emerald-900/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-300 backdrop-blur"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400 opacity-75" />
@@ -82,7 +78,7 @@ export default function Hero() {
           Apprendre · Comprendre · Pratiquer
         </span>
 
-        <h1 className="font-mega font-bold leading-[0.98] tracking-tight [text-shadow:0_6px_40px_rgba(0,0,0,0.55)]">
+        <h1 className="font-mega font-bold leading-[0.98] tracking-tight [text-shadow:0_6px_40px_rgba(0,0,0,0.6)]">
           <span data-hero="line" className="block text-4xl text-sand-50 sm:text-6xl lg:text-7xl">
             Grande
           </span>
@@ -99,7 +95,7 @@ export default function Hero() {
           Bienvenue dans votre maison spirituelle.
         </p>
 
-        <div className="pointer-events-auto mt-9 flex flex-wrap items-center gap-3">
+        <div className="mt-9 flex flex-wrap items-center gap-3">
           <a data-hero="cta" href="#horaires" className="btn-gold">
             <Icon.clock width={18} height={18} /> Horaires de prière
           </a>
@@ -126,9 +122,9 @@ export default function Hero() {
         </dl>
 
         <a
-          href="#horaires"
+          href="#apropos"
           aria-label="Faire défiler vers le contenu"
-          className="pointer-events-auto absolute bottom-24 left-1/2 -translate-x-1/2 text-sand-100/70 animate-bob-down"
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 text-sand-100/70 animate-bob-down"
         >
           <Icon.arrow width={24} height={24} className="rotate-90" />
         </a>

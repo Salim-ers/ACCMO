@@ -76,13 +76,6 @@ export const SERVICES = [
     cta: "Commander un mouton",
   },
   {
-    icon: "rings",
-    title: "Mariages & cérémonies",
-    desc: "Accompagnement pour les actes religieux et les grandes étapes de la vie.",
-    href: "#contact",
-    cta: "Prendre contact",
-  },
-  {
     icon: "hands",
     title: "Funérailles & Janaza",
     desc: "Soutien et organisation des prières funéraires dans le respect des rites.",

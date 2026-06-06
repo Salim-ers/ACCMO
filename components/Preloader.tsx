@@ -51,32 +51,34 @@ export default function Preloader() {
           {/* halo doré */}
           <div className="pointer-events-none absolute h-[520px] w-[520px] rounded-full bg-gold-500/15 blur-3xl" aria-hidden />
 
-          {/* Logo + anneaux qui tournent */}
-          <div className="relative z-10 mb-8 grid place-items-center">
-            <motion.span
-              className="absolute h-32 w-32 rounded-full border border-gold-400/40 border-t-gold-400"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 2.4, ease: "linear" }}
+          {/* Logo qui s'allume de bas en haut au fil du chargement */}
+          <div className="relative z-10 mb-8 h-28 w-28">
+            {/* base éteinte */}
+            <Image
+              src="https://accmo.org/wp-content/uploads/2023/04/cropped-cropped-logo-creil-150x150-1.webp"
+              alt="Logo Grande Mosquée de Creil"
+              fill
+              priority
+              className="object-contain opacity-15 grayscale"
             />
-            <motion.span
-              className="absolute h-44 w-44 rounded-full border border-emerald-400/20 border-b-emerald-300/60"
-              animate={{ rotate: -360 }}
-              transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-            />
-            <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            {/* version allumée, révélée du bas vers le haut */}
+            <div
+              className="absolute inset-0 transition-[clip-path] duration-200 ease-out"
+              style={{ clipPath: `inset(${100 - pct}% 0 0 0)` }}
             >
               <Image
                 src="https://accmo.org/wp-content/uploads/2023/04/cropped-cropped-logo-creil-150x150-1.webp"
-                alt="Logo Grande Mosquée de Creil"
-                width={84}
-                height={84}
-                className="rounded-full ring-1 ring-gold-400/30"
-                priority
+                alt=""
+                fill
+                aria-hidden
+                className="object-contain drop-shadow-[0_0_22px_rgba(212,175,86,0.65)]"
               />
-            </motion.div>
+            </div>
+            {/* ligne lumineuse au niveau du remplissage */}
+            <div
+              className="pointer-events-none absolute inset-x-2 h-px bg-gold-300/80 shadow-[0_0_12px_2px_rgba(228,200,120,0.8)] transition-all duration-200"
+              style={{ top: `${100 - pct}%`, opacity: pct > 2 && pct < 99 ? 1 : 0 }}
+            />
           </div>
 
           <motion.p
@@ -89,7 +91,7 @@ export default function Preloader() {
           </motion.p>
 
           <motion.h1
-            className="relative z-10 mt-3 text-center font-mega text-lg font-bold uppercase tracking-[0.2em] sm:text-2xl"
+            className="relative z-10 mt-3 text-center font-lux text-2xl font-medium uppercase tracking-[0.3em] sm:text-4xl"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, duration: 0.6 }}

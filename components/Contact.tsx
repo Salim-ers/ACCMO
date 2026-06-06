@@ -42,10 +42,10 @@ export default function Contact() {
               </div>
             </div>
             <div className="flex gap-3 pt-2">
-              <a href={SITE.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-700 text-sand-50 transition hover:bg-emerald-800">
+              <a href={SITE.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-transparent ring-1 ring-emerald-900/15 text-emerald-700 transition hover:text-emerald-900 hover:ring-emerald-500">
                 <Icon.facebook width={18} height={18} />
               </a>
-              <a href={SITE.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-700 text-sand-50 transition hover:bg-emerald-800">
+              <a href={SITE.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-transparent ring-1 ring-emerald-900/15 text-emerald-700 transition hover:text-emerald-900 hover:ring-emerald-500">
                 <Icon.instagram width={18} height={18} />
               </a>
             </div>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, Amiri, Bricolage_Grotesque, Unbounded } from "next/font/google";
+import { Fraunces, Inter, Amiri, Bricolage_Grotesque, Unbounded, Cormorant_Garamond } from "next/font/google";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -21,6 +21,13 @@ const mega = Unbounded({
   subsets: ["latin"],
   weight: ["400", "600", "700", "800"],
   variable: "--font-mega",
+  display: "swap",
+});
+// Police luxe (serif élégant) pour le préchargeur et accents premium.
+const lux = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-lux",
   display: "swap",
 });
 const body = Inter({
@@ -93,7 +100,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${heading.variable} ${mega.variable} ${body.variable} ${arabic.variable}`}>
+    <html lang="fr" className={`${display.variable} ${heading.variable} ${mega.variable} ${lux.variable} ${body.variable} ${arabic.variable}`}>
       <body>
         <script
           type="application/ld+json"

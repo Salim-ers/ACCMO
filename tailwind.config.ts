@@ -53,6 +53,7 @@ const config: Config = {
         display: ["var(--font-display)", "Georgia", "serif"],
         heading: ["var(--font-heading)", "var(--font-display)", "sans-serif"],
         mega: ["var(--font-mega)", "var(--font-heading)", "sans-serif"],
+        lux: ["var(--font-lux)", "Georgia", "serif"],
         sans: ["var(--font-body)", "system-ui", "sans-serif"],
         arabic: ["var(--font-arabic)", "serif"],
       },

@@ -25,10 +25,10 @@ export default function Footer() {
             Lieu de prière, de savoir et de solidarité au cœur de Creil.
           </p>
           <div className="flex gap-3">
-            <a href={SITE.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-gold-500 hover:text-emerald-900">
+            <a href={SITE.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent ring-1 ring-white/25 text-sand-100/80 transition hover:text-gold-400 hover:ring-gold-400/60">
               <Icon.facebook width={18} height={18} />
             </a>
-            <a href={SITE.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition hover:bg-gold-500 hover:text-emerald-900">
+            <a href={SITE.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent ring-1 ring-white/25 text-sand-100/80 transition hover:text-gold-400 hover:ring-gold-400/60">
               <Icon.instagram width={18} height={18} />
             </a>
           </div>

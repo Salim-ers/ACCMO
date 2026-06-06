@@ -3,12 +3,11 @@ import path from "path";
 import crypto from "crypto";
 
 // =============================================================
-// Stockage des annonces dans un fichier JSON local.
-//   ✓ Fonctionne en local et sur tout hébergement Node persistant
-//     (VPS, Render, Railway, Dokku, Docker, OVH...).
-//   ⚠ NE convient PAS au système de fichiers en lecture seule de
-//     Vercel/Netlify serverless. Voir README > "Mise en production"
-//     pour basculer vers Supabase/Vercel KV (l'interface ne change pas).
+// Stockage des annonces.
+//   • En PRODUCTION (Vercel) : Vercel KV (persistant) dès que les
+//     variables KV_REST_API_URL / KV_REST_API_TOKEN sont présentes.
+//   • En LOCAL (sans KV) : fichier JSON data/announcements.json.
+//   L'interface (admin + API) est identique dans les deux cas.
 // =============================================================
 
 export type Announcement = {
@@ -16,14 +15,24 @@ export type Announcement = {
   title: string;
   body: string;
   date: string; // AAAA-MM-JJ
+  image?: string; // URL d'une photo (optionnel)
+  link?: string; // lien externe (optionnel)
+  linkLabel?: string; // texte du bouton de lien (optionnel)
   featured: boolean;
   published: boolean;
   createdAt: string; // ISO
 };
 
 const DATA_FILE = path.join(process.cwd(), "data", "announcements.json");
+const KV_KEY = "annonces:list";
+const useKV = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 
 async function readAll(): Promise<Announcement[]> {
+  if (useKV) {
+    const { kv } = await import("@vercel/kv");
+    const data = await kv.get<Announcement[]>(KV_KEY);
+    return Array.isArray(data) ? data : [];
+  }
   try {
     const raw = await fs.readFile(DATA_FILE, "utf-8");
     const data = JSON.parse(raw);
@@ -34,6 +43,11 @@ async function readAll(): Promise<Announcement[]> {
 }
 
 async function writeAll(items: Announcement[]): Promise<void> {
+  if (useKV) {
+    const { kv } = await import("@vercel/kv");
+    await kv.set(KV_KEY, items);
+    return;
+  }
   await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
   await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2), "utf-8");
 }
@@ -61,14 +75,28 @@ export type AnnouncementInput = {
   title?: unknown;
   body?: unknown;
   date?: unknown;
+  image?: unknown;
+  link?: unknown;
+  linkLabel?: unknown;
   featured?: unknown;
   published?: unknown;
 };
+
+/** Autorise une URL http(s), un chemin local (/...), mailto: ou tel:. */
+function cleanUrl(value: unknown): string {
+  const s = String(value ?? "").trim().slice(0, 600);
+  if (!s) return "";
+  if (/^(https?:\/\/|\/|mailto:|tel:)/i.test(s)) return s;
+  return ""; // valeur invalide -> ignorée
+}
 
 function sanitize(input: AnnouncementInput) {
   const title = String(input.title ?? "").trim().slice(0, 160);
   const body = String(input.body ?? "").trim().slice(0, 2000);
   const date = String(input.date ?? "").trim();
+  const image = cleanUrl(input.image);
+  const link = cleanUrl(input.link);
+  const linkLabel = String(input.linkLabel ?? "").trim().slice(0, 60);
   const featured = Boolean(input.featured);
   const published = input.published === undefined ? true : Boolean(input.published);
 
@@ -77,7 +105,7 @@ function sanitize(input: AnnouncementInput) {
   if (body.length < 2) errors.push("Le contenu est requis.");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) errors.push("Date invalide (AAAA-MM-JJ).");
 
-  return { value: { title, body, date, featured, published }, errors };
+  return { value: { title, body, date, image, link, linkLabel, featured, published }, errors };
 }
 
 export async function create(input: AnnouncementInput) {

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Plus_Jakarta_Sans, Amiri, Bricolage_Grotesque, Unbounded } from "next/font/google";
+import { Fraunces, Inter, Amiri, Bricolage_Grotesque, Unbounded } from "next/font/google";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -23,9 +23,9 @@ const mega = Unbounded({
   variable: "--font-mega",
   display: "swap",
 });
-const body = Plus_Jakarta_Sans({
+const body = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });

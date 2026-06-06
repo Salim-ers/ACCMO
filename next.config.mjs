@@ -14,6 +14,7 @@ const nextConfig = {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https:",
+      "media-src 'self' https:",
       "frame-src https://accmo.org https://www.google.com https://maps.google.com https://mawaqit.net",
       "connect-src 'self'",
       "form-action 'self'",

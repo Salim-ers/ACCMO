@@ -52,33 +52,35 @@ export default function Preloader() {
           <div className="pointer-events-none absolute h-[520px] w-[520px] rounded-full bg-gold-500/15 blur-3xl" aria-hidden />
 
           {/* Logo qui s'allume de bas en haut au fil du chargement */}
-          <div className="relative z-10 mb-8 h-28 w-28">
-            {/* base éteinte */}
-            <Image
-              src="https://accmo.org/wp-content/uploads/2023/04/cropped-cropped-logo-creil-150x150-1.webp"
-              alt="Logo Grande Mosquée de Creil"
-              fill
-              priority
-              className="object-contain opacity-15 grayscale"
-            />
-            {/* version allumée, révélée du bas vers le haut */}
-            <div
-              className="absolute inset-0 transition-[clip-path] duration-200 ease-out"
-              style={{ clipPath: `inset(${100 - pct}% 0 0 0)` }}
-            >
+          <div className="relative z-10 mb-8 grid h-40 w-40 place-items-center rounded-full bg-sand-50 p-5 shadow-[0_0_50px_rgba(212,175,86,0.35)] ring-1 ring-gold-400/40">
+            <div className="relative h-full w-full">
+              {/* base atténuée (logo sur disque clair pour lisibilité du « ESSALAM ») */}
               <Image
                 src="https://accmo.org/wp-content/uploads/2023/04/cropped-cropped-logo-creil-150x150-1.webp"
-                alt=""
+                alt="Logo Grande Mosquée de Creil"
                 fill
-                aria-hidden
-                className="object-contain drop-shadow-[0_0_22px_rgba(212,175,86,0.65)]"
+                priority
+                className="object-contain opacity-25"
+              />
+              {/* version pleine, révélée du bas vers le haut */}
+              <div
+                className="absolute inset-0 transition-[clip-path] duration-200 ease-out"
+                style={{ clipPath: `inset(${100 - pct}% 0 0 0)` }}
+              >
+                <Image
+                  src="https://accmo.org/wp-content/uploads/2023/04/cropped-cropped-logo-creil-150x150-1.webp"
+                  alt=""
+                  fill
+                  aria-hidden
+                  className="object-contain"
+                />
+              </div>
+              {/* ligne lumineuse au niveau du remplissage */}
+              <div
+                className="pointer-events-none absolute inset-x-0 h-px bg-gold-500 shadow-[0_0_12px_2px_rgba(198,154,60,0.8)] transition-all duration-200"
+                style={{ top: `${100 - pct}%`, opacity: pct > 2 && pct < 99 ? 1 : 0 }}
               />
             </div>
-            {/* ligne lumineuse au niveau du remplissage */}
-            <div
-              className="pointer-events-none absolute inset-x-2 h-px bg-gold-300/80 shadow-[0_0_12px_2px_rgba(228,200,120,0.8)] transition-all duration-200"
-              style={{ top: `${100 - pct}%`, opacity: pct > 2 && pct < 99 ? 1 : 0 }}
-            />
           </div>
 
           <motion.p

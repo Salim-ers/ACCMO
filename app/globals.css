@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --header-h: 76px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  @apply bg-sand-50 text-ink font-sans antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Liens d'évitement / focus accessibles */
+:focus-visible {
+  outline: 3px solid theme("colors.gold.500");
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Motif géométrique islamique subtil en arrière-plan */
+.pattern-geo {
+  background-color: theme("colors.emerald.900");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3Cpath d='M30 12l18 18-18 18-18-18z'/%3E%3Ccircle cx='30' cy='30' r='6'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.pattern-light {
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231a4f3a' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M24 0l24 24-24 24L0 24z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Conteneur centré */
+.container-x {
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+}
+
+/* Carte de base */
+.card {
+  @apply rounded-2xl bg-white shadow-soft ring-1 ring-emerald-900/5;
+}
+
+/* Bouton primaire */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none;
+}
+.btn-primary {
+  @apply btn bg-emerald-600 text-sand-50 hover:bg-emerald-700 hover:-translate-y-0.5 shadow-soft;
+}
+.btn-gold {
+  @apply btn bg-gold-500 text-emerald-900 hover:bg-gold-400 hover:-translate-y-0.5;
+}
+.btn-ghost {
+  @apply btn ring-1 ring-emerald-900/15 text-emerald-800 hover:bg-emerald-50;
+}
+
+/* Titre eyebrow */
+.eyebrow {
+  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600;
+}
+
+/* Cible d'animation GSAP : caché jusqu'à révélation (sans JS, reste visible) */
+.gsap-reveal {
+  will-change: transform, opacity;
+}
+
+/* Respect des préférences d'accessibilité : on coupe tout mouvement */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

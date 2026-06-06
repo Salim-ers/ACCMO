@@ -1,0 +1,29 @@
+[
+  {
+    "id": "a1f3c2e0-0001-4a00-9000-000000000001",
+    "title": "Horaires du mois de Ramadan",
+    "body": "Les horaires de prière et des Tarawih pour le mois béni de Ramadan sont désormais disponibles à l'entrée de la mosquée et sur cette page.",
+    "date": "2026-03-01",
+    "featured": true,
+    "published": true,
+    "createdAt": "2026-02-20T10:00:00.000Z"
+  },
+  {
+    "id": "a1f3c2e0-0002-4a00-9000-000000000002",
+    "title": "Collecte de denrées alimentaires",
+    "body": "Une collecte solidaire est organisée au profit des familles dans le besoin. Vos dons (riz, pâtes, conserves) peuvent être déposés à l'accueil.",
+    "date": "2026-02-15",
+    "featured": false,
+    "published": true,
+    "createdAt": "2026-02-10T09:00:00.000Z"
+  },
+  {
+    "id": "a1f3c2e0-0003-4a00-9000-000000000003",
+    "title": "Reprise des cours de l'école coranique",
+    "body": "Les cours reprennent le samedi. Pensez à finaliser l'inscription de vos enfants pour l'année 2026/2027.",
+    "date": "2026-01-10",
+    "featured": false,
+    "published": true,
+    "createdAt": "2026-01-05T08:00:00.000Z"
+  }
+]

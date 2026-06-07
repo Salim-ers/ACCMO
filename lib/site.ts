@@ -38,10 +38,8 @@ export const LINKS = {
 // --- Navigation principale ---
 export const NAV: { label: string; href: string; external?: boolean }[] = [
   { label: "La mosquée", href: "#apropos" },
-  { label: "Horaires", href: "#horaires" },
   { label: "Annonces", href: "#annonces" },
-  { label: "Services", href: "#services" },
-  { label: "Événements", href: "#evenements" },
+  { label: "Horaires", href: "#horaires" },
   { label: "Visite virtuelle", href: "#visite-virtuelle" },
   { label: "École", href: LINKS.ecole, external: true },
   { label: "Contact", href: "#contact" },

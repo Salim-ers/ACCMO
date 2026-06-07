@@ -2,12 +2,10 @@ import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import PrayerTimes from "@/components/PrayerTimes";
 import Announcements from "@/components/Announcements";
-import Services from "@/components/Services";
-import Events from "@/components/Events";
-import Donate from "@/components/Donate";
+import PrayerTimes from "@/components/PrayerTimes";
 import VirtualTour from "@/components/VirtualTour";
+import Donate from "@/components/Donate";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -19,10 +17,8 @@ export default function Home() {
       <main id="contenu">
         <Hero />
         <About />
-        <PrayerTimes />
         <Announcements />
-        <Services />
-        <Events />
+        <PrayerTimes />
         <VirtualTour />
         <Donate />
         <Contact />

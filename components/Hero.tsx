@@ -14,8 +14,19 @@ export default function Hero() {
         alt="Façade et minaret de la Grande Mosquée de Creil"
         fill
         priority
+        quality={95}
         sizes="100vw"
-        className="object-cover object-[70%_center]"
+        className="object-cover object-[70%_center] [filter:contrast(1.06)_saturate(1.1)_brightness(1.02)]"
+      />
+      {/* Grain fin pour masquer le flou de l'agrandissement */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "160px 160px",
+        }}
       />
       {/* Dégradé bas pour la lisibilité du texte blanc */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/10" aria-hidden />

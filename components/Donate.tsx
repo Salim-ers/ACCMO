@@ -55,7 +55,7 @@ export default function Donate() {
               href={LINKS.cotisation}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-ghost !text-sand-50 !ring-white/30"
+              className="btn-ghost !text-sand-50 !ring-white/40 hover:!bg-white/15 hover:!text-sand-50"
             >
               Cotisation annuelle
             </a>

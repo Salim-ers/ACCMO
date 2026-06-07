@@ -32,7 +32,7 @@ export default function VirtualTour() {
               type="button"
               onClick={() => setActive(true)}
               className="photo-bg group flex h-full w-full flex-col items-center justify-center gap-4 text-sand-50"
-              style={{ "--photo": "url('/photos/mosquee-interieur.png')" } as CSSProperties}
+              style={{ "--photo": "url('/photos/mosquee-salle.jpg')" } as CSSProperties}
               aria-label="Lancer la visite virtuelle 360°"
             >
               <span className="pattern-svg pointer-events-none absolute inset-0 opacity-40" aria-hidden />

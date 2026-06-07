@@ -10,13 +10,13 @@ export default function Hero() {
     <section id="accueil" className="relative h-screen w-full overflow-hidden bg-black text-white">
       {/* Photo de la mosquée en fond plein écran */}
       <Image
-        src="/photos/mosquee-exterieur.png"
+        src="/photos/mosquee-facade.jpg"
         alt="Façade et minaret de la Grande Mosquée de Creil"
         fill
         priority
         quality={95}
         sizes="100vw"
-        className="object-cover object-[70%_center] [filter:contrast(1.06)_saturate(1.1)_brightness(1.02)]"
+        className="object-cover object-[center_40%] [filter:contrast(1.06)_saturate(1.1)_brightness(1.02)]"
       />
       {/* Grain fin pour masquer le flou de l'agrandissement */}
       <div

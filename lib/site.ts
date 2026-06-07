@@ -32,16 +32,18 @@ export const LINKS = {
   mouton: "https://mosqueedecreil.kebchi.fr/",
   inscriptionCours: "https://inscription-madrassah.web.app/",
   visiteVirtuelle: "https://accmo.org/virtualtour/mosquee/",
+  ecole: "https://alghazali.org/",
 };
 
 // --- Navigation principale ---
-export const NAV = [
+export const NAV: { label: string; href: string; external?: boolean }[] = [
   { label: "La mosquée", href: "#apropos" },
   { label: "Horaires", href: "#horaires" },
   { label: "Annonces", href: "#annonces" },
   { label: "Services", href: "#services" },
   { label: "Événements", href: "#evenements" },
   { label: "Visite virtuelle", href: "#visite-virtuelle" },
+  { label: "École", href: LINKS.ecole, external: true },
   { label: "Contact", href: "#contact" },
 ];
 

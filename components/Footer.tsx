@@ -42,7 +42,11 @@ export default function Footer() {
           <ul className="space-y-2.5 text-sm">
             {NAV.map((n) => (
               <li key={n.href}>
-                <a href={n.href} className="text-sand-100/75 transition hover:text-sand-50">
+                <a
+                  href={n.href}
+                  {...(n.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="text-sand-100/75 transition hover:text-sand-50"
+                >
                   {n.label}
                 </a>
               </li>

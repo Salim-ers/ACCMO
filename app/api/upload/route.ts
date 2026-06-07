@@ -10,11 +10,13 @@ export async function POST(req: Request) {
   if (!isAuthenticated()) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  const token =
+    process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
+  if (!token) {
     return NextResponse.json(
       {
         error:
-          "Photos non actives : connecte un store Blob sur Vercel PUIS redéploie (Deployments → Redeploy). En attendant, colle une URL d'image.",
+          "Variable BLOB_READ_WRITE_TOKEN manquante sur Vercel. Storage → ton Blob → copie le token (vercel_blob_rw_…) → Settings → Environment Variables → ajoute BLOB_READ_WRITE_TOKEN → Redeploy. En attendant, colle une URL d'image.",
       },
       { status: 501 }
     );
@@ -34,10 +36,18 @@ export async function POST(req: Request) {
 
   const { put } = await import("@vercel/blob");
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const blob = await put(`annonces/${crypto.randomUUID()}.${ext}`, file, {
-    access: "public",
-    contentType: file.type,
-  });
-
-  return NextResponse.json({ url: blob.url });
+  try {
+    const blob = await put(`annonces/${crypto.randomUUID()}.${ext}`, file, {
+      access: "public",
+      contentType: file.type,
+      token,
+    });
+    return NextResponse.json({ url: blob.url });
+  } catch (e) {
+    console.error("blob upload failed:", e);
+    return NextResponse.json(
+      { error: "Échec de l'envoi de l'image. Vérifie le token Blob, ou colle une URL d'image." },
+      { status: 500 }
+    );
+  }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Announcement } from "@/lib/announcements";
 import { Icon } from "@/components/Icons";
@@ -36,6 +36,29 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [aidEnabled, setAidEnabled] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((s) => setAidEnabled(!!s?.aidEnabled))
+      .catch(() => {});
+  }, []);
+
+  async function toggleAid(value: boolean) {
+    setAidEnabled(value); // optimiste
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ aidEnabled: value }),
+    });
+    if (!res.ok) {
+      setAidEnabled(!value); // rollback
+      const data = await res.json().catch(() => ({}));
+      setErrors([data.error || "Réglage non enregistré."]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
 
   async function refresh() {
     const res = await fetch("/api/announcements", { cache: "no-store" });
@@ -169,6 +192,26 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
+        <div className="flex flex-col gap-6">
+        {/* Réglages du site */}
+        <div className="card p-6">
+          <h2 className="mb-3 font-display text-xl font-semibold text-emerald-900">Réglages du site</h2>
+          <label className="flex items-start gap-3 text-sm text-emerald-900">
+            <input
+              type="checkbox"
+              checked={aidEnabled}
+              onChange={(e) => toggleAid(e.target.checked)}
+              className="mt-0.5 h-4 w-4 accent-emerald-600"
+            />
+            <span>
+              Activer le service <strong>Aïd — Commande de mouton</strong> sur le site
+              <span className="mt-0.5 block text-xs text-emerald-800/60">
+                À cocher chaque année à l&apos;approche de l&apos;Aïd, puis décocher après.
+              </span>
+            </span>
+          </label>
+        </div>
+
         {/* Formulaire */}
         <form onSubmit={save} className="card h-fit p-6">
           <h2 className="mb-4 font-display text-xl font-semibold text-emerald-900">
@@ -296,6 +339,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
             </div>
           </div>
         </form>
+        </div>
 
         {/* Liste */}
         <div className="flex flex-col gap-3">

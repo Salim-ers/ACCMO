@@ -69,13 +69,6 @@ export const SERVICES = [
     cta: "Nous contacter",
   },
   {
-    icon: "sheep",
-    title: "Aïd — Commande de mouton",
-    desc: "Réservez votre mouton pour l'Aïd 2026 en quelques clics via notre service partenaire.",
-    href: LINKS.mouton,
-    cta: "Commander un mouton",
-  },
-  {
     icon: "hands",
     title: "Funérailles & Janaza",
     desc: "Soutien et organisation des prières funéraires dans le respect des rites.",
@@ -83,6 +76,15 @@ export const SERVICES = [
     cta: "Prendre contact",
   },
 ];
+
+// Service saisonnier (Aïd) — affiché seulement s'il est activé dans l'admin (1×/an).
+export const AID_SERVICE = {
+  icon: "sheep",
+  title: "Aïd — Commande de mouton",
+  desc: "Réservez votre mouton pour l'Aïd en quelques clics via notre service partenaire.",
+  href: LINKS.mouton,
+  cta: "Commander un mouton",
+};
 
 // --- Événements (statiques ; les annonces datées sont gérées via /admin) ---
 export const EVENTS = [

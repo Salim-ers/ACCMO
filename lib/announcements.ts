@@ -11,6 +11,7 @@ import crypto from "crypto";
 // =============================================================
 
 import { DEFAULT_CATEGORY, isCategory, type Category } from "@/lib/categories";
+import { kvHost, resolveKvCredentials } from "@/lib/kv-env";
 
 export type Announcement = {
   id: string;
@@ -29,10 +30,10 @@ export type Announcement = {
 const DATA_FILE = path.join(process.cwd(), "data", "announcements.json");
 const KV_KEY = "annonces:list";
 
-// Accepte un store « Vercel KV » OU « Upstash Redis » (noms de variables différents).
-const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const useKV = !!(KV_URL && KV_TOKEN);
+// Accepte « Vercel KV » comme « Upstash Redis », avec ou sans préfixe
+// personnalisé appliqué par l'intégration Vercel (voir lib/kv-env.ts).
+const KV = resolveKvCredentials();
+const useKV = KV !== null;
 
 /** Indique si un stockage persistant (KV) est configuré. */
 export function hasPersistentStore(): boolean {
@@ -62,12 +63,7 @@ export type StoreStatus = {
  */
 export async function checkStore(): Promise<StoreStatus> {
   const serverless = !!process.env.VERCEL;
-  let host: string | null = null;
-  try {
-    host = KV_URL ? new URL(KV_URL).host : null;
-  } catch {
-    host = KV_URL ?? null;
-  }
+  const host = kvHost(KV?.url ?? null);
 
   if (useKV) {
     try {
@@ -80,7 +76,7 @@ export async function checkStore(): Promise<StoreStatus> {
         ok: false,
         serverless,
         host,
-        hint: `La base « ${host ?? "inconnue"} » ne répond pas : elle a probablement été supprimée. Dans Vercel : Storage → créez un store KV / Upstash et reliez-le au projet, puis redéployez. Les annonces existantes ne sont pas récupérables si la base a été détruite.`,
+        hint: `La base « ${host ?? "inconnue"} » ne répond pas. Sur le plan gratuit Upstash, une base inutilisée est archivée et son point d'accès retiré : vérifiez d'abord dans la console Upstash si elle peut être restaurée — les données y sont alors conservées. À défaut, créez un nouveau store dans Vercel (Storage), reliez-le au projet et redéployez.`,
       };
     }
   }
@@ -105,7 +101,7 @@ export async function checkStore(): Promise<StoreStatus> {
 
 async function kvClient() {
   const { createClient } = await import("@vercel/kv");
-  return createClient({ url: KV_URL as string, token: KV_TOKEN as string });
+  return createClient({ url: KV!.url, token: KV!.token });
 }
 
 /** Les annonces créées avant l'ajout des rubriques n'en ont pas : on comble. */

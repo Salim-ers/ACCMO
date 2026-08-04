@@ -91,8 +91,20 @@ délais d'iqama et l'heure de la Jumu'a. Aucune iframe n'est incrustée.
 La rubrique alimente les **filtres de l'agenda** côté public. Les annonces créées
 avant l'ajout des rubriques reçoivent « Informations pratiques » automatiquement.
 
-Stockage : **Vercel KV** en production (dès que `KV_REST_API_URL` / `KV_REST_API_TOKEN`
-sont présents), sinon `data/announcements.json` en local. Même interface dans les deux cas.
+Stockage : **Vercel KV / Upstash** en production, sinon `data/announcements.json`
+en local. Même interface dans les deux cas.
+
+`lib/kv-env.ts` résout les identifiants du store en acceptant **n'importe quel
+préfixe** appliqué par l'intégration Vercel (`KV_REST_API_URL`,
+`UPSTASH_REDIS_REST_URL`, `STORAGE_KV_REST_API_URL`…), à condition que l'URL et
+le jeton partagent le même préfixe. Les noms standards restent prioritaires, et
+un jeton en lecture seule n'est jamais retenu.
+
+L'espace `/admin` **teste réellement le store** au chargement et affiche un
+bandeau si la base ne répond pas, en nommant l'hôte fautif — plutôt que de
+laisser découvrir la panne au moment d'un enregistrement perdu. Sur le plan
+gratuit Upstash, une base inutilisée est *archivée* et son point d'accès retiré :
+elle se restaure depuis la console Upstash, données comprises.
 
 ## 6. Où modifier le contenu
 

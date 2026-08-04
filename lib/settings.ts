@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { resolveKvCredentials } from "@/lib/kv-env";
 
 // =============================================================
 // Réglages globaux du site (ex. activer le service Aïd 1×/an).
@@ -16,13 +17,13 @@ const DEFAULTS: Settings = { aidEnabled: false };
 const DATA_FILE = path.join(process.cwd(), "data", "settings.json");
 const KV_KEY = "site:settings";
 
-const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const useKV = !!(KV_URL && KV_TOKEN);
+// Mêmes identifiants que les annonces, préfixe personnalisé compris.
+const KV = resolveKvCredentials();
+const useKV = KV !== null;
 
 async function kvClient() {
   const { createClient } = await import("@vercel/kv");
-  return createClient({ url: KV_URL as string, token: KV_TOKEN as string });
+  return createClient({ url: KV!.url, token: KV!.token });
 }
 
 export async function getSettings(): Promise<Settings> {

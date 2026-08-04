@@ -1,30 +1,33 @@
-# Photos de la mosquée — emplacements de fond
+# Photographies de la mosquée
 
-Dépose ici tes photos avec **exactement** ces noms de fichiers.
-Elles s'afficheront automatiquement en fond (avec un voile vert
-émeraude pour la lisibilité du texte). Tant qu'un fichier est absent,
-le motif zellige + le dégradé vert servent de repli : le site reste soigné.
+Les photos utilisées par le site sont déclarées **une seule fois**, dans
+`lib/site.ts` (objet `PHOTOS`). Les composants s'y réfèrent par leur clé :
+si tu changes un fichier ici, mets à jour ce seul objet.
 
-| Fichier                     | Où il apparaît                | Photo conseillée                          |
-| --------------------------- | ----------------------------- | ----------------------------------------- |
-| `mosquee-exterieur.png`     | Hero (haut de page)           | Façade + minaret (extérieur)              |
-| `mosquee-interieur.png`     | Bloc « Visite virtuelle 360° »| Salle de prière (tapis, colonnes, lustre) |
-| `mosquee-mihrab.png`        | Bandeau « Faire un don »      | Mihrab / minbar (carrelage zellige)       |
-| `mosaique-fond.png`         | Fond mosaïque de tout le site | Carrelage zellige (motif répété)          |
+| Clé         | Fichier attendu           | Où elle apparaît                                                        |
+| ----------- | ------------------------- | ----------------------------------------------------------------------- |
+| `facade`    | `mosquee-facade.jpg`      | Hero (photo verticale), en-têtes photographiques, image Open Graph        |
+| `salle`     | `mosquee-salle.jpg`       | Vignette carrée du hero, aperçu de la visite 360°, raccourci « Visiter »  |
+| `interieur` | `mosquee-interieur.png`   | Section école, en-tête de la page Annonces, raccourci « École Al Ghazali » |
 
-## Conseils
+## Règles de traitement
 
-- Formats acceptés : `.jpg`, `.jpeg`, `.png`, `.webp` — mais garde le nom
-  `*.jpg` ci-dessus, ou adapte le `--photo` dans le composant correspondant.
-- Privilégie des images **larges et lumineuses** (min. 1600 px de large)
-  et < 500 Ko (compresse-les sur https://squoosh.app si besoin).
-- Les photos sont servies en local (`/photos/...`), donc rapides et
-  conformes à la politique de sécurité (CSP) du site.
+- **Cadrage architectural** : les photos sont recadrées par `object-fit: cover`
+  et un point focal explicite (`object-position`), jamais déformées.
+- **Formats et poids** : viser ≥ 1600 px de large et < 400 Ko. Compresse au
+  besoin (par exemple sur https://squoosh.app).
+- **Textes alternatifs** : ils sont écrits dans `PHOTOS[...].alt` et décrivent
+  la photo réelle. Une photo purement décorative reçoit `alt=""`.
+- **Chargement** : seule la photo du hero est prioritaire ; les autres sont
+  chargées en différé par `next/image`.
+- Les photos sont servies localement (`/photos/...`), donc rapides et conformes
+  à la politique de sécurité (CSP) du site.
 
-## Remplacer un nom de fichier
+## Ajouter une photo
 
-Le nom est défini via la variable CSS `--photo` dans :
+1. Dépose le fichier dans ce dossier.
+2. Ajoute une entrée dans `PHOTOS` (`lib/site.ts`) avec un `alt` précis.
+3. Référence-la par sa clé dans le composant voulu.
 
-- Hero  → `components/Hero.tsx`
-- Visite virtuelle → `components/VirtualTour.tsx`
-- Don   → `components/Donate.tsx`
+`mosaique-zellige.png` n'est plus utilisé : la trame géométrique du site est
+désormais construite en CSS (`.mesh-faint`), à très faible opacité.

@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Announcement } from "@/lib/announcements";
-import { Icon } from "@/components/Icons";
+import { CATEGORIES, DEFAULT_CATEGORY, type Category } from "@/lib/categories";
+import { ROUTES } from "@/lib/site";
 
 type FormState = {
   id: string | null;
   title: string;
   body: string;
   date: string;
+  category: Category;
   image: string;
   link: string;
   linkLabel: string;
@@ -22,12 +24,17 @@ const empty = (): FormState => ({
   title: "",
   body: "",
   date: new Date().toISOString().slice(0, 10),
+  category: DEFAULT_CATEGORY,
   image: "",
   link: "",
   linkLabel: "",
   featured: false,
   published: true,
 });
+
+const field =
+  "w-full border border-[var(--rule-strong)] bg-white px-3 py-2.5 text-[15px] text-night-900 outline-none transition-colors focus:border-night-900";
+const label = "mb-1.5 block text-[12px] font-bold uppercase tracking-[0.1em] text-night-600";
 
 export default function AdminDashboard({ initial }: { initial: Announcement[] }) {
   const router = useRouter();
@@ -94,6 +101,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
       title: form.title,
       body: form.body,
       date: form.date,
+      category: form.category,
       image: form.image,
       link: form.link,
       linkLabel: form.linkLabel,
@@ -126,6 +134,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
       title: a.title,
       body: a.body,
       date: a.date,
+      category: a.category ?? DEFAULT_CATEGORY,
       image: a.image || "",
       link: a.link || "",
       linkLabel: a.linkLabel || "",
@@ -150,12 +159,12 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
   }
 
   // Bascule rapide publier/dépublier ou à la une depuis la liste.
-  async function toggle(a: Announcement, field: "published" | "featured") {
+  async function toggle(a: Announcement, key: "published" | "featured") {
     setErrors([]);
     const res = await fetch(`/api/announcements/${a.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...a, [field]: !a[field] }),
+      body: JSON.stringify({ ...a, [key]: !a[key] }),
     });
     if (res.ok) {
       await refresh();
@@ -173,206 +182,296 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
   }
 
   return (
-    <div className="container-x py-10">
+    <div className="shell py-10">
       {/* En-tête */}
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--rule)] pb-6">
         <div>
-          <h1 className="font-display text-3xl font-semibold text-emerald-900">
-            Gestion des annonces
-          </h1>
-          <p className="text-sm text-emerald-800/60">
-            {items.length} annonce(s) · « Dépublier » masque l&apos;annonce du site mais la
-            conserve (réactivable chaque année).
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-terra-600">
+            Espace d’administration
+          </p>
+          <h1 className="title-md mt-2 text-night-900">Annonces de la mosquée</h1>
+          <p className="mt-2 text-[14px] text-night-600">
+            {items.length} annonce(s) · «&nbsp;Dépublier&nbsp;» retire l’annonce du site sans
+            la supprimer.
           </p>
         </div>
         <div className="flex gap-2">
-          <a href="/" target="_blank" className="btn-ghost !py-2.5">Voir le site</a>
-          <button onClick={logout} className="btn-primary !py-2.5">Déconnexion</button>
+          <a href={ROUTES.home} target="_blank" rel="noopener noreferrer" className="btn btn-outline !min-h-[42px]">
+            Voir le site
+          </a>
+          <button type="button" onClick={logout} className="btn btn-primary !min-h-[42px]">
+            Déconnexion
+          </button>
         </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
         <div className="flex flex-col gap-6">
-        {/* Réglages du site */}
-        <div className="card p-6">
-          <h2 className="mb-3 font-display text-xl font-semibold text-emerald-900">Réglages du site</h2>
-          <label className="flex items-start gap-3 text-sm text-emerald-900">
-            <input
-              type="checkbox"
-              checked={aidEnabled}
-              onChange={(e) => toggleAid(e.target.checked)}
-              className="mt-0.5 h-4 w-4 accent-emerald-600"
-            />
-            <span>
-              Activer le service <strong>Aïd — Commande de mouton</strong> sur le site
-              <span className="mt-0.5 block text-xs text-emerald-800/60">
-                À cocher chaque année à l&apos;approche de l&apos;Aïd, puis décocher après.
+          {/* Réglages du site */}
+          <section className="border border-[var(--rule)] bg-white p-6">
+            <h2 className="text-[17px] font-extrabold tracking-tight text-night-900">
+              Réglages du site
+            </h2>
+            <label className="mt-4 flex items-start gap-3 text-[14.5px] text-night-800">
+              <input
+                type="checkbox"
+                checked={aidEnabled}
+                onChange={(e) => toggleAid(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-[#c66f4e]"
+              />
+              <span>
+                Afficher le service <strong>Aïd — Commande de mouton</strong>
+                <span className="mt-1 block text-[13px] text-night-600">
+                  À cocher chaque année à l’approche de l’Aïd, puis à décocher ensuite.
+                </span>
               </span>
-            </span>
-          </label>
-        </div>
+            </label>
+          </section>
 
-        {/* Formulaire */}
-        <form onSubmit={save} className="card h-fit p-6">
-          <h2 className="mb-4 font-display text-xl font-semibold text-emerald-900">
-            {form.id ? "Modifier l'annonce" : "Nouvelle annonce"}
-          </h2>
+          {/* Formulaire */}
+          <form onSubmit={save} className="h-fit border border-[var(--rule)] bg-white p-6">
+            <h2 className="mb-5 text-[17px] font-extrabold tracking-tight text-night-900">
+              {form.id ? "Modifier l’annonce" : "Nouvelle annonce"}
+            </h2>
 
-          <div className="flex flex-col gap-4">
-            <div>
-              <label htmlFor="title" className="mb-1 block text-sm font-medium text-emerald-900">Titre</label>
-              <input
-                id="title"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                maxLength={160}
-                required
-                className="w-full rounded-xl border border-emerald-900/15 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="body" className="mb-1 block text-sm font-medium text-emerald-900">Contenu</label>
-              <textarea
-                id="body"
-                value={form.body}
-                onChange={(e) => setForm({ ...form, body: e.target.value })}
-                maxLength={2000}
-                rows={4}
-                required
-                className="w-full resize-y rounded-xl border border-emerald-900/15 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="date" className="mb-1 block text-sm font-medium text-emerald-900">Date</label>
-              <input
-                id="date"
-                type="date"
-                value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                required
-                className="w-full rounded-xl border border-emerald-900/15 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-              />
-            </div>
-
-            {/* Photo */}
-            <div>
-              <label className="mb-1 block text-sm font-medium text-emerald-900">Photo (optionnel)</label>
-              <div className="flex items-center gap-2">
-                <label className="cursor-pointer rounded-xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-900/10 hover:bg-emerald-100">
-                  {uploading ? "Envoi…" : "Choisir une image"}
-                  <input type="file" accept="image/*" onChange={onUpload} disabled={uploading} className="hidden" />
+            <div className="flex flex-col gap-5">
+              <div>
+                <label htmlFor="title" className={label}>
+                  Titre
                 </label>
+                <input
+                  id="title"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  maxLength={160}
+                  required
+                  className={field}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="body" className={label}>
+                  Contenu
+                </label>
+                <textarea
+                  id="body"
+                  value={form.body}
+                  onChange={(e) => setForm({ ...form, body: e.target.value })}
+                  maxLength={2000}
+                  rows={4}
+                  required
+                  className={`${field} resize-y`}
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="date" className={label}>
+                    Date
+                  </label>
+                  <input
+                    id="date"
+                    type="date"
+                    value={form.date}
+                    onChange={(e) => setForm({ ...form, date: e.target.value })}
+                    required
+                    className={field}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="category" className={label}>
+                    Rubrique
+                  </label>
+                  <select
+                    id="category"
+                    value={form.category}
+                    onChange={(e) =>
+                      setForm({ ...form, category: e.target.value as Category })
+                    }
+                    className={field}
+                  >
+                    {CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Photo */}
+              <div>
+                <span className={label}>Photo (optionnel)</span>
+                <div className="flex items-center gap-3">
+                  <label className="cursor-pointer border border-[var(--rule-strong)] bg-sand-100 px-3 py-2 text-[13.5px] font-semibold text-night-800 transition-colors hover:bg-sand-200">
+                    {uploading ? "Envoi…" : "Choisir une image"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={onUpload}
+                      disabled={uploading}
+                      className="hidden"
+                    />
+                  </label>
+                  {form.image && (
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, image: "" })}
+                      className="text-[13px] font-semibold text-terra-700 underline underline-offset-4"
+                    >
+                      Retirer
+                    </button>
+                  )}
+                </div>
+                <input
+                  value={form.image}
+                  onChange={(e) => setForm({ ...form, image: e.target.value })}
+                  placeholder="…ou collez une URL d’image (https://…)"
+                  aria-label="URL de l’image"
+                  className={`${field} mt-2 !text-[14px]`}
+                />
                 {form.image && (
-                  <button type="button" onClick={() => setForm({ ...form, image: "" })} className="text-xs text-red-600 hover:underline">
-                    Retirer
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={form.image}
+                    alt="Aperçu de l’image de l’annonce"
+                    className="mt-2 h-28 w-full border border-[var(--rule)] object-cover"
+                  />
+                )}
+              </div>
+
+              {/* Lien */}
+              <div>
+                <label htmlFor="link" className={label}>
+                  Lien (optionnel)
+                </label>
+                <input
+                  id="link"
+                  value={form.link}
+                  onChange={(e) => setForm({ ...form, link: e.target.value })}
+                  placeholder="https://… (inscription, don, document…)"
+                  className={field}
+                />
+                <input
+                  value={form.linkLabel}
+                  onChange={(e) => setForm({ ...form, linkLabel: e.target.value })}
+                  maxLength={60}
+                  placeholder="Texte du bouton (ex. « S’inscrire »)"
+                  aria-label="Texte du bouton de lien"
+                  className={`${field} mt-2 !text-[14px]`}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2.5 border-t border-[var(--rule)] pt-4">
+                <label className="flex items-center gap-3 text-[14.5px] text-night-800">
+                  <input
+                    type="checkbox"
+                    checked={form.featured}
+                    onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                    className="h-4 w-4 accent-[#c66f4e]"
+                  />
+                  Mettre à la une (grand bloc de l’agenda)
+                </label>
+                <label className="flex items-center gap-3 text-[14.5px] text-night-800">
+                  <input
+                    type="checkbox"
+                    checked={form.published}
+                    onChange={(e) => setForm({ ...form, published: e.target.checked })}
+                    className="h-4 w-4 accent-[#c66f4e]"
+                  />
+                  Publier immédiatement
+                </label>
+              </div>
+
+              {errors.length > 0 && (
+                <ul role="alert" className="border-l-2 border-terra-600 bg-terra-100 px-4 py-3 text-[14px] text-terra-700">
+                  {errors.map((er, i) => (
+                    <li key={i}>{er}</li>
+                  ))}
+                </ul>
+              )}
+
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="btn btn-primary flex-1 disabled:opacity-60"
+                >
+                  {busy ? "Enregistrement…" : form.id ? "Mettre à jour" : "Ajouter"}
+                </button>
+                {form.id && (
+                  <button type="button" onClick={() => setForm(empty())} className="btn btn-outline">
+                    Annuler
                   </button>
                 )}
               </div>
-              <input
-                value={form.image}
-                onChange={(e) => setForm({ ...form, image: e.target.value })}
-                placeholder="…ou collez une URL d'image (https://…)"
-                className="mt-2 w-full rounded-xl border border-emerald-900/15 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-              />
-              {form.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={form.image} alt="Aperçu" className="mt-2 h-28 w-full rounded-lg object-cover ring-1 ring-emerald-900/10" />
-              )}
             </div>
-
-            {/* Lien */}
-            <div>
-              <label htmlFor="link" className="mb-1 block text-sm font-medium text-emerald-900">Lien (optionnel)</label>
-              <input
-                id="link"
-                value={form.link}
-                onChange={(e) => setForm({ ...form, link: e.target.value })}
-                placeholder="https://… (inscription, don, document…)"
-                className="w-full rounded-xl border border-emerald-900/15 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-              />
-              <input
-                value={form.linkLabel}
-                onChange={(e) => setForm({ ...form, linkLabel: e.target.value })}
-                maxLength={60}
-                placeholder="Texte du bouton (ex. « S'inscrire »)"
-                className="mt-2 w-full rounded-xl border border-emerald-900/15 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-              />
-            </div>
-
-            <label className="flex items-center gap-3 text-sm text-emerald-900">
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-                className="h-4 w-4 accent-emerald-600"
-              />
-              Mettre en avant (à la une)
-            </label>
-
-            <label className="flex items-center gap-3 text-sm text-emerald-900">
-              <input
-                type="checkbox"
-                checked={form.published}
-                onChange={(e) => setForm({ ...form, published: e.target.checked })}
-                className="h-4 w-4 accent-emerald-600"
-              />
-              Publier immédiatement
-            </label>
-
-            {errors.length > 0 && (
-              <ul role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-                {errors.map((er, i) => <li key={i}>{er}</li>)}
-              </ul>
-            )}
-
-            <div className="flex gap-2">
-              <button type="submit" disabled={busy} className="btn-primary flex-1 disabled:opacity-60">
-                {busy ? "Enregistrement…" : form.id ? "Mettre à jour" : "Ajouter"}
-              </button>
-              {form.id && (
-                <button type="button" onClick={() => setForm(empty())} className="btn-ghost">
-                  Annuler
-                </button>
-              )}
-            </div>
-          </div>
-        </form>
+          </form>
         </div>
 
         {/* Liste */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           {items.length === 0 && (
-            <p className="card p-6 text-emerald-800/60">Aucune annonce. Créez-en une à gauche.</p>
+            <p className="border border-[var(--rule)] bg-white p-6 text-[15px] text-night-600">
+              Aucune annonce pour l’instant. Créez-en une avec le formulaire à gauche.
+            </p>
           )}
           {items.map((a) => (
-            <article key={a.id} className="card flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <article
+              key={a.id}
+              className="flex flex-col gap-4 border border-[var(--rule)] bg-white p-5 sm:flex-row sm:items-start sm:justify-between"
+            >
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-display text-lg font-semibold text-emerald-900">{a.title}</h3>
+                  <h3 className="text-[17px] font-extrabold tracking-tight text-night-900">
+                    {a.title}
+                  </h3>
                   {a.featured && (
-                    <span className="rounded-full bg-gold-500/15 px-2 py-0.5 text-[11px] font-semibold text-gold-600">À la une</span>
+                    <span className="tag bg-terra-600 text-white">À la une</span>
                   )}
-                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${a.published ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-500"}`}>
+                  <span
+                    className={`tag ${
+                      a.published ? "bg-night-900 text-sand-100" : "bg-night-100 text-night-600"
+                    }`}
+                  >
                     {a.published ? "Publiée" : "Brouillon"}
                   </span>
                 </div>
-                <p className="mt-1 line-clamp-2 text-sm text-emerald-800/70">{a.body}</p>
-                <time className="mt-1 block text-xs text-emerald-600">{a.date}</time>
+                <p className="mt-1.5 line-clamp-2 text-[14px] leading-relaxed text-night-600">
+                  {a.body}
+                </p>
+                <p className="tabular mt-1.5 text-[12.5px] text-night-500">
+                  {a.date} · {a.category ?? DEFAULT_CATEGORY}
+                </p>
               </div>
 
               <div className="flex shrink-0 flex-wrap gap-2">
-                <button onClick={() => toggle(a, "published")} className="rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 ring-emerald-900/15 hover:bg-emerald-50" title={a.published ? "Dépublier" : "Publier"}>
+                <button
+                  type="button"
+                  onClick={() => toggle(a, "published")}
+                  className="border border-[var(--rule-strong)] px-3 py-2 text-[12.5px] font-semibold text-night-800 transition-colors hover:bg-sand-100"
+                >
                   {a.published ? "Dépublier" : "Publier"}
                 </button>
-                <button onClick={() => toggle(a, "featured")} className="rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 ring-emerald-900/15 hover:bg-emerald-50" title="À la une">
-                  {a.featured ? "Retirer une" : "À la une"}
+                <button
+                  type="button"
+                  onClick={() => toggle(a, "featured")}
+                  className="border border-[var(--rule-strong)] px-3 py-2 text-[12.5px] font-semibold text-night-800 transition-colors hover:bg-sand-100"
+                >
+                  {a.featured ? "Retirer de la une" : "Mettre à la une"}
                 </button>
-                <button onClick={() => edit(a)} className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-sand-50 hover:bg-emerald-700">
+                <button
+                  type="button"
+                  onClick={() => edit(a)}
+                  className="bg-night-900 px-3 py-2 text-[12.5px] font-semibold text-sand-50 transition-colors hover:bg-night-700"
+                >
                   Modifier
                 </button>
-                <button onClick={() => remove(a.id)} className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100">
+                <button
+                  type="button"
+                  onClick={() => remove(a.id)}
+                  className="border border-terra-500 px-3 py-2 text-[12.5px] font-semibold text-terra-700 transition-colors hover:bg-terra-100"
+                >
                   Supprimer
                 </button>
               </div>

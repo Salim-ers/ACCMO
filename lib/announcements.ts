@@ -10,11 +10,14 @@ import crypto from "crypto";
 //   L'interface (admin + API) est identique dans les deux cas.
 // =============================================================
 
+import { DEFAULT_CATEGORY, isCategory, type Category } from "@/lib/categories";
+
 export type Announcement = {
   id: string;
   title: string;
   body: string;
   date: string; // AAAA-MM-JJ
+  category: Category;
   image?: string; // URL d'une photo (optionnel)
   link?: string; // lien externe (optionnel)
   linkLabel?: string; // texte du bouton de lien (optionnel)
@@ -41,16 +44,24 @@ async function kvClient() {
   return createClient({ url: KV_URL as string, token: KV_TOKEN as string });
 }
 
+/** Les annonces créées avant l'ajout des rubriques n'en ont pas : on comble. */
+function withDefaults(items: unknown): Announcement[] {
+  if (!Array.isArray(items)) return [];
+  return items.map((a: Announcement) => ({
+    ...a,
+    category: isCategory(a?.category) ? a.category : DEFAULT_CATEGORY,
+  }));
+}
+
 async function readAll(): Promise<Announcement[]> {
   if (useKV) {
     const c = await kvClient();
     const data = await c.get<Announcement[]>(KV_KEY);
-    return Array.isArray(data) ? data : [];
+    return withDefaults(data);
   }
   try {
     const raw = await fs.readFile(DATA_FILE, "utf-8");
-    const data = JSON.parse(raw);
-    return Array.isArray(data) ? data : [];
+    return withDefaults(JSON.parse(raw));
   } catch {
     return [];
   }
@@ -89,6 +100,7 @@ export type AnnouncementInput = {
   title?: unknown;
   body?: unknown;
   date?: unknown;
+  category?: unknown;
   image?: unknown;
   link?: unknown;
   linkLabel?: unknown;
@@ -108,6 +120,9 @@ function sanitize(input: AnnouncementInput) {
   const title = String(input.title ?? "").trim().slice(0, 160);
   const body = String(input.body ?? "").trim().slice(0, 2000);
   const date = String(input.date ?? "").trim();
+  const category: Category = isCategory(input.category)
+    ? input.category
+    : DEFAULT_CATEGORY;
   const image = cleanUrl(input.image);
   const link = cleanUrl(input.link);
   const linkLabel = String(input.linkLabel ?? "").trim().slice(0, 60);
@@ -119,7 +134,10 @@ function sanitize(input: AnnouncementInput) {
   if (body.length < 2) errors.push("Le contenu est requis.");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) errors.push("Date invalide (AAAA-MM-JJ).");
 
-  return { value: { title, body, date, image, link, linkLabel, featured, published }, errors };
+  return {
+    value: { title, body, date, category, image, link, linkLabel, featured, published },
+    errors,
+  };
 }
 
 export async function create(input: AnnouncementInput) {

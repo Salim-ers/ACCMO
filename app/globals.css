@@ -2,253 +2,380 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =============================================================
+   ESSALAM — jetons de design
+   ============================================================= */
 :root {
-  --header-h: 76px;
+  --color-ink: #101b2d;
+  --color-slate: #294865;
+  --color-mist: #dceaf0;
+  /* Terre cuite claire : marqueurs, filets, points — jamais de texte dessus. */
+  --color-terracotta: #c66f4e;
+  /* Terre cuite foncée : dès qu'il y a du texte (contraste AA garanti,
+     blanc sur ce fond = 5:1 ; ce ton sur fond clair = 5:1 également). */
+  --color-terracotta-deep: #a85940;
+  --color-sand: #f1e7d6;
+  --color-surface: #faf8f3;
+  --color-graphite: #202326;
+
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+
+  --space-section: clamp(4.5rem, 9vw, 8rem);
+  --container-width: 1280px;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+
+  --rule: rgba(16, 27, 45, 0.14);
+  --rule-strong: rgba(16, 27, 45, 0.26);
+  --rule-invert: rgba(220, 234, 240, 0.2);
+
+  /* Hauteurs des barres fixes (header + barre d'info). */
+  --statusbar-h: 34px;
+  --header-h: 68px;
+  --sticky-h: calc(var(--statusbar-h) + var(--header-h));
+}
+
+@media (max-width: 767px) {
+  :root {
+    --statusbar-h: 32px;
+    --header-h: 60px;
+  }
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--header-h);
+  /* Décalage d'ancrage = barres fixes + respiration. */
+  scroll-padding-top: calc(var(--sticky-h) + 12px);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  @apply bg-sand-50 text-ink font-sans antialiased;
+  background-color: var(--color-surface);
+  color: var(--color-graphite);
+  @apply font-sans antialiased;
   text-rendering: optimizeLegibility;
-  /* Fond épuré (aucun motif) : place nette au 3D et aux photos. */
-  background-color: #fbf8f2;
+  overflow-x: hidden;
 }
 
-/* Liquid glass (hero / navbar) */
-.liquid-glass {
-  background: rgba(0, 0, 0, 0.4);
-  background-blend-mode: luminosity;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: none;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-.liquid-glass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.4px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.1) 20%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0.1) 80%,
-    rgba(255, 255, 255, 0.3) 100%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* Verre dépoli (glassmorphism) — cartes/barres modernes. */
-.glass {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-.glass-light {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(20, 32, 27, 0.06);
-}
-
-/* Liens d'évitement / focus accessibles */
+/* Focus visible franc, jamais masqué. */
 :focus-visible {
-  outline: 3px solid theme("colors.gold.500");
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 3px solid var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.on-dark :focus-visible {
+  outline-color: var(--color-mist);
 }
 
-/* Mosaïque sombre — anneaux entrelacés crème/or sur fond vert profond. */
-.pattern-geo {
-  background-color: theme("colors.emerald.900");
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23f5eee0' stroke-opacity='0.10' stroke-width='1'%3E%3Ccircle cx='0' cy='0' r='20'/%3E%3Ccircle cx='20' cy='0' r='20'/%3E%3Ccircle cx='40' cy='0' r='20'/%3E%3Ccircle cx='0' cy='20' r='20'/%3E%3Ccircle cx='20' cy='20' r='20'/%3E%3Ccircle cx='40' cy='20' r='20'/%3E%3Ccircle cx='0' cy='40' r='20'/%3E%3Ccircle cx='20' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3C/g%3E%3Crect x='18.6' y='18.6' width='2.8' height='2.8' fill='%23d4af56' fill-opacity='0.45'/%3E%3C/svg%3E");
-}
-
-/* Mosaïque colorée (zellige authentique) — sections claires.
-   Voile crème par-dessus pour garder textes et cartes lisibles. */
-.pattern-light {
-  background-image:
-    linear-gradient(rgba(251, 248, 242, 0.74), rgba(251, 248, 242, 0.74)),
-    url("/photos/mosaique-zellige.png");
-  background-size: auto, 340px;
-  background-repeat: repeat;
-}
-
-/* Mosaïque seule (sans fond opaque) — à superposer sur une photo. */
-.pattern-svg {
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23f5eee0' stroke-opacity='0.16' stroke-width='1'%3E%3Ccircle cx='0' cy='0' r='20'/%3E%3Ccircle cx='20' cy='0' r='20'/%3E%3Ccircle cx='40' cy='0' r='20'/%3E%3Ccircle cx='0' cy='20' r='20'/%3E%3Ccircle cx='20' cy='20' r='20'/%3E%3Ccircle cx='40' cy='20' r='20'/%3E%3Ccircle cx='0' cy='40' r='20'/%3E%3Ccircle cx='20' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3C/g%3E%3Crect x='18.6' y='18.6' width='2.8' height='2.8' fill='%23d4af56' fill-opacity='0.50'/%3E%3C/svg%3E");
+::selection {
+  background: var(--color-ink);
+  color: var(--color-sand);
 }
 
 /* =============================================================
-   Fonds photo en calques.
-   Dépose tes photos dans /public/photos (voir le README de ce dossier).
-   Si la photo est absente, le dégradé vert + le motif géométrique
-   restent affichés : le rendu est toujours soigné.
+   Grille éditoriale
    ============================================================= */
-.photo-bg {
-  background-color: theme("colors.emerald.900");
+.shell {
+  width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+.section-tight {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+/* Filet horizontal fin — séparateur signature du site. */
+.rule {
+  border-top: 1px solid var(--rule);
+}
+.rule-invert {
+  border-top: 1px solid var(--rule-invert);
+}
+
+/* Marqueur de section numéroté (00 — Intitulé). */
+.section-marker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-slate);
+}
+.section-marker .num {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-terracotta-deep);
+}
+
+/* Titres : expressifs par la taille et la graisse, sans lettrage espacé. */
+.title-xl {
+  font-size: clamp(2.5rem, 6.4vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+}
+.title-lg {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+.title-md {
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+/* Arabe : lisible et digne, jamais décoratif. */
+.arabic {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  direction: rtl;
+  line-height: 1.9;
+  font-weight: 400;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* =============================================================
+   Boutons — langage propre à Essalam :
+   rectangle à angle court, flèche directionnelle, aucune capsule.
+   ============================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  line-height: 1.2;
+  text-align: center;
+  transition: background-color 0.22s ease, color 0.22s ease,
+    border-color 0.22s ease, box-shadow 0.22s ease;
+}
+.btn .arw {
+  transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.btn:hover .arw {
+  transform: translateX(4px);
+}
+
+/* Principal : bleu nuit plein → terre cuite au survol. */
+.btn-primary {
+  background: var(--color-ink);
+  color: var(--color-sand);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+}
+.btn-primary:hover {
+  background: var(--color-terracotta-deep);
+  box-shadow: inset 0 0 0 1px var(--color-terracotta-deep);
+}
+
+/* Accent : terre cuite pleine (usage ponctuel : don). */
+.btn-accent {
+  background: var(--color-terracotta-deep);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px var(--color-terracotta-deep);
+}
+.btn-accent:hover {
+  background: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+}
+
+/* Secondaire : contour, se remplit depuis le bas au survol. */
+.btn-outline {
   position: relative;
+  overflow: hidden;
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
   isolation: isolate;
 }
-.photo-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background-image: var(--photo);
-  background-size: cover;
-  background-position: center;
-  /* Léger zoom lent « ken burns » pour le dynamisme. */
-  animation: kenburns 22s ease-out alternate infinite;
-}
-/* Voile vert émeraude pour la lisibilité du texte par-dessus la photo. */
-.photo-bg::after {
+.btn-outline::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(15, 43, 33, 0.40) 0%, rgba(15, 43, 33, 0.62) 55%, rgba(15, 43, 33, 0.85) 100%),
-    radial-gradient(120% 90% at 75% 10%, rgba(15, 43, 33, 0) 0%, rgba(15, 43, 33, 0.35) 70%);
+  background: var(--color-ink);
+  transform: translateY(101%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-@media (prefers-reduced-motion: reduce) {
-  .photo-bg::before {
-    animation: none;
-  }
+.btn-outline:hover {
+  color: var(--color-sand);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
 }
-
-/* Titre à reflet doré animé (balayage lumineux continu). */
-.title-shine {
-  background: linear-gradient(
-    100deg,
-    #f5eee0 0%,
-    #d4af56 28%,
-    #fff6d8 48%,
-    #d4af56 68%,
-    #f5eee0 100%
-  );
-  background-size: 220% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 6s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .title-shine {
-    animation: none;
-  }
+.btn-outline:hover::before {
+  transform: translateY(0);
 }
 
-/* Dégradé vert/crème animé (mesh d'ambiance). */
-.mesh-emerald {
-  background: linear-gradient(120deg, #0f2b21, #1a4f3a, #163f30, #1f6347);
-  background-size: 300% 300%;
+/* Contour sur fond sombre. */
+.btn-outline-invert {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  color: var(--color-mist);
+  box-shadow: inset 0 0 0 1px var(--rule-invert);
+  isolation: isolate;
 }
-
-/* Bandeau défilant (marquee) des disciplines. */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 32s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
-/* Conteneur centré */
-.container-x {
-  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
-}
-
-/* Carte de base */
-.card {
-  @apply rounded-2xl bg-white shadow-soft ring-1 ring-emerald-900/5;
-}
-
-/* Bouton primaire */
-.btn {
-  @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none;
-}
-.btn-primary {
-  @apply btn bg-emerald-600 text-sand-50 hover:bg-emerald-700 hover:-translate-y-0.5 shadow-soft;
-}
-.btn-gold {
-  @apply btn bg-gold-500 text-emerald-900 hover:bg-gold-400 hover:-translate-y-0.5 shadow-soft;
-}
-.btn-ghost {
-  @apply btn ring-1 ring-emerald-900/15 text-emerald-800 hover:bg-emerald-50;
-}
-
-/* Reflet lumineux qui balaie les boutons pleins au survol. */
-.btn-primary::after,
-.btn-gold::after {
+.btn-outline-invert::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    100deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.45) 50%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: transform 0.7s ease;
+  z-index: -1;
+  background: var(--color-mist);
+  transform: translateY(101%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-.btn-primary:hover::after,
-.btn-gold:hover::after {
-  transform: translateX(120%);
+.btn-outline-invert:hover {
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-mist);
+}
+.btn-outline-invert:hover::before {
+  transform: translateY(0);
 }
 
-/* Carte à liseré dégradé doré au survol. */
-.card-glow {
-  @apply relative rounded-2xl bg-white shadow-soft ring-1 ring-emerald-900/5 transition;
+/* Lien textuel : soulignement qui se déroule + flèche. */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 650;
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+  padding-block: 0.35rem;
+  background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.3s cubic-bezier(0.2, 0.7, 0.3, 1), color 0.2s ease;
 }
-.card-glow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(140deg, theme("colors.gold.400"), transparent 40%, theme("colors.emerald.400") 100%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+.link-arrow:hover,
+.link-arrow:focus-visible {
+  background-size: 100% 2px;
+  color: var(--color-terracotta-deep);
+}
+.link-arrow .arw {
+  transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.link-arrow:hover .arw {
+  transform: translateX(4px);
+}
+.on-dark .link-arrow {
+  color: var(--color-mist);
+  background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
+}
+.on-dark .link-arrow:hover,
+.on-dark .link-arrow:focus-visible {
+  color: var(--color-terracotta);
+}
+
+/* Étiquette (catégorie, statut) — rectangle net, pas de pilule. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+/* =============================================================
+   Motif géométrique — trame presque invisible, jamais orientaliste.
+   Grille de losanges construite à la CSS (aucun asset).
+   ============================================================= */
+.mesh-faint {
+  background-image: linear-gradient(
+      45deg,
+      var(--mesh-color, rgba(16, 27, 45, 0.055)) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--mesh-color, rgba(16, 27, 45, 0.055)) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--mesh-color, rgba(16, 27, 45, 0.055)) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--mesh-color, rgba(16, 27, 45, 0.055)) 75%
+    );
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+.mesh-invert {
+  --mesh-color: rgba(220, 234, 240, 0.05);
+}
+
+/* =============================================================
+   Photographies — cadrage architectural, découpes franches.
+   ============================================================= */
+.frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--color-night, #16263d);
+}
+.frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Léger déplacement de l'image au survol (jamais de zoom brutal). */
+.frame-shift img {
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.group:hover .frame-shift img {
+  transform: scale(1.035);
+}
+
+/* =============================================================
+   Révélation au défilement (IntersectionObserver, sans librairie).
+
+   L'état masqué n'est appliqué que si JavaScript est disponible : la
+   classe `.js` est posée sur <html> par un script en ligne, avant que le
+   corps de page ne soit analysé. Sans JS — ou si le script échoue — le
+   contenu s'affiche normalement, sans dépendre de l'animation.
+   ============================================================= */
+.js [data-reveal] {
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(16px);
+  transition: opacity 0.65s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.65s cubic-bezier(0.2, 0.7, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
 }
-.card-glow:hover::before {
+.js [data-reveal].is-in {
   opacity: 1;
+  transform: none;
 }
 
-/* Titre eyebrow */
-.eyebrow {
-  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600;
-}
-
-/* Cible d'animation GSAP : caché jusqu'à révélation (sans JS, reste visible) */
-.gsap-reveal {
-  will-change: transform, opacity;
-}
-
-/* Respect des préférences d'accessibilité : on coupe tout mouvement */
+/* =============================================================
+   Accessibilité — réduction des animations
+   ============================================================= */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
   *,
   *::before,
@@ -256,5 +383,15 @@ body {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* Masquer proprement la barre de défilement d'un rail horizontal. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

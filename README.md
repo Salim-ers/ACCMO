@@ -1,8 +1,10 @@
 # Grande Mosquée de Creil — Essalam (ACCMO)
 
-Refonte complète du site : **Next.js 14 (App Router) + TypeScript + Tailwind CSS + GSAP**.
-Design moderne, chaleureux et spirituel, responsive mobile-first, accessible, optimisé SEO,
-avec un **espace d'administration des annonces** sans toucher au code.
+Site de la Grande Mosquée de Creil : **Next.js 14 (App Router) + TypeScript + Tailwind CSS**.
+Aucune librairie d'animation, aucune dépendance 3D — tout est en CSS et en composants serveur.
+
+Identité : **« Le centre vivant de la communauté »** — bleu nuit minéral, sable lumineux,
+accent terre cuite, grille éditoriale à filets fins. Voir §3.
 
 ---
 
@@ -14,150 +16,183 @@ avec un **espace d'administration des annonces** sans toucher au code.
 ## 2. Installation & lancement
 
 ```bash
-# 1. Installer les dépendances
 npm install
 
-# 2. Créer le fichier d'environnement
+# Créer le fichier d'environnement
 cp .env.example .env.local
-#   puis ÉDITER .env.local et définir :
+#   puis ÉDITER .env.local :
 #   - ADMIN_PASSWORD  (mot de passe de l'espace admin)
-#   - SESSION_SECRET  (chaîne aléatoire ≥ 32 caractères)
-#   Générer un secret : openssl rand -hex 32
+#   - SESSION_SECRET  (chaîne aléatoire ≥ 32 caractères — openssl rand -hex 32)
 
-# 3. Lancer en développement
-npm run dev          # http://localhost:3000
-
-# 4. Build de production
-npm run build
-npm run start        # http://localhost:3000
-```
-
-> ℹ️ Le **premier build télécharge les polices** (Fraunces, Plus Jakarta Sans, Amiri)
-> via `next/font/google` : une connexion internet est nécessaire au build.
-
----
-
-## 3. Gérer les annonces (espace admin)
-
-1. Aller sur **`/admin`** (lien aussi en bas de page → « Espace administration »).
-2. Se connecter avec le mot de passe défini dans `ADMIN_PASSWORD`.
-3. Depuis le tableau de bord, vous pouvez :
-   - **Ajouter** une annonce (titre, contenu, date) ;
-   - **Modifier** une annonce existante ;
-   - **Supprimer** une annonce ;
-   - **Choisir une date** (sélecteur de date) ;
-   - **Mettre en avant** (« à la une ») ;
-   - **Publier / Dépublier** (brouillon non visible du public).
-
-Les annonces sont stockées dans **`data/announcements.json`**. Le site public
-n'affiche que les annonces **publiées** ; l'admin voit tout.
-
----
-
-## 4. Où modifier le contenu
-
-| Élément | Fichier |
-| --- | --- |
-| Liens (dons, mouton, inscriptions, visite virtuelle), navigation, services, événements | `lib/site.ts` |
-| Annonces | via `/admin` (ou `data/announcements.json`) |
-| Couleurs & typographie | `tailwind.config.ts` |
-| En-têtes de sécurité (CSP…) | `next.config.mjs` |
-
-**Tous les liens existants du site actuel sont préservés** dans `lib/site.ts` :
-don/cotisation Stripe, commande de mouton (kebchi), inscription Madrassah,
-**visite virtuelle 360°**, Facebook, Instagram.
-
----
-
-## 5. Mise en production
-
-### Option A — Hébergement Node persistant (recommandé tel quel)
-VPS, Render, Railway, Dokku, Docker, OVH… Le stockage des annonces en fichier
-JSON fonctionne directement.
-
-```bash
+npm run dev            # http://localhost:3000
 npm run build && npm run start
 ```
 
-### Option B — Vercel / Netlify (serverless)
-Le système de fichiers y est **en lecture seule** : l'écriture d'annonces
-échouerait. Basculez le stockage vers une base externe (l'interface admin ne
-change pas). La couche d'accès est isolée dans `lib/announcements.ts` :
-il suffit d'y remplacer `readAll`/`writeAll` par des appels à **Supabase**,
-**Vercel KV**, **Vercel Postgres** ou **Notion**. Exemple Supabase :
-
-```ts
-// lib/announcements.ts — remplacer readAll/writeAll
-import { createClient } from "@supabase/supabase-js";
-const db = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
-// readAll  -> const { data } = await db.from("announcements").select("*");
-// create   -> await db.from("announcements").insert(item);
-// update   -> await db.from("announcements").update(value).eq("id", id);
-// remove   -> await db.from("announcements").delete().eq("id", id);
-```
+> ℹ️ Le premier build télécharge les polices (**Plus Jakarta Sans**, **Noto Kufi Arabic**)
+> via `next/font/google` : une connexion internet est nécessaire au build. Elles sont
+> ensuite auto-hébergées.
 
 ---
 
-## 6. Sécurité
+## 3. Design system
+
+Les jetons sont définis deux fois, volontairement, et doivent rester synchronisés :
+`app/globals.css` (variables CSS, pour les composants sur mesure) et
+`tailwind.config.ts` (échelles de couleurs, pour les classes utilitaires).
+
+| Rôle                | Valeur    | Usage                                              |
+| ------------------- | --------- | -------------------------------------------------- |
+| Bleu nuit (`night-900`) | `#101b2d` | Identité principale, fonds sombres, texte fort   |
+| Bleu minéral (`night-600`) | `#294865` | Texte secondaire, filets                     |
+| Bleu brumeux (`night-100`) | `#dceaf0` | Fonds de sections claires                    |
+| Terre cuite (`terra-500`)  | `#c66f4e` | **Marqueurs et filets uniquement**           |
+| Terre cuite foncée (`terra-600`) | `#a85940` | **Dès qu'il y a du texte** (AA garanti) |
+| Sable (`sand-200`)  | `#f1e7d6` | Blocs d'appel, fonds chaleureux                     |
+| Blanc cassé         | `#faf8f3` | Surface générale du site                            |
+
+**Règle de contraste** : la terre cuite claire (`#c66f4e`) ne porte jamais de texte —
+le blanc dessus ne donne que 3,6:1. Tout panneau terracotta porteur de texte utilise
+`terra-600` (blanc dessus = 5:1). Idem pour les petits textes terracotta sur fond clair.
+
+Autres principes :
+
+- Angles courts (4 / 10 / 18 px), **jamais de capsule**, jamais d'ombre floue.
+- Filets 1 px (`--rule`) comme séparateur signature, plutôt que des cartes ombrées.
+- Titres expressifs par la **taille et la graisse** (`.title-xl/lg/md`), jamais par
+  un espacement artificiel des lettres.
+- Motif géométrique en CSS (`.mesh-faint`), à opacité très faible.
+- L'arabe (`.arabic`) est lisible et aligné, jamais décoratif.
+
+## 4. Horaires de prière
+
+Les horaires viennent du **calendrier officiel de la mosquée sur Mawaqit**
+(`https://mawaqit.net/fr/m/essalam-creil`). `lib/prayer.ts` lit l'objet `confData`
+de cette page **côté serveur** (cache 1 h) et en extrait le calendrier annuel, les
+délais d'iqama et l'heure de la Jumu'a. Aucune iframe n'est incrustée.
+
+- `getPrayerDay()` est appelé **une fois par rendu**, dans `app/(site)/layout.tsx`,
+  puis passé en props à l'en-tête, au pied de page et aux sections.
+- `serverMinutes` transporte l'heure de Paris du rendu serveur : le HTML initial
+  affiche déjà la bonne prochaine prière, sans écart d'hydratation.
+- `lib/usePrayerClock.ts` prend le relais côté client (tic de 20 s, fuseau
+  Europe/Paris quel que soit celui du visiteur) et recharge le calendrier via
+  `/api/prayer-times` au passage de minuit.
+- **Si la source est injoignable, aucun horaire n'est inventé** : l'interface
+  affiche un message explicite et renvoie vers Mawaqit.
+
+## 5. Gérer les annonces (espace admin)
+
+1. Aller sur **`/admin`** (lien discret en bas de page).
+2. Se connecter avec le mot de passe défini dans `ADMIN_PASSWORD`.
+3. Ajouter / modifier / supprimer une annonce, avec :
+   titre, contenu, date, **rubrique** (Informations pratiques, Enseignement,
+   Événements, Solidarité), photo, lien, « à la une », publication.
+
+La rubrique alimente les **filtres de l'agenda** côté public. Les annonces créées
+avant l'ajout des rubriques reçoivent « Informations pratiques » automatiquement.
+
+Stockage : **Vercel KV** en production (dès que `KV_REST_API_URL` / `KV_REST_API_TOKEN`
+sont présents), sinon `data/announcements.json` en local. Même interface dans les deux cas.
+
+## 6. Où modifier le contenu
+
+| Élément                                                                | Fichier                    |
+| ---------------------------------------------------------------------- | -------------------------- |
+| Adresse, contact, liens externes, navigation, raccourcis, chapitres, actions, pied de page | `lib/site.ts`  |
+| Photographies et leurs textes alternatifs                              | `lib/site.ts` (`PHOTOS`) + `public/photos/` |
+| Rubriques de l'agenda                                                  | `lib/categories.ts`        |
+| Annonces                                                               | `/admin`                   |
+| Couleurs, typographie, animations                                      | `tailwind.config.ts` + `app/globals.css` |
+| En-têtes de sécurité (CSP…)                                            | `next.config.mjs`          |
+
+**Aucune donnée inventée.** Les informations non confirmées par l'association sont
+`null` dans `lib/site.ts` (`SITE.phone`, `ACCESS.transport`, `ACCESS.doorsOpening`)
+et **rien ne s'affiche** tant qu'elles ne sont pas renseignées. Les mentions légales
+signalent explicitement « À compléter par l'association » pour le directeur de
+publication et le numéro RNA / SIRET.
+
+Tous les liens de l'ancien site sont préservés : don/cotisation Stripe, commande de
+mouton (kebchi), inscription Madrassah, visite virtuelle 360°, école Al Ghazali,
+Facebook, Instagram, Mawaqit.
+
+## 7. Structure du projet
+
+```
+app/
+  layout.tsx              Polices, métadonnées globales, drapeau « js »
+  globals.css             Jetons, boutons, filets, motif, révélations
+  (site)/                 Groupe de routes du site public
+    layout.tsx            En-tête + pied de page + JSON-LD + horaires partagés
+    page.tsx              Accueil (hero, horaires, raccourcis, agenda, école,
+                          360°, histoire, actions, don, localisation)
+    horaires/ annonces/ la-mosquee/ ecole/ visite-virtuelle/
+    contact/ soutenir/ mentions-legales/ confidentialite/
+  admin/                  Espace admin (hors habillage public)
+  api/                    Auth, CRUD annonces, réglages, upload, horaires
+  not-found.tsx  sitemap.ts  robots.ts
+components/
+  SiteHeader  PrayerStatusBar  PrayerTimeline  NextPrayerCard  HomeHero
+  CommunityShortcuts  EventsAgenda  SchoolFeature  VirtualTourSection
+  HeritageChapters  CommunityActions  DonationPanel  LocationSection
+  SiteFooter  FooterPrayerLine  MobileQuickBar  PageHeader  SectionHead
+  RevealEngine  Icons  AdminDashboard
+lib/
+  site.ts (configuration centrale)  prayer.ts (Mawaqit)  usePrayerClock.ts
+  categories.ts  format.ts  announcements.ts  settings.ts  auth.ts
+```
+
+## 8. Pages intérieures
+
+Quatre types d'en-têtes (`components/PageHeader.tsx`) pour qu'aucune page ne
+ressemble au même gabarit avec un titre différent :
+
+- `EditorialHeader` — pages de fond (La mosquée, École) ;
+- `FunctionalHeader` — pages outils, fond bleu nuit (Horaires, Contact, Soutenir, 360°) ;
+- `CompactHeader` — pages légales ;
+- `PhotoHeader` — usage ponctuel, bandeau photographique (Annonces).
+
+## 9. Sécurité
 
 - Espace admin protégé par mot de passe (`ADMIN_PASSWORD`), comparaison à **temps constant**.
-- Session = **cookie httpOnly signé HMAC** (`SESSION_SECRET`), `Secure` en production, `SameSite=Lax`, expiration 8 h.
+- Session = **cookie httpOnly signé HMAC** (`SESSION_SECRET`), `Secure` en production,
+  `SameSite=Lax`, expiration 8 h.
 - Toutes les routes de mutation (`POST`/`PUT`/`DELETE`) vérifient l'authentification.
-- Entrées **validées et nettoyées** côté serveur (longueurs, format de date).
-- **En-têtes HTTP durcis** dans `next.config.mjs` : Content-Security-Policy, X-Frame-Options,
+- Entrées **validées et nettoyées** côté serveur (longueurs, format de date, URL, rubrique).
+- **En-têtes HTTP durcis** dans `next.config.mjs` : CSP, X-Frame-Options,
   X-Content-Type-Options, Referrer-Policy, Permissions-Policy, HSTS.
 - `/admin` et `/api` exclus de l'indexation (`robots.ts` + `noindex`).
 
 > ⚠️ Changez impérativement `ADMIN_PASSWORD` et `SESSION_SECRET` avant la mise en ligne.
 
----
+## 10. SEO
 
-## 7. SEO
+- Titre et description **uniques par page**, canonical, OpenGraph et Twitter Card.
+- **JSON-LD** : `Mosque` (adresse réelle, géolocalisation, équipements) +
+  `NGO/Organization` (ACCMO) + `WebSite`, liés entre eux par `@id`.
+- `sitemap.xml` (dix pages, priorités et fréquences) et `robots.txt` générés.
+- Hiérarchie `h1 → h2 → h3` vérifiée sur chaque page, un seul `h1` par page.
+- Ancres de l'ancienne page unique conservées (`#horaires`, `#annonces`, `#contact`,
+  `#dons`, `#visite-virtuelle`, `#apropos`) : les liens déjà partagés fonctionnent.
 
-- Métadonnées complètes (title/description, **OpenGraph**, Twitter Card, canonical).
-- **Données structurées JSON-LD** de type `Mosque` (nom, adresse, géolocalisation, réseaux).
-- **`sitemap.xml`** et **`robots.txt`** générés automatiquement.
-- HTML sémantique (`header`, `main`, `nav`, `section`, `article`, `footer`), `lang="fr"`.
-- Polices avec `display: swap`, images optimisées via `next/image`.
+## 11. Accessibilité
 
-## 8. Accessibilité
+- Lien d'évitement « Aller au contenu principal ».
+- Menu mobile plein écran : `aria-expanded`, fermeture à **Échap**, **piège au clavier
+  maîtrisé** (Tab cyclique), focus rendu au bouton à la fermeture.
+- Focus visible franc (contour terre cuite, contour brumeux sur fond sombre).
+- Cibles tactiles ≥ 44 px, barre d'accès rapide mobile à 58 px avec libellés visibles.
+- Contrastes ≥ 4,5:1 pour le texte courant (voir §3).
+- **`prefers-reduced-motion`** respecté : révélations, compte à rebours clignotant et
+  déplacement de la visite 360° sont neutralisés.
+- **Sans JavaScript, tout le contenu reste visible** : l'état masqué des révélations
+  est conditionné à la classe `.js` posée par un script en ligne.
 
-- Lien d'évitement « Aller au contenu ».
-- Navigation clavier complète, focus visible, `aria-*` sur menu/boutons/sections.
-- Menu mobile fermable au clavier (Échap) et au clic.
-- **`prefers-reduced-motion`** respecté : toutes les animations GSAP/CSS sont désactivées.
-- Contrastes conformes (vert profond / sable / texte encre).
+## 12. Performance
 
-## 9. Performance
-
-- Composants serveur par défaut ; client uniquement là où nécessaire (GSAP, formulaires).
-- GSAP chargé côté client avec nettoyage automatique (`useGSAP`).
-- Iframes (visite virtuelle, carte) en **lazy-load** ; la visite 360° ne se charge qu'au clic.
-- Build statique pour les pages publiques.
-
----
-
-## 10. Structure du projet
-
-```
-app/
-  layout.tsx          Polices, SEO, JSON-LD
-  page.tsx            Page d'accueil (assemblage des sections)
-  globals.css         Styles, motifs islamiques, reduced-motion
-  sitemap.ts / robots.ts
-  admin/              Espace admin (login + tableau de bord)
-  api/                Auth + CRUD annonces
-components/           Header, Hero, PrayerTimes, Announcements, Services,
-                      Events, Donate, VirtualTour, Contact, Footer, Reveal…
-lib/                  site.ts (config/liens), announcements.ts, auth.ts
-data/announcements.json
-```
-
-## 11. Animations GSAP
-
-- **Hero** : timeline d'entrée (arche/mihrab, bismillah, titres, CTA, statistiques) + flottement.
-- **Sections** : révélation au scroll avec `ScrollTrigger` (composant `Reveal`, effet *stagger*).
-- **Cartes** : apparition échelonnée + micro-interactions au survol.
-- **Menu mobile** : ouverture/fermeture animée, liens en cascade.
-
-Toutes les animations sont **coupées** si l'utilisateur a activé « réduire les animations ».
+- Composants **serveur par défaut** ; îlots clients réduits à l'horloge des prières,
+  aux filtres de l'agenda, au menu et à la visite 360°.
+- Zéro librairie d'animation (GSAP, Framer Motion et Three.js ont été retirés) :
+  environ **87 kB de JS partagé**, 111 kB sur l'accueil.
+- Un seul appel à Mawaqit par rendu, mis en cache 1 h ; pages régénérées toutes les 60 s.
+- Visite 360° et carte chargées **à la demande** ; photo du hero prioritaire, le reste différé.
+- Aucune police décorative : deux familles, `display: swap`, auto-hébergées.

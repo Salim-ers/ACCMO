@@ -15,7 +15,9 @@ const nextConfig = {
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https:",
       "media-src 'self' https:",
-      "frame-src https://accmo.org https://www.google.com https://maps.google.com https://mawaqit.net",
+      // accmo.org : visite virtuelle 360° · google : plan d'accès.
+      // Mawaqit n'est plus incrusté : ses horaires sont lus côté serveur.
+      "frame-src https://accmo.org https://www.google.com https://maps.google.com",
       "connect-src 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",

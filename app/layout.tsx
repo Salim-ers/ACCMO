@@ -1,50 +1,32 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, Amiri, Bricolage_Grotesque, Unbounded, Cormorant_Garamond } from "next/font/google";
-import { SITE } from "@/lib/site";
+import { Plus_Jakarta_Sans, Noto_Kufi_Arabic } from "next/font/google";
+import { LOGO, SITE } from "@/lib/site";
+import RevealEngine from "@/components/RevealEngine";
 import "./globals.css";
 
-const display = Fraunces({
+// Racine minimale : polices, métadonnées globales et moteur de révélation.
+// L'habillage public (en-tête, pied de page, barre d'accès rapide) vit dans
+// le groupe de routes `(site)`, afin que l'espace d'administration conserve
+// son propre cadre.
+
+// Deux familles seulement : une sans-serif contemporaine pour le français,
+// une kufique pour l'arabe. Rien de serif éditorial, rien de décoratif.
+const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
   display: "swap",
 });
-// Police d'affichage forte et moderne pour les grands titres.
-const heading = Bricolage_Grotesque({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-heading",
-  display: "swap",
-});
-// Police « haut de gamme » géométrique pour les méga-titres (hero, preloader).
-const mega = Unbounded({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-mega",
-  display: "swap",
-});
-// Police luxe (serif élégant) pour le préchargeur et accents premium.
-const lux = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-lux",
-  display: "swap",
-});
-const body = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-body",
-  display: "swap",
-});
-const arabic = Amiri({
+
+const arabic = Noto_Kufi_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "700"],
   variable: "--font-arabic",
   display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#1a4f3a",
+  themeColor: "#101b2d",
   width: "device-width",
   initialScale: 1,
 };
@@ -53,18 +35,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
     default: "Grande Mosquée de Creil — Essalam (ACCMO)",
-    template: "%s · Mosquée de Creil",
+    template: "%s · Mosquée Essalam de Creil",
   },
   description: SITE.description,
+  applicationName: SITE.name,
   keywords: [
     "mosquée Creil",
     "Essalam",
     "ACCMO",
-    "horaires prière Creil",
+    "horaires de prière Creil",
+    "Jumu'a Creil",
     "école coranique Creil",
-    "islam Oise",
+    "Al Ghazali",
+    "mosquée Oise",
   ],
-  alternates: { canonical: "/" },
+  authors: [{ name: SITE.legalName, url: SITE.url }],
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -72,40 +57,43 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: "Grande Mosquée de Creil — Essalam (ACCMO)",
     description: SITE.description,
+    images: [
+      {
+        url: "/photos/mosquee-facade.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Façade de la Grande Mosquée de Creil",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Grande Mosquée de Creil — Essalam (ACCMO)",
     description: SITE.description,
+    images: ["/photos/mosquee-facade.jpg"],
   },
+  icons: { icon: LOGO, apple: LOGO },
   robots: { index: true, follow: true },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Mosque",
-  name: SITE.name,
-  alternateName: SITE.shortName,
-  url: SITE.url,
-  description: SITE.description,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: SITE.address.city,
-    postalCode: SITE.address.zip,
-    addressCountry: "FR",
-  },
-  geo: { "@type": "GeoCoordinates", latitude: SITE.geo.lat, longitude: SITE.geo.lng },
-  sameAs: [SITE.social.facebook, SITE.social.instagram],
+  formatDetection: { telephone: false },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${heading.variable} ${mega.variable} ${lux.variable} ${body.variable} ${arabic.variable}`}>
-      <body>
+    <html lang="fr" className={`${sans.variable} ${arabic.variable}`}>
+      <head>
+        {/*
+          Marque la page comme « JavaScript disponible » avant l'analyse du
+          corps : c'est ce drapeau qui autorise l'état masqué des animations
+          de révélation. Sans lui, tout le contenu reste visible.
+        */}
         <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
         />
+      </head>
+      <body>
+        <RevealEngine />
         {children}
       </body>
     </html>

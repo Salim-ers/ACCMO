@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ROUTES, SITE } from "@/lib/site";
 import { Icon } from "@/components/Icons";
 
 export default function LoginPage() {
@@ -28,49 +30,60 @@ export default function LoginPage() {
         setError(data.error || "Connexion impossible.");
       }
     } catch {
-      setError("Erreur réseau.");
+      setError("Connexion au serveur impossible. Vérifiez votre réseau.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-5">
-      <div className="card w-full max-w-sm p-8">
-        <div className="mb-6 flex flex-col items-center gap-2 text-center">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-sand-50">
-            <Icon.moon width={22} height={22} />
-          </span>
-          <h1 className="font-display text-2xl font-semibold text-emerald-900">
-            Espace administration
-          </h1>
-          <p className="text-sm text-emerald-800/60">Gestion des annonces de la mosquée</p>
-        </div>
+    <main className="flex min-h-screen flex-col justify-center bg-[var(--color-surface)] px-5 py-12">
+      <div className="mx-auto w-full max-w-sm">
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-terra-600">
+          {SITE.shortName} · {SITE.association}
+        </p>
+        <h1 className="title-md mt-3 text-night-900">Espace d’administration</h1>
+        <p className="mt-2 text-[14.5px] leading-relaxed text-night-600">
+          Gestion des annonces publiées sur le site de la mosquée.
+        </p>
 
-        <form onSubmit={submit} className="flex flex-col gap-4">
-          <div>
-            <label htmlFor="pwd" className="mb-1.5 block text-sm font-medium text-emerald-900">
-              Mot de passe
-            </label>
-            <input
-              id="pwd"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-xl border border-emerald-900/15 bg-sand-50 px-4 py-3 text-emerald-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
-            />
-          </div>
+        <form onSubmit={submit} className="mt-8 border-t border-[var(--rule-strong)] pt-6">
+          <label
+            htmlFor="pwd"
+            className="mb-1.5 block text-[12px] font-bold uppercase tracking-[0.1em] text-night-600"
+          >
+            Mot de passe
+          </label>
+          <input
+            id="pwd"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            aria-describedby={error ? "login-error" : undefined}
+            className="w-full border border-[var(--rule-strong)] bg-white px-4 py-3 text-[16px] text-night-900 outline-none transition-colors focus:border-night-900"
+          />
+
           {error && (
-            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p
+              id="login-error"
+              role="alert"
+              className="mt-3 border-l-2 border-terra-600 bg-terra-100 px-4 py-3 text-[14px] text-terra-700"
+            >
               {error}
             </p>
           )}
-          <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
+
+          <button type="submit" disabled={loading} className="btn btn-primary mt-5 w-full disabled:opacity-60">
             {loading ? "Connexion…" : "Se connecter"}
+            <Icon.arrow width={16} height={16} className="arw" />
           </button>
         </form>
+
+        <Link href={ROUTES.home} className="link-arrow mt-8 inline-flex">
+          Retour au site
+        </Link>
       </div>
     </main>
   );

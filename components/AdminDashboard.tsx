@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Announcement } from "@/lib/announcements";
+import type { Announcement, StoreStatus } from "@/lib/announcements";
 import { CATEGORIES, DEFAULT_CATEGORY, type Category } from "@/lib/categories";
 import { ROUTES } from "@/lib/site";
 
@@ -44,11 +44,18 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [aidEnabled, setAidEnabled] = useState(false);
+  const [store, setStore] = useState<StoreStatus | null>(null);
 
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => (r.ok ? r.json() : null))
       .then((s) => setAidEnabled(!!s?.aidEnabled))
+      .catch(() => {});
+
+    // État réel du stockage : prévenir avant un enregistrement perdu.
+    fetch("/api/storage-status")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((s: StoreStatus | null) => setStore(s))
       .catch(() => {});
   }, []);
 
@@ -204,6 +211,23 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
           </button>
         </div>
       </div>
+
+      {/* Alerte de stockage — n'apparaît que si quelque chose cloche. */}
+      {store && !store.ok && (
+        <div
+          role="alert"
+          className="mb-8 border-l-4 border-terra-600 bg-terra-100 p-5"
+        >
+          <p className="text-[15px] font-extrabold tracking-tight text-terra-700">
+            Les annonces ne peuvent pas être enregistrées
+          </p>
+          <p className="mt-1.5 text-[14px] leading-relaxed text-night-800">{store.hint}</p>
+          <p className="mt-2 text-[13px] text-night-600">
+            Le site public reste en ligne et affiche les rendez-vous récurrents ;
+            seules les annonces gérées depuis cette page sont concernées.
+          </p>
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
         <div className="flex flex-col gap-6">

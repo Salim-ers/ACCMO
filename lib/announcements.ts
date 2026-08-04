@@ -39,6 +39,70 @@ export function hasPersistentStore(): boolean {
   return useKV;
 }
 
+// --- Diagnostic du stockage -------------------------------------------------
+
+export type StoreStatus = {
+  /** `kv` : store distant configuré · `file` : fichier JSON local. */
+  mode: "kv" | "file";
+  /** Vrai si une lecture vient d'aboutir. */
+  ok: boolean;
+  /** Vrai quand le site tourne sur Vercel (le fichier local n'y persiste pas). */
+  serverless: boolean;
+  /** Hôte du store, pour identifier une URL obsolète d'un coup d'œil. */
+  host: string | null;
+  /** Message court expliquant quoi faire, si quelque chose cloche. */
+  hint: string | null;
+};
+
+/**
+ * Vérifie que le stockage répond vraiment, au lieu de se contenter de
+ * constater que les variables d'environnement existent. Utilisé par
+ * l'espace d'administration pour prévenir AVANT une tentative
+ * d'enregistrement plutôt qu'après son échec.
+ */
+export async function checkStore(): Promise<StoreStatus> {
+  const serverless = !!process.env.VERCEL;
+  let host: string | null = null;
+  try {
+    host = KV_URL ? new URL(KV_URL).host : null;
+  } catch {
+    host = KV_URL ?? null;
+  }
+
+  if (useKV) {
+    try {
+      const c = await kvClient();
+      await c.get(KV_KEY);
+      return { mode: "kv", ok: true, serverless, host, hint: null };
+    } catch {
+      return {
+        mode: "kv",
+        ok: false,
+        serverless,
+        host,
+        hint: `La base « ${host ?? "inconnue"} » ne répond pas : elle a probablement été supprimée. Dans Vercel : Storage → créez un store KV / Upstash et reliez-le au projet, puis redéployez. Les annonces existantes ne sont pas récupérables si la base a été détruite.`,
+      };
+    }
+  }
+
+  // Pas de store distant : fichier local. Correct en développement,
+  // inopérant sur Vercel où le système de fichiers est en lecture seule.
+  try {
+    await fs.readFile(DATA_FILE, "utf-8");
+  } catch {
+    // Un fichier absent n'est pas une anomalie : il est créé au premier ajout.
+  }
+  return {
+    mode: "file",
+    ok: !serverless,
+    serverless,
+    host: null,
+    hint: serverless
+      ? "Aucun store persistant n'est configuré et le système de fichiers est en lecture seule sur Vercel : les annonces ne pourront pas être enregistrées. Créez un store KV / Upstash dans Storage, puis redéployez."
+      : null,
+  };
+}
+
 async function kvClient() {
   const { createClient } = await import("@vercel/kv");
   return createClient({ url: KV_URL as string, token: KV_TOKEN as string });

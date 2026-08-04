@@ -10,6 +10,11 @@ function storageError() {
   if (process.env.VERCEL && !hasPersistentStore()) {
     return "Stockage non configuré. Sur Vercel : Storage → Create → KV (puis redéployez).";
   }
+  if (hasPersistentStore()) {
+    // Les variables sont bien là : le store lui-même ne répond pas
+    // (base supprimée, jeton révoqué, URL obsolète).
+    return "Enregistrement impossible : la base de données liée au projet ne répond pas. Vérifiez le store KV / Upstash dans les réglages Vercel.";
+  }
   return "Impossible d'enregistrer. Réessayez.";
 }
 

@@ -53,11 +53,25 @@ function withDefaults(items: unknown): Announcement[] {
   }));
 }
 
+/**
+ * Lecture des annonces — ne lève jamais.
+ *
+ * Les annonces sont rendues côté serveur (bon pour le référencement et la
+ * performance) : un store injoignable ne doit donc pas faire échouer un
+ * rendu, ni le build. Dans ce cas on renvoie une liste vide et l'agenda
+ * affiche son état « aucune annonce », le reste du site restant intact.
+ * L'écriture, elle, continue de lever : l'administrateur doit savoir
+ * immédiatement que son enregistrement n'est pas passé.
+ */
 async function readAll(): Promise<Announcement[]> {
   if (useKV) {
-    const c = await kvClient();
-    const data = await c.get<Announcement[]>(KV_KEY);
-    return withDefaults(data);
+    try {
+      const c = await kvClient();
+      return withDefaults(await c.get<Announcement[]>(KV_KEY));
+    } catch (e) {
+      console.error("Lecture des annonces impossible (store KV injoignable) :", e);
+      return [];
+    }
   }
   try {
     const raw = await fs.readFile(DATA_FILE, "utf-8");

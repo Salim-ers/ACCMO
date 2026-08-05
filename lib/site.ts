@@ -272,7 +272,7 @@ export const ACTIONS: { num: string; verb: string; text: string }[] = [
 export const PHOTOS = {
   facade: {
     src: "/photos/mosquee-facade.jpg",
-    alt: "Façade et minaret de la Grande Mosquée de Creil vus depuis la rue",
+    alt: "La Grande Mosquée de Creil vue depuis sa cour : la salle de prière et son minaret",
   },
   salle: {
     src: "/photos/mosquee-salle.jpg",

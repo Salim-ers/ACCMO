@@ -57,12 +57,12 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: "Grande Mosquée de Creil — Essalam (ACCMO)",
     description: SITE.description,
+    // Pas de dimensions déclarées : la photographie est un cliché 4:3 et
+    // annoncer un 1200×630 inexact induirait les aperçus en erreur.
     images: [
       {
         url: "/photos/mosquee-facade.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Façade de la Grande Mosquée de Creil",
+        alt: "La Grande Mosquée de Creil et son minaret",
       },
     ],
   },

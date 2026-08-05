@@ -17,12 +17,6 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
       className="relative overflow-hidden bg-[var(--color-surface)]"
       aria-labelledby="hero-title"
     >
-      {/* Trame géométrique presque invisible, cantonnée au quart droit. */}
-      <div
-        className="mesh-faint pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] lg:block"
-        aria-hidden
-      />
-
       <div className="shell relative grid items-center gap-12 pb-16 pt-12 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:pb-24 lg:pt-20">
         {/* ================= Discours ================= */}
         <div>
@@ -110,6 +104,13 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
 
           {/* Photographie verticale — cadrage architectural, découpe franche. */}
           <div className="frame aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5]">
+            {/*
+              La source est un cliché 4:3 en paysage, le cadre du hero est
+              vertical : object-cover rogne donc sur la largeur. Le point
+              focal est décalé vers la droite pour garder le minaret dans
+              le champ — c'est lui qui donne la verticale architecturale.
+              Ajuster ce pourcentage si la photo est recadrée un jour.
+            */}
             <Image
               src={PHOTOS.facade.src}
               alt={PHOTOS.facade.alt}
@@ -117,7 +118,7 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
               priority
               quality={82}
               sizes="(max-width: 1023px) 100vw, 45vw"
-              className="object-cover object-[center_38%]"
+              className="object-cover object-[72%_center]"
             />
           </div>
 

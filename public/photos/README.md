@@ -7,6 +7,13 @@ si tu changes un fichier ici, mets à jour ce seul objet.
 | Clé         | Fichier attendu           | Où elle apparaît                                                        |
 | ----------- | ------------------------- | ----------------------------------------------------------------------- |
 | `facade`    | `mosquee-facade.jpg`      | Hero (photo verticale), en-têtes photographiques, image Open Graph        |
+
+> **Remplacer la photo du hero** : écrase simplement `mosquee-facade.jpg`
+> (même nom, même extension `.jpg`) — aucune modification de code n'est
+> nécessaire, les trois emplacements ci-dessus suivent. La photo est un
+> cliché 4:3 recadré en vertical dans le hero : le point focal est réglé
+> par `object-[72%_center]` dans `components/HomeHero.tsx`, à ajuster si
+> le sujet principal n'est plus sur la droite du cadre.
 | `salle`     | `mosquee-salle.jpg`       | Vignette carrée du hero, aperçu de la visite 360°, raccourci « Visiter »  |
 | `interieur` | `mosquee-interieur.png`   | Section école, en-tête de la page Annonces, raccourci « École Al Ghazali » |
 

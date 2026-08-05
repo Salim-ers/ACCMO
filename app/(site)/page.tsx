@@ -35,14 +35,35 @@ export default async function HomePage() {
 
   return (
     <main id="contenu">
-      {/* 01 — Hero asymétrique */}
+      {/* Hero asymétrique — sans marqueur numéroté */}
       <HomeHero prayerDay={prayerDay} />
 
-      {/* 02 — Horaires : l'information la plus consultée, juste après le hero */}
-      <section id="horaires" className="section-tight bg-sand-100" aria-labelledby="h-horaires">
+      {/* 01 — Vie de la mosquée : mise au premier plan, avant les horaires.
+             La prochaine prière reste accessible plus haut, dans la barre
+             d'information et dans l'encart du hero. */}
+      <section id="annonces" className="section-tight bg-sand-100" aria-labelledby="h-agenda">
         <div className="shell">
           <SectionHead
             num="01"
+            kicker="Vie de la mosquée"
+            title={<span id="h-agenda">Annonces et rendez-vous</span>}
+            intro="Ce qui se passe à Essalam : informations de l’association, enseignement, événements et actions solidaires."
+            action={
+              <Link href={ROUTES.annonces} className="btn btn-outline">
+                Tout l’agenda
+                <Icon.arrow width={16} height={16} className="arw" />
+              </Link>
+            }
+          />
+          <EventsAgenda items={announcements} featuredId={featured?.id} limit={5} />
+        </div>
+      </section>
+
+      {/* 02 — Horaires du jour */}
+      <section id="horaires" className="section-tight bg-night-100" aria-labelledby="h-horaires">
+        <div className="shell">
+          <SectionHead
+            num="02"
             kicker="Prier à Essalam"
             title={<span id="h-horaires">Les horaires du jour</span>}
             intro="La journée de la mosquée, du Fajr à la ‘Icha, tenue à jour depuis le calendrier officiel de l’association."
@@ -61,7 +82,7 @@ export default async function HomePage() {
       <section className="section" aria-labelledby="h-demarches">
         <div className="shell">
           <SectionHead
-            num="02"
+            num="03"
             kicker="Accès rapides"
             title={<span id="h-demarches">Que venez-vous faire aujourd’hui&nbsp;?</span>}
             intro="Les démarches les plus demandées, accessibles en un geste."
@@ -99,27 +120,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 04 — Vie de la mosquée */}
-      <section id="annonces" className="section bg-sand-100" aria-labelledby="h-agenda">
-        <div className="shell">
-          <SectionHead
-            num="03"
-            kicker="Vie de la mosquée"
-            title={<span id="h-agenda">Annonces et rendez-vous</span>}
-            intro="Ce qui se passe à Essalam : informations de l’association, enseignement, événements et actions solidaires."
-            action={
-              <Link href={ROUTES.annonces} className="btn btn-outline">
-                Tout l’agenda
-                <Icon.arrow width={16} height={16} className="arw" />
-              </Link>
-            }
-          />
-          <EventsAgenda items={announcements} featuredId={featured?.id} limit={5} />
-        </div>
-      </section>
-
-      {/* 05 — École Al Ghazali */}
-      <section id="ecole" className="section bg-night-100" aria-labelledby="h-ecole">
+      {/* 04 — École Al Ghazali */}
+      <section id="ecole" className="section bg-sand-100" aria-labelledby="h-ecole">
         <div className="shell">
           <SectionHead
             num="04"
@@ -131,7 +133,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 06 — Visite virtuelle immersive */}
+      {/* 05 — Visite virtuelle immersive */}
       <section
         id="visite-virtuelle"
         className="on-dark section bg-night-900"
@@ -149,7 +151,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 07 — Histoire et mission.
+      {/* 06 — Histoire et mission.
           `apropos` : ancre héritée de l'ancienne page unique, conservée pour
           que les liens déjà partagés continuent d'atterrir au bon endroit. */}
       <span id="apropos" className="sr-only" aria-hidden />
@@ -171,7 +173,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 08 — Solidarité et services */}
+      {/* 07 — Solidarité et services */}
       <section id="actions" className="on-dark section bg-night-900" aria-labelledby="h-actions">
         <div className="shell">
           <SectionHead
@@ -184,7 +186,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 09 — Don et cotisation */}
+      {/* 08 — Don et cotisation */}
       <section id="dons" className="section bg-sand-100" aria-labelledby="h-dons">
         <div className="shell">
           <p className="section-marker border-t border-[var(--rule)] pt-6" data-reveal>
@@ -214,7 +216,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 10 — Localisation */}
+      {/* 09 — Localisation */}
       <section id="contact" className="section" aria-labelledby="h-contact">
         <div className="shell">
           <SectionHead

@@ -18,8 +18,10 @@ import { Icon } from "@/components/Icons";
 export default function SiteFooter({ prayerDay }: { prayerDay: PrayerDay | null }) {
   const year = new Date().getFullYear();
 
+  // Aplat de bleu nuit franc : aucune trame de fond ici. La respiration
+  // vient des filets et de l'espacement, pas d'une texture.
   return (
-    <footer className="on-dark mesh-invert mesh-faint bg-night-950 text-night-100">
+    <footer className="on-dark bg-night-900 text-night-100">
       {/* ---- Phrase d'identité ---- */}
       <div className="shell border-b border-[var(--rule-invert)] py-14 sm:py-20">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">

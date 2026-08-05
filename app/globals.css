@@ -296,31 +296,9 @@ body {
   line-height: 1.35;
 }
 
-/* =============================================================
-   Motif géométrique — trame presque invisible, jamais orientaliste.
-   Grille de losanges construite à la CSS (aucun asset).
-   ============================================================= */
-.mesh-faint {
-  background-image: linear-gradient(
-      45deg,
-      var(--mesh-color, rgba(16, 27, 45, 0.055)) 25%,
-      transparent 25%,
-      transparent 75%,
-      var(--mesh-color, rgba(16, 27, 45, 0.055)) 75%
-    ),
-    linear-gradient(
-      45deg,
-      var(--mesh-color, rgba(16, 27, 45, 0.055)) 25%,
-      transparent 25%,
-      transparent 75%,
-      var(--mesh-color, rgba(16, 27, 45, 0.055)) 75%
-    );
-  background-size: 28px 28px;
-  background-position: 0 0, 14px 14px;
-}
-.mesh-invert {
-  --mesh-color: rgba(220, 234, 240, 0.05);
-}
+/* Aucune trame de fond sur ce site : les respirations viennent des
+   filets, des aplats et de l'espacement. La grille géométrique qui
+   existait ici a été retirée, elle lisait comme un quadrillage. */
 
 /* =============================================================
    Photographies — cadrage architectural, découpes franches.

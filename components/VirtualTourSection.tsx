@@ -50,10 +50,9 @@ export default function VirtualTourSection() {
               className="object-cover opacity-60 transition-transform duration-500 ease-out"
               style={{ transform: `translateX(${shift}px) scale(1.06)` }}
             />
-            <div
-              className="mesh-invert mesh-faint absolute inset-0 bg-night-950/45"
-              aria-hidden
-            />
+            {/* Voile bleu nuit uni : il assure le contraste du titre et du
+                bouton par-dessus la photographie, sans aucune texture. */}
+            <div className="absolute inset-0 bg-night-950/55" aria-hidden />
 
             <div className="on-dark absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-sand-50">
               <span className="flex items-center gap-2.5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-terra-300">

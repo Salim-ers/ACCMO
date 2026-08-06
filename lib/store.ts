@@ -34,8 +34,13 @@ const KV = resolveKvCredentials();
 // jeton. On ne renseigne donc `token` que lorsqu'on en possède réellement un.
 const BLOB_TOKEN =
   process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_READ_WRITE_TOKEN || null;
-const BLOB_OIDC = !!(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
-const BLOB_AVAILABLE = !!BLOB_TOKEN || BLOB_OIDC;
+const BLOB_STORE_ID = process.env.BLOB_STORE_ID || null;
+
+// La présence d'un store relié suffit à choisir ce support : c'est une
+// donnée de configuration. Que l'OIDC soit effectivement activé relève,
+// lui, du diagnostic — mieux vaut un message précis qu'un repli silencieux
+// sur un support qui n'écrit rien.
+const BLOB_AVAILABLE = !!BLOB_TOKEN || !!BLOB_STORE_ID;
 
 /** Options d'authentification à passer à @vercel/blob. */
 function blobAuth(): { token?: string } {
@@ -174,7 +179,25 @@ export type StoreStatus = {
   label: string;
   /** Message expliquant quoi faire, si quelque chose cloche. */
   hint: string | null;
+  /**
+   * Variables de configuration réellement vues par le serveur (présence
+   * seulement, jamais les valeurs) et version déployée. Sans cela, il est
+   * impossible de distinguer « mal configuré » de « déploiement pas à jour ».
+   */
+  diagnostic: Record<string, string>;
 };
+
+function diagnostic(): Record<string, string> {
+  const oui = (v: unknown) => (v ? "présente" : "absente");
+  return {
+    BLOB_STORE_ID: oui(BLOB_STORE_ID),
+    VERCEL_OIDC_TOKEN: oui(process.env.VERCEL_OIDC_TOKEN),
+    BLOB_READ_WRITE_TOKEN: oui(BLOB_TOKEN),
+    "Identifiants Redis": oui(KV),
+    SESSION_SECRET: oui(process.env.SESSION_SECRET),
+    "Version déployée": (process.env.VERCEL_GIT_COMMIT_SHA || "locale").slice(0, 7),
+  };
+}
 
 export async function probeStore(key: string): Promise<StoreStatus> {
   const mode = storeMode();
@@ -185,13 +208,14 @@ export async function probeStore(key: string): Promise<StoreStatus> {
     try {
       const c = await kvClient();
       await c.get(key);
-      return { mode, ok: true, serverless, label: `Base Redis (${host})`, hint: null };
+      return { mode, ok: true, serverless, label: `Base Redis (${host})`, hint: null, diagnostic: diagnostic() };
     } catch {
       return {
         mode,
         ok: false,
         serverless,
         label: `Base Redis (${host})`,
+        diagnostic: diagnostic(),
         hint: `La base « ${host} » ne répond pas. Sur le plan gratuit Upstash, une base inutilisée est archivée et son point d'accès retiré. Deux issues : la restaurer depuis la console Upstash, ou supprimer les variables KV_REST_API_URL et KV_REST_API_TOKEN dans Vercel — le stockage bascule alors automatiquement sur le Blob Store du projet.`,
       };
     }
@@ -205,21 +229,37 @@ export async function probeStore(key: string): Promise<StoreStatus> {
         ok: false,
         serverless,
         label,
+        diagnostic: diagnostic(),
         hint: "La variable SESSION_SECRET est absente : elle sert à rendre le nom du fichier de données indevinable. Définissez-la dans Vercel, puis redéployez.",
       };
     }
+    // Sans jeton explicite, l'authentification repose sur l'identité du
+    // déploiement : elle exige que « Secure Backend Access (OIDC) » soit
+    // activé sur le projet, faute de quoi Vercel n'injecte pas de jeton.
+    if (!BLOB_TOKEN && !process.env.VERCEL_OIDC_TOKEN) {
+      return {
+        mode,
+        ok: false,
+        serverless,
+        label,
+        diagnostic: diagnostic(),
+        hint: "Le Blob Store est relié (BLOB_STORE_ID présente) mais Vercel n'injecte aucun jeton d'identité : dans les réglages du projet, section Security, activez « Secure Backend Access (OIDC) », puis redéployez. À défaut, ajoutez un jeton BLOB_READ_WRITE_TOKEN.",
+      };
+    }
+
     try {
       await blobRead(key);
-      return { mode, ok: true, serverless, label, hint: null };
+      return { mode, ok: true, serverless, label, hint: null, diagnostic: diagnostic() };
     } catch (e) {
       return {
         mode,
         ok: false,
         serverless,
         label,
+        diagnostic: diagnostic(),
         hint: `Le Blob Store ne répond pas (${
           e instanceof Error ? e.message : "cause inconnue"
-        }). Vérifiez que le store est bien relié au projet — la variable BLOB_STORE_ID doit être présente — puis redéployez.`,
+        }). Vérifiez que le store est bien relié au projet, puis redéployez.`,
       };
     }
   }
@@ -229,8 +269,9 @@ export async function probeStore(key: string): Promise<StoreStatus> {
     ok: !serverless,
     serverless,
     label: "Fichier local (data/)",
+    diagnostic: diagnostic(),
     hint: serverless
-      ? "Aucun stockage persistant n'est configuré et le système de fichiers est en lecture seule sur Vercel : les annonces ne pourront pas être enregistrées. Reliez un Blob Store au projet (variable BLOB_READ_WRITE_TOKEN), puis redéployez."
+      ? "Aucun stockage persistant n'est configuré. Reliez un Blob Store au projet (Storage → votre Blob → Connect Project), puis redéployez. Le tableau ci-dessous indique ce que le serveur voit réellement."
       : null,
   };
 }

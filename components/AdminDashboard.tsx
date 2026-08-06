@@ -231,7 +231,27 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
             Les annonces ne peuvent pas être enregistrées
           </p>
           <p className="mt-1.5 text-[14px] leading-relaxed text-night-800">{store.hint}</p>
-          <p className="mt-2 text-[13px] text-night-600">
+
+          {/* Ce que le serveur voit réellement : présence des variables et
+              version déployée. Aucune valeur secrète n'est exposée. */}
+          {store.diagnostic && (
+            <dl className="tabular mt-4 grid gap-x-6 gap-y-1 border-t border-terra-500/30 pt-3 text-[12.5px] sm:grid-cols-2">
+              {Object.entries(store.diagnostic).map(([k, v]) => (
+                <div key={k} className="flex justify-between gap-3">
+                  <dt className="text-night-600">{k}</dt>
+                  <dd
+                    className={
+                      v === "absente" ? "font-semibold text-terra-700" : "text-night-800"
+                    }
+                  >
+                    {v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          <p className="mt-3 text-[13px] text-night-600">
             Le site public reste en ligne et affiche les rendez-vous récurrents ;
             seules les annonces gérées depuis cette page sont concernées.
           </p>

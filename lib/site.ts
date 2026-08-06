@@ -39,6 +39,15 @@ export const SITE = {
   tagline: "Grande Mosquée de Creil",
   legalName: "Association Culturelle et Cultuelle des Musulmans de l'Oise",
   association: "ACCMO",
+  // Identité légale — source : registre INSEE (mise à jour du 05/08/2026).
+  legal: {
+    siren: "481 835 221",
+    siret: "481 835 221 00021",
+    tva: "FR35481835221",
+    /** Enregistrement de l'association, à ne pas confondre avec l'ouverture de la mosquée. */
+    createdOn: "6 mai 1998",
+    form: "Association loi 1901",
+  },
   url: resolveSiteUrl(),
   description:
     "La Grande Mosquée de Creil — Essalam (ACCMO) : horaires de prière, école coranique Al Ghazali, annonces, visite virtuelle 360°, solidarité et démarches pour toute la communauté de Creil.",
@@ -52,13 +61,22 @@ export const SITE = {
   // Source : fiche Mawaqit de la mosquée (identique à accmo.org).
   geo: { lat: 49.2495975, lng: 2.4631836 },
   email: "contact@accmo.org",
-  // Non publié par l'association : reste masqué tant qu'il n'est pas confirmé.
-  phone: null as string | null,
+  // Communiqué par l'association.
+  phone: "03 44 64 15 31" as string | null,
   social: {
     facebook: "https://www.facebook.com/mosqueecreil/?locale=fr_FR",
     instagram: "https://www.instagram.com/mosqueecreil/",
   },
 } as const;
+
+/**
+ * Lien d'appel au format international : c'est celui qui fonctionne partout,
+ * y compris depuis un mobile étranger ou en itinérance. Vaut `null` tant
+ * qu'aucun numéro n'est renseigné, pour que l'affichage reste conditionnel.
+ */
+export const PHONE_HREF = SITE.phone
+  ? `tel:+33${SITE.phone.replace(/\D/g, "").replace(/^0/, "")}`
+  : null;
 
 export const FULL_ADDRESS = `${SITE.address.street}, ${SITE.address.zip} ${SITE.address.city}`;
 
@@ -252,7 +270,7 @@ export const CHAPTERS: { num: string; title: string; text: string }[] = [
   {
     num: "I",
     title: "Une association, puis un lieu",
-    text: "L'ACCMO — Association Culturelle et Cultuelle des Musulmans de l'Oise — porte la Grande Mosquée de Creil. Elle en assure la gestion, l'entretien et le fonctionnement quotidien, au service des habitants du bassin creillois.",
+    text: "L'ACCMO — Association Culturelle et Cultuelle des Musulmans de l'Oise — porte la Grande Mosquée de Creil. Déclarée en 1998, elle en assure la gestion, l'entretien et le fonctionnement quotidien, au service des habitants du bassin creillois.",
   },
   {
     num: "II",

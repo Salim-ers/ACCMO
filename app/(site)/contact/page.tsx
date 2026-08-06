@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LINKS, ROUTES, SITE } from "@/lib/site";
+import { LINKS, PHONE_HREF, ROUTES, SITE } from "@/lib/site";
 import { FunctionalHeader } from "@/components/PageHeader";
 import SectionHead from "@/components/SectionHead";
 import LocationSection from "@/components/LocationSection";
@@ -46,10 +46,18 @@ export default function ContactPage() {
         title="Venir, écrire, demander"
         intro="L’association répond par e-mail. Choisissez ci-dessous le motif de votre demande : le message part avec le bon objet."
         meta={
-          <a href={`mailto:${SITE.email}`} className="btn btn-outline-invert">
-            <Icon.mail width={17} height={17} />
-            {SITE.email}
-          </a>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            {SITE.phone && PHONE_HREF && (
+              <a href={PHONE_HREF} className="btn btn-accent">
+                <Icon.phone width={17} height={17} />
+                {SITE.phone}
+              </a>
+            )}
+            <a href={`mailto:${SITE.email}`} className="btn btn-outline-invert">
+              <Icon.mail width={17} height={17} />
+              {SITE.email}
+            </a>
+          </div>
         }
       />
 

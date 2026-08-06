@@ -56,6 +56,11 @@ export const Icon = {
       <circle cx="12" cy="10.4" r="2.3" />
     </svg>
   ),
+  phone: (p: P) => (
+    <svg {...base} {...p} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8.4 4.5H5.2A1.7 1.7 0 0 0 3.5 6.3c0 7.8 6.4 14.2 14.2 14.2a1.7 1.7 0 0 0 1.8-1.7v-3.2l-3.6-1.2-1.8 1.8a13.4 13.4 0 0 1-5.5-5.5l1.8-1.8z" />
+    </svg>
+  ),
   mail: (p: P) => (
     <svg {...base} {...p}>
       <rect x="3.5" y="5.5" width="17" height="13" />

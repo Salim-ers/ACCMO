@@ -30,11 +30,15 @@ export default function MentionsPage() {
           <dl className="border-t border-[var(--rule-strong)]">
             {[
               { t: "Éditeur du site", d: `${SITE.legalName} (${SITE.association})` },
+              { t: "Forme juridique", d: SITE.legal.form },
               { t: "Lieu de culte", d: SITE.name },
-              { t: "Adresse", d: FULL_ADDRESS },
+              { t: "Adresse du siège", d: FULL_ADDRESS },
+              { t: "Téléphone", d: SITE.phone ?? TO_COMPLETE },
               { t: "Contact", d: SITE.email },
               { t: "Directeur de la publication", d: TO_COMPLETE },
-              { t: "Numéro RNA / SIRET", d: TO_COMPLETE },
+              { t: "SIREN", d: SITE.legal.siren },
+              { t: "SIRET (siège social)", d: SITE.legal.siret },
+              { t: "Numéro de TVA intracommunautaire", d: SITE.legal.tva },
               {
                 t: "Hébergeur",
                 d: "Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis — vercel.com",

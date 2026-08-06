@@ -5,6 +5,7 @@ import {
   FOOTER_GROUPS,
   FULL_ADDRESS,
   LOGO,
+  PHONE_HREF,
   ROUTES,
   SITE,
 } from "@/lib/site";
@@ -110,6 +111,15 @@ export default function SiteFooter({
               <Icon.pin width={14} height={14} />
               {FULL_ADDRESS}
             </a>
+            {SITE.phone && PHONE_HREF && (
+              <a
+                href={PHONE_HREF}
+                className="mt-1 inline-flex min-h-[26px] items-center gap-1.5 py-0.5 text-[14.5px] font-bold text-sand-50 hover:text-terra-400"
+              >
+                <Icon.phone width={14} height={14} />
+                {SITE.phone}
+              </a>
+            )}
             <a
               href={`mailto:${SITE.email}`}
               className="mt-1 inline-flex min-h-[26px] items-center py-0.5 text-[13.5px] text-night-200 underline-offset-4 hover:text-white hover:underline"

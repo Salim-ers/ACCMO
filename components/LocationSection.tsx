@@ -3,6 +3,7 @@ import {
   DIRECTIONS_LINK,
   FULL_ADDRESS,
   MAPS_EMBED,
+  PHONE_HREF,
   SITE,
 } from "@/lib/site";
 import { Icon } from "@/components/Icons";
@@ -72,23 +73,26 @@ export default function LocationSection() {
 
           <div className="border-b border-[var(--rule)] py-4">
             <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-night-500">
-              Écrire à l’association
+              Nous joindre
             </dt>
-            <dd className="mt-1.5">
+            <dd className="mt-1.5 flex flex-col gap-1">
+              {/* Le téléphone d'abord : c'est ce que cherchent en premier les
+                  personnes qui ne passent pas par un formulaire. */}
+              {SITE.phone && PHONE_HREF && (
+                <a
+                  href={PHONE_HREF}
+                  className="inline-flex min-h-[32px] items-center gap-2 text-[19px] font-extrabold tracking-tight text-night-900 hover:text-terra-600"
+                >
+                  <Icon.phone width={18} height={18} className="shrink-0 text-terra-600" />
+                  {SITE.phone}
+                </a>
+              )}
               <a
                 href={`mailto:${SITE.email}`}
                 className="inline-flex min-h-[28px] items-center text-[15px] font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
               >
                 {SITE.email}
               </a>
-              {SITE.phone && (
-                <a
-                  href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-                  className="mt-1 inline-flex min-h-[28px] items-center text-[15px] font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
-                >
-                  {SITE.phone}
-                </a>
-              )}
             </dd>
           </div>
         </dl>

@@ -27,6 +27,7 @@ const jsonLd = {
       image: `${SITE.url}/photos/mosquee-facade.jpg`,
       logo: LOGO,
       email: SITE.email,
+      ...(SITE.phone ? { telephone: SITE.phone } : {}),
       address: {
         "@type": "PostalAddress",
         streetAddress: SITE.address.street,
@@ -56,6 +57,9 @@ const jsonLd = {
       alternateName: SITE.association,
       url: SITE.url,
       email: SITE.email,
+      ...(SITE.phone ? { telephone: SITE.phone } : {}),
+      taxID: SITE.legal.siret,
+      vatID: SITE.legal.tva,
       address: {
         "@type": "PostalAddress",
         streetAddress: SITE.address.street,

@@ -1,22 +1,10 @@
 import { NextResponse } from "next/server";
-import { getAll, getPublished, create, hasPersistentStore } from "@/lib/announcements";
+import { getAll, getPublished, create } from "@/lib/announcements";
+import { storageError } from "@/lib/storage-error";
 import { isAuthenticated } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-/** Message d'erreur clair selon la cause probable. */
-function storageError() {
-  if (process.env.VERCEL && !hasPersistentStore()) {
-    return "Stockage non configuré. Sur Vercel : Storage → Create → KV (puis redéployez).";
-  }
-  if (hasPersistentStore()) {
-    // Les variables sont bien là : le store lui-même ne répond pas
-    // (base supprimée, jeton révoqué, URL obsolète).
-    return "Enregistrement impossible : la base de données liée au projet ne répond pas. Vérifiez le store KV / Upstash dans les réglages Vercel.";
-  }
-  return "Impossible d'enregistrer. Réessayez.";
-}
 
 // GET : public -> annonces publiées ; admin connecté -> toutes.
 export async function GET() {
@@ -42,7 +30,7 @@ export async function POST(req: Request) {
     if (!result.ok) {
       return NextResponse.json({ errors: result.errors }, { status: 422 });
     }
-    return NextResponse.json(result.item, { status: 201 });
+    return NextResponse.json({ item: result.item, items: result.items }, { status: 201 });
   } catch (e) {
     console.error("create announcement failed:", e);
     return NextResponse.json({ error: storageError() }, { status: 500 });

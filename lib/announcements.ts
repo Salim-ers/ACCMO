@@ -1,17 +1,22 @@
-import { promises as fs } from "fs";
-import path from "path";
 import crypto from "crypto";
 
 // =============================================================
-// Stockage des annonces.
-//   • En PRODUCTION (Vercel) : Vercel KV (persistant) dès que les
-//     variables KV_REST_API_URL / KV_REST_API_TOKEN sont présentes.
-//   • En LOCAL (sans KV) : fichier JSON data/announcements.json.
-//   L'interface (admin + API) est identique dans les deux cas.
+// Annonces de la mosquée.
+//
+// Le support de stockage (Vercel KV, Vercel Blob ou fichier local) est
+// choisi par lib/store.ts : ce module ne s'occupe que des règles métier
+// — validation, tri, rubriques.
+//
+// Les fonctions de mutation renvoient la LISTE COMPLÈTE à jour, afin que
+// l'espace d'administration l'affiche directement sans relecture. C'est
+// ce qui permet d'utiliser un support à cohérence différée comme le Blob
+// sans que l'administrateur voie jamais un état périmé.
 // =============================================================
 
 import { DEFAULT_CATEGORY, isCategory, type Category } from "@/lib/categories";
-import { kvHost, resolveKvCredentials } from "@/lib/kv-env";
+import { probeStore, readJson, storeMode, writeJson, type StoreStatus } from "@/lib/store";
+
+export type { StoreStatus };
 
 export type Announcement = {
   id: string;
@@ -27,81 +32,16 @@ export type Announcement = {
   createdAt: string; // ISO
 };
 
-const DATA_FILE = path.join(process.cwd(), "data", "announcements.json");
-const KV_KEY = "annonces:list";
+const KEY = "annonces:list";
 
-// Accepte « Vercel KV » comme « Upstash Redis », avec ou sans préfixe
-// personnalisé appliqué par l'intégration Vercel (voir lib/kv-env.ts).
-const KV = resolveKvCredentials();
-const useKV = KV !== null;
-
-/** Indique si un stockage persistant (KV) est configuré. */
+/** Indique si un stockage persistant est configuré (autre que le fichier local). */
 export function hasPersistentStore(): boolean {
-  return useKV;
+  return storeMode() !== "file";
 }
 
-// --- Diagnostic du stockage -------------------------------------------------
-
-export type StoreStatus = {
-  /** `kv` : store distant configuré · `file` : fichier JSON local. */
-  mode: "kv" | "file";
-  /** Vrai si une lecture vient d'aboutir. */
-  ok: boolean;
-  /** Vrai quand le site tourne sur Vercel (le fichier local n'y persiste pas). */
-  serverless: boolean;
-  /** Hôte du store, pour identifier une URL obsolète d'un coup d'œil. */
-  host: string | null;
-  /** Message court expliquant quoi faire, si quelque chose cloche. */
-  hint: string | null;
-};
-
-/**
- * Vérifie que le stockage répond vraiment, au lieu de se contenter de
- * constater que les variables d'environnement existent. Utilisé par
- * l'espace d'administration pour prévenir AVANT une tentative
- * d'enregistrement plutôt qu'après son échec.
- */
-export async function checkStore(): Promise<StoreStatus> {
-  const serverless = !!process.env.VERCEL;
-  const host = kvHost(KV?.url ?? null);
-
-  if (useKV) {
-    try {
-      const c = await kvClient();
-      await c.get(KV_KEY);
-      return { mode: "kv", ok: true, serverless, host, hint: null };
-    } catch {
-      return {
-        mode: "kv",
-        ok: false,
-        serverless,
-        host,
-        hint: `La base « ${host ?? "inconnue"} » ne répond pas. Sur le plan gratuit Upstash, une base inutilisée est archivée et son point d'accès retiré : vérifiez d'abord dans la console Upstash si elle peut être restaurée — les données y sont alors conservées. À défaut, créez un nouveau store dans Vercel (Storage), reliez-le au projet et redéployez.`,
-      };
-    }
-  }
-
-  // Pas de store distant : fichier local. Correct en développement,
-  // inopérant sur Vercel où le système de fichiers est en lecture seule.
-  try {
-    await fs.readFile(DATA_FILE, "utf-8");
-  } catch {
-    // Un fichier absent n'est pas une anomalie : il est créé au premier ajout.
-  }
-  return {
-    mode: "file",
-    ok: !serverless,
-    serverless,
-    host: null,
-    hint: serverless
-      ? "Aucun store persistant n'est configuré et le système de fichiers est en lecture seule sur Vercel : les annonces ne pourront pas être enregistrées. Créez un store KV / Upstash dans Storage, puis redéployez."
-      : null,
-  };
-}
-
-async function kvClient() {
-  const { createClient } = await import("@vercel/kv");
-  return createClient({ url: KV!.url, token: KV!.token });
+/** État réel du stockage, pour le bandeau de l'espace d'administration. */
+export function checkStore(): Promise<StoreStatus> {
+  return probeStore(KEY);
 }
 
 /** Les annonces créées avant l'ajout des rubriques n'en ont pas : on comble. */
@@ -113,42 +53,12 @@ function withDefaults(items: unknown): Announcement[] {
   }));
 }
 
-/**
- * Lecture des annonces — ne lève jamais.
- *
- * Les annonces sont rendues côté serveur (bon pour le référencement et la
- * performance) : un store injoignable ne doit donc pas faire échouer un
- * rendu, ni le build. Dans ce cas on renvoie une liste vide et l'agenda
- * affiche son état « aucune annonce », le reste du site restant intact.
- * L'écriture, elle, continue de lever : l'administrateur doit savoir
- * immédiatement que son enregistrement n'est pas passé.
- */
 async function readAll(): Promise<Announcement[]> {
-  if (useKV) {
-    try {
-      const c = await kvClient();
-      return withDefaults(await c.get<Announcement[]>(KV_KEY));
-    } catch (e) {
-      console.error("Lecture des annonces impossible (store KV injoignable) :", e);
-      return [];
-    }
-  }
-  try {
-    const raw = await fs.readFile(DATA_FILE, "utf-8");
-    return withDefaults(JSON.parse(raw));
-  } catch {
-    return [];
-  }
+  return withDefaults(await readJson<Announcement[]>(KEY, []));
 }
 
 async function writeAll(items: Announcement[]): Promise<void> {
-  if (useKV) {
-    const c = await kvClient();
-    await c.set(KV_KEY, items);
-    return;
-  }
-  await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
-  await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2), "utf-8");
+  await writeJson(KEY, items);
 }
 
 function sortByDateDesc(items: Announcement[]): Announcement[] {
@@ -225,7 +135,7 @@ export async function create(input: AnnouncementInput) {
   };
   items.push(item);
   await writeAll(items);
-  return { ok: true as const, item };
+  return { ok: true as const, item, items: sortByDateDesc(items) };
 }
 
 export async function update(id: string, input: AnnouncementInput) {
@@ -236,7 +146,7 @@ export async function update(id: string, input: AnnouncementInput) {
   if (idx === -1) return { ok: false as const, errors: ["Annonce introuvable."] };
   items[idx] = { ...items[idx], ...value };
   await writeAll(items);
-  return { ok: true as const, item: items[idx] };
+  return { ok: true as const, item: items[idx], items: sortByDateDesc(items) };
 }
 
 export async function remove(id: string) {
@@ -245,5 +155,5 @@ export async function remove(id: string) {
   if (next.length === items.length)
     return { ok: false as const, errors: ["Annonce introuvable."] };
   await writeAll(next);
-  return { ok: true as const };
+  return { ok: true as const, items: sortByDateDesc(next) };
 }

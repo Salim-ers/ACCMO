@@ -74,9 +74,12 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
     }
   }
 
-  async function refresh() {
-    const res = await fetch("/api/announcements", { cache: "no-store" });
-    if (res.ok) setItems(await res.json());
+  // Les mutations renvoient la liste complete a jour : on l'applique telle
+  // quelle. Une relecture immediate pourrait retomber sur une copie en cache
+  // (le Blob Store est a coherence differee) et afficher un etat perime.
+  function applyList(data: unknown) {
+    const items = (data as { items?: Announcement[] })?.items;
+    if (Array.isArray(items)) setItems(items);
   }
 
   async function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -123,11 +126,11 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setForm(empty());
-        await refresh();
+        applyList(data);
       } else {
-        const data = await res.json().catch(() => ({}));
         setErrors(data.errors || [data.error || "Une erreur est survenue."]);
       }
     } finally {
@@ -156,10 +159,10 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
     if (!confirm("Supprimer définitivement cette annonce ?")) return;
     setErrors([]);
     const res = await fetch(`/api/announcements/${id}`, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      await refresh();
+      applyList(data);
     } else {
-      const data = await res.json().catch(() => ({}));
       setErrors([data.error || (data.errors?.[0] ?? "Suppression impossible.")]);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -173,10 +176,10 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...a, [key]: !a[key] }),
     });
+    const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      await refresh();
+      applyList(data);
     } else {
-      const data = await res.json().catch(() => ({}));
       setErrors([data.error || (data.errors?.[0] ?? "Modification impossible.")]);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -201,6 +204,12 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
             {items.length} annonce(s) · «&nbsp;Dépublier&nbsp;» retire l’annonce du site sans
             la supprimer.
           </p>
+          {store?.ok && (
+            <p className="mt-1 flex items-center gap-2 text-[12.5px] text-night-500">
+              <span className="h-1.5 w-1.5 shrink-0 bg-night-600" aria-hidden />
+              Enregistrement actif — {store.label}
+            </p>
+          )}
         </div>
         <div className="flex gap-2">
           <a href={ROUTES.home} target="_blank" rel="noopener noreferrer" className="btn btn-outline !min-h-[42px]">

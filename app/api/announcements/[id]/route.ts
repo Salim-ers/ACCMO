@@ -1,21 +1,10 @@
 import { NextResponse } from "next/server";
-import { update, remove, hasPersistentStore } from "@/lib/announcements";
+import { update, remove } from "@/lib/announcements";
+import { storageError } from "@/lib/storage-error";
 import { isAuthenticated } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-function storageError() {
-  if (process.env.VERCEL && !hasPersistentStore()) {
-    return "Stockage non configuré. Sur Vercel : Storage → Create → KV (puis redéployez).";
-  }
-  if (hasPersistentStore()) {
-    // Les variables sont bien là : le store lui-même ne répond pas
-    // (base supprimée, jeton révoqué, URL obsolète).
-    return "Enregistrement impossible : la base de données liée au projet ne répond pas. Vérifiez le store KV / Upstash dans les réglages Vercel.";
-  }
-  return "Impossible d'enregistrer. Réessayez.";
-}
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   if (!isAuthenticated()) {
@@ -32,7 +21,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     if (!result.ok) {
       return NextResponse.json({ errors: result.errors }, { status: 422 });
     }
-    return NextResponse.json(result.item);
+    return NextResponse.json({ item: result.item, items: result.items });
   } catch (e) {
     console.error("update announcement failed:", e);
     return NextResponse.json({ error: storageError() }, { status: 500 });
@@ -48,7 +37,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     if (!result.ok) {
       return NextResponse.json({ errors: result.errors }, { status: 404 });
     }
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, items: result.items });
   } catch (e) {
     console.error("delete announcement failed:", e);
     return NextResponse.json({ error: storageError() }, { status: 500 });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSettings, setSettings } from "@/lib/settings";
 import { isAuthenticated } from "@/lib/auth";
+import { storageError } from "@/lib/storage-error";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,7 +28,7 @@ export async function PUT(req: Request) {
   } catch (e) {
     console.error("update settings failed:", e);
     return NextResponse.json(
-      { error: "Stockage non configuré (KV). Réessayez après avoir branché KV sur Vercel." },
+      { error: storageError() },
       { status: 500 }
     );
   }

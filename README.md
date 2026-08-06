@@ -91,20 +91,38 @@ délais d'iqama et l'heure de la Jumu'a. Aucune iframe n'est incrustée.
 La rubrique alimente les **filtres de l'agenda** côté public. Les annonces créées
 avant l'ajout des rubriques reçoivent « Informations pratiques » automatiquement.
 
-Stockage : **Vercel KV / Upstash** en production, sinon `data/announcements.json`
-en local. Même interface dans les deux cas.
+### Où sont stockées les données
 
-`lib/kv-env.ts` résout les identifiants du store en acceptant **n'importe quel
-préfixe** appliqué par l'intégration Vercel (`KV_REST_API_URL`,
-`UPSTASH_REDIS_REST_URL`, `STORAGE_KV_REST_API_URL`…), à condition que l'URL et
-le jeton partagent le même préfixe. Les noms standards restent prioritaires, et
-un jeton en lecture seule n'est jamais retenu.
+`lib/store.ts` expose `readJson` / `writeJson` et choisit le support **par la
+configuration**, jamais par l'état du réseau — un incident passager ne doit pas
+déplacer silencieusement les données. Ordre de priorité :
 
-L'espace `/admin` **teste réellement le store** au chargement et affiche un
-bandeau si la base ne répond pas, en nommant l'hôte fautif — plutôt que de
-laisser découvrir la panne au moment d'un enregistrement perdu. Sur le plan
-gratuit Upstash, une base inutilisée est *archivée* et son point d'accès retiré :
-elle se restaure depuis la console Upstash, données comprises.
+| Rang | Support | Condition | Remarques |
+| ---- | ------- | --------- | --------- |
+| 1 | **Redis** (Vercel KV / Upstash) | `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Écriture immédiate, données privées. Le plan gratuit Upstash **archive** une base inutilisée. |
+| 2 | **Vercel Blob** | `BLOB_READ_WRITE_TOKEN` | Ne s'archive pas. Nom de fichier dérivé de `SESSION_SECRET` par HMAC. Propagation publique ≤ 5 min. |
+| 3 | **Fichier** `data/*.json` | aucune | Développement seulement : ne persiste pas sur Vercel. |
+
+`lib/kv-env.ts` accepte **n'importe quel préfixe** appliqué par l'intégration
+Vercel (`STORAGE_KV_REST_API_URL`…), à condition que l'URL et le jeton partagent
+le même. Un jeton en lecture seule n'est jamais retenu.
+
+**Sur le support Blob**, deux points de conception méritent d'être connus :
+
+- Vercel Blob ne propose que des objets `public`. Le chemin du fichier est donc
+  un HMAC de `SESSION_SECRET`, ce qui le rend indevinable — c'est ce qui protège
+  les **brouillons** non publiés. Changer `SESSION_SECRET` rendrait les données
+  existantes introuvables.
+- Le contenu est servi par un CDN. L'écriture pose `cacheControlMaxAge: 0` et la
+  lecture ajoute un paramètre jetable, mais une propagation de quelques minutes
+  reste possible côté public. C'est pourquoi **les mutations renvoient la liste
+  complète à jour** : l'administration l'affiche directement, sans relecture, et
+  ne montre donc jamais un état périmé.
+
+L'espace `/admin` **teste réellement le stockage** au chargement : il affiche le
+support actif en permanence, et un bandeau d'alerte nommant la cause dès qu'un
+enregistrement devient impossible — plutôt que de laisser découvrir la panne au
+moment d'un enregistrement perdu.
 
 ## 6. Où modifier le contenu
 

@@ -10,13 +10,36 @@
 
 import type { Category } from "@/lib/categories";
 
+/**
+ * Adresse publique du site — celle qui est déclarée aux moteurs de recherche
+ * (canonique, sitemap, robots.txt, données structurées, aperçus de partage).
+ *
+ * Elle est déduite de l'hébergement et n'a donc jamais besoin d'être exacte
+ * dans le code : Vercel expose le domaine de production du projet, domaine
+ * personnalisé compris dès qu'il est branché. `SITE_URL` permet de forcer une
+ * valeur ; la dernière est un simple repli de développement.
+ *
+ * Se tromper ici a une conséquence lourde : annoncer une canonique pointant
+ * vers un AUTRE site revient à demander aux moteurs de ne pas indexer
+ * celui-ci.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.SITE_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "").replace(/\/$/, "")}`;
+
+  return "http://localhost:3000";
+}
+
 export const SITE = {
   name: "Grande Mosquée de Creil — Essalam",
   shortName: "Essalam",
   tagline: "Grande Mosquée de Creil",
   legalName: "Association Culturelle et Cultuelle des Musulmans de l'Oise",
   association: "ACCMO",
-  url: "https://accmo.org",
+  url: resolveSiteUrl(),
   description:
     "La Grande Mosquée de Creil — Essalam (ACCMO) : horaires de prière, école coranique Al Ghazali, annonces, visite virtuelle 360°, solidarité et démarches pour toute la communauté de Creil.",
   address: {

@@ -47,6 +47,13 @@ export const SITE = {
     /** Enregistrement de l'association, à ne pas confondre avec l'ouverture de la mosquée. */
     createdOn: "6 mai 1998",
     form: "Association loi 1901",
+    /**
+     * Directeur de la publication. La LCEN impose aux personnes morales de le
+     * faire figurer ; l'association ayant choisi de ne pas exposer de nom
+     * personnel, on désigne la fonction, formulation courante chez les
+     * associations. Remplacer par le nom du président si cela change.
+     */
+    publisher: "Le représentant légal de l'association",
   },
   url: resolveSiteUrl(),
   description:

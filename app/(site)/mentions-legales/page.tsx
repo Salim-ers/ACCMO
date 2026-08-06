@@ -10,11 +10,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-// Les informations non encore communiquées par l'association sont signalées
-// explicitement plutôt que remplies au hasard : une mention légale fausse
-// est pire qu'une mention incomplète.
-const TO_COMPLETE = "À compléter par l’association";
-
 export default function MentionsPage() {
   return (
     <main id="contenu">
@@ -33,9 +28,9 @@ export default function MentionsPage() {
               { t: "Forme juridique", d: SITE.legal.form },
               { t: "Lieu de culte", d: SITE.name },
               { t: "Adresse du siège", d: FULL_ADDRESS },
-              { t: "Téléphone", d: SITE.phone ?? TO_COMPLETE },
+              { t: "Téléphone", d: SITE.phone ?? "—" },
               { t: "Contact", d: SITE.email },
-              { t: "Directeur de la publication", d: TO_COMPLETE },
+              { t: "Directeur de la publication", d: SITE.legal.publisher },
               { t: "SIREN", d: SITE.legal.siren },
               { t: "SIRET (siège social)", d: SITE.legal.siret },
               { t: "Numéro de TVA intracommunautaire", d: SITE.legal.tva },
@@ -49,13 +44,7 @@ export default function MentionsPage() {
                 className="grid gap-1 border-b border-[var(--rule)] py-4 sm:grid-cols-[minmax(0,260px)_1fr] sm:gap-8"
               >
                 <dt className="text-[14px] font-bold text-night-900">{row.t}</dt>
-                <dd
-                  className={`text-[15px] leading-relaxed ${
-                    row.d === TO_COMPLETE ? "text-night-500 italic" : "text-night-700"
-                  }`}
-                >
-                  {row.d}
-                </dd>
+                <dd className="text-[15px] leading-relaxed text-night-700">{row.d}</dd>
               </div>
             ))}
           </dl>

@@ -1,26 +1,30 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { isAuthenticated } from "@/lib/auth";
+import { putUpload } from "@/lib/store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Upload d'une image vers Vercel Blob (espace admin uniquement).
+// Envoi d'une photo d'annonce vers Vercel Blob (espace admin uniquement).
+//
+// Le store peut être configuré en accès public ou privé : lib/store.ts s'y
+// adapte et renvoie, dans le second cas, une URL relayée par le site
+// (/api/photo/…) pour que l'image reste affichable par les visiteurs.
 export async function POST(req: Request) {
   if (!isAuthenticated()) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
-  // Deux modes d'authentification possibles : un jeton d'écriture explicite,
-  // ou l'identité du déploiement (OIDC), que l'intégration Vercel actuelle
-  // fournit via BLOB_STORE_ID sans jeton à recopier.
-  //
-  // On ne vérifie QUE la présence d'un store relié : le jeton OIDC n'arrive
-  // pas dans l'environnement mais en en-tête de requête, et le tester ici
-  // reviendrait à refuser une configuration valide. Si l'authentification
-  // échoue vraiment, c'est `put` qui le dira.
-  const token =
-    process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
-  if (!token && !process.env.BLOB_STORE_ID) {
+
+  // Seule la présence d'un store relié est vérifiée : le jeton d'identité
+  // OIDC n'arrive pas dans l'environnement mais en en-tête de requête, et le
+  // tester ici reviendrait à refuser une configuration valide.
+  const hasStore = !!(
+    process.env.BLOB_READ_WRITE_TOKEN ||
+    process.env.VERCEL_BLOB_READ_WRITE_TOKEN ||
+    process.env.BLOB_STORE_ID
+  );
+  if (!hasStore) {
     return NextResponse.json(
       {
         error:
@@ -42,34 +46,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Image trop lourde (max 5 Mo)." }, { status: 413 });
   }
 
-  const { put } = await import("@vercel/blob");
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
   try {
-    const blob = await put(`annonces/${crypto.randomUUID()}.${ext}`, file, {
-      access: "public",
-      contentType: file.type,
-      // Le nom porte déjà un identifiant unique ; sans jeton, la librairie
-      // s'authentifie par l'identité du déploiement.
-      addRandomSuffix: false,
-      ...(token ? { token } : {}),
-    });
-    return NextResponse.json({ url: blob.url });
+    const { url } = await putUpload(
+      `annonces/${crypto.randomUUID()}.${ext}`,
+      file,
+      file.type
+    );
+    return NextResponse.json({ url });
   } catch (e) {
     console.error("blob upload failed:", e);
-
-    // Cas particulier : un store en accès privé. On n'y téléverse pas l'image
-    // « quand même » — son URL ne serait pas lisible par les visiteurs et la
-    // photo apparaîtrait cassée sur le site.
-    if (e instanceof Error && /private store/i.test(e.message)) {
-      return NextResponse.json(
-        {
-          error:
-            "Votre Blob Store est en accès privé : une photo téléversée ne pourrait pas s'afficher sur le site public. Basculez le store en accès public dans Vercel (Storage → votre Blob), ou collez ici l'URL d'une image déjà hébergée ailleurs.",
-        },
-        { status: 409 }
-      );
-    }
-
     return NextResponse.json(
       {
         error: `Échec de l'envoi de l'image. ${

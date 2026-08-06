@@ -175,6 +175,52 @@ export function blobAccessMode(): "public" | "private" {
 }
 
 // ---------------------------------------------------------------
+// Fichiers téléversés (photos d'annonces)
+// ---------------------------------------------------------------
+
+/**
+ * Dépose un fichier et renvoie l'URL à laquelle le site pourra l'afficher.
+ *
+ * Sur un store public, c'est l'URL directe du CDN. Sur un store privé, cette
+ * URL ne serait lisible par personne : on renvoie alors un chemin servi par
+ * le site lui-même, qui relaie le fichier. Contrairement à un lien signé,
+ * il n'expire jamais — l'URL enregistrée dans l'annonce reste valable.
+ */
+export async function putUpload(
+  pathname: string,
+  body: Blob | ArrayBuffer | Buffer,
+  contentType: string
+): Promise<{ url: string; access: "public" | "private" }> {
+  const { put } = await import("@vercel/blob");
+  const blob = await withAccess((access) =>
+    put(pathname, body, {
+      access,
+      contentType,
+      addRandomSuffix: false, // le nom porte déjà un identifiant unique
+      cacheControlMaxAge: 31_536_000, // une année : le nom ne sera jamais réutilisé
+      ...blobAuth(),
+    })
+  );
+  return {
+    url: blobAccess === "public" ? blob.url : `/api/photo/${pathname}`,
+    access: blobAccess,
+  };
+}
+
+/** Contenu d'un fichier téléversé, lu de façon authentifiée. */
+export async function getUpload(
+  pathname: string
+): Promise<{ stream: ReadableStream<Uint8Array>; contentType: string } | null> {
+  const { get } = await import("@vercel/blob");
+  const res = await withAccess((access) => get(pathname, { access, ...blobAuth() }));
+  if (!res || res.statusCode !== 200 || !res.stream) return null;
+  return {
+    stream: res.stream,
+    contentType: res.blob.contentType || "application/octet-stream",
+  };
+}
+
+// ---------------------------------------------------------------
 // API publique
 // ---------------------------------------------------------------
 

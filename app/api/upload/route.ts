@@ -56,8 +56,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: blob.url });
   } catch (e) {
     console.error("blob upload failed:", e);
+
+    // Cas particulier : un store en accès privé. On n'y téléverse pas l'image
+    // « quand même » — son URL ne serait pas lisible par les visiteurs et la
+    // photo apparaîtrait cassée sur le site.
+    if (e instanceof Error && /private store/i.test(e.message)) {
+      return NextResponse.json(
+        {
+          error:
+            "Votre Blob Store est en accès privé : une photo téléversée ne pourrait pas s'afficher sur le site public. Basculez le store en accès public dans Vercel (Storage → votre Blob), ou collez ici l'URL d'une image déjà hébergée ailleurs.",
+        },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
-      { error: "Échec de l'envoi de l'image. Vérifie le token Blob, ou colle une URL d'image." },
+      {
+        error: `Échec de l'envoi de l'image. ${
+          e instanceof Error ? e.message : ""
+        } Vous pouvez aussi coller l'URL d'une image.`.trim(),
+      },
       { status: 500 }
     );
   }

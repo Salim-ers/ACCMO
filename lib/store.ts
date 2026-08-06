@@ -97,10 +97,10 @@ function filePath(key: string): string {
 }
 
 /**
- * Chemin du blob. Vercel Blob ne propose que des objets publics : le nom du
- * fichier est donc dérivé de SESSION_SECRET par HMAC, de sorte qu'il ne soit
- * pas devinable depuis l'extérieur. Les annonces publiées sont de toute façon
- * publiques ; ce sont les brouillons que cela protège.
+ * Chemin du blob, dérivé de SESSION_SECRET par HMAC : il n'est donc pas
+ * devinable depuis l'extérieur. Cette précaution ne coûte rien et couvre le
+ * cas d'un store configuré en accès public, où l'URL du fichier serait sinon
+ * atteignable — ce sont les brouillons non publiés qu'elle protège.
  */
 function blobPath(key: string): string {
   const secret = process.env.SESSION_SECRET || "";
@@ -117,31 +117,61 @@ async function kvClient() {
   return createClient({ url: KV!.url, token: KV!.token });
 }
 
-async function blobRead<T>(key: string): Promise<T | null> {
-  const { list } = await import("@vercel/blob");
-  const pathname = blobPath(key);
-  const { blobs } = await list({ prefix: pathname, limit: 1, ...blobAuth() });
-  const found = blobs.find((b) => b.pathname === pathname);
-  if (!found) return null; // jamais écrit : ce n'est pas une erreur
+/**
+ * Mode d'accès du store. Un store Vercel Blob est configuré en public OU en
+ * privé, et rejette explicitement l'autre valeur. Plutôt que d'imposer un
+ * réglage supplémentaire, on retient le mode dès que le service l'a signalé.
+ */
+let blobAccess: "public" | "private" =
+  process.env.BLOB_ACCESS === "private" ? "private" : "public";
 
-  // Le contenu est servi par un CDN, dont la durée de cache ne peut pas
-  // descendre sous une minute. Le paramètre jetable change la clé de cache
-  // à chaque lecture, ce qui garantit d'obtenir la dernière version.
-  const res = await fetch(`${found.url}?v=${Date.now()}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Lecture du blob impossible (HTTP ${res.status})`);
-  return (await res.json()) as T;
+function isWrongAccessError(e: unknown): boolean {
+  return e instanceof Error && /private store|public store/i.test(e.message);
+}
+
+/** Exécute une opération, en basculant de mode d'accès si le store le réclame. */
+async function withAccess<R>(run: (access: "public" | "private") => Promise<R>): Promise<R> {
+  try {
+    return await run(blobAccess);
+  } catch (e) {
+    if (!isWrongAccessError(e)) throw e;
+    blobAccess = blobAccess === "public" ? "private" : "public";
+    return run(blobAccess);
+  }
+}
+
+/**
+ * Lecture AUTHENTIFIÉE du contenu, via `get`. Contrairement à un `fetch` sur
+ * l'URL publique, cela fonctionne quel que soit le mode du store — public ou
+ * privé — et ne dépend d'aucun cache CDN : la fraîcheur est garantie.
+ */
+async function blobRead<T>(key: string): Promise<T | null> {
+  const { get } = await import("@vercel/blob");
+  const res = await withAccess((access) =>
+    get(blobPath(key), { access, ...blobAuth() })
+  );
+  if (!res || res.statusCode !== 200 || !res.stream) return null; // jamais écrit
+  return JSON.parse(await new Response(res.stream).text()) as T;
 }
 
 async function blobWrite(key: string, value: unknown): Promise<void> {
   const { put } = await import("@vercel/blob");
-  await put(blobPath(key), JSON.stringify(value), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false, // chemin stable, indépendant de la version installée
-    allowOverwrite: true, // sans cela, la 2e écriture lèverait « blob already exists »
-    cacheControlMaxAge: 60, // minimum accepté par Vercel Blob
-    ...blobAuth(),
-  });
+  const body = JSON.stringify(value);
+  await withAccess((access) =>
+    put(blobPath(key), body, {
+      access,
+      contentType: "application/json",
+      addRandomSuffix: false, // chemin stable, indépendant de la version installée
+      allowOverwrite: true, // sans cela, la 2e écriture lèverait « blob already exists »
+      cacheControlMaxAge: 60, // minimum accepté par Vercel Blob
+      ...blobAuth(),
+    })
+  );
+}
+
+/** Mode d'accès retenu, pour le diagnostic de l'administration. */
+export function blobAccessMode(): "public" | "private" {
+  return blobAccess;
 }
 
 // ---------------------------------------------------------------
@@ -228,6 +258,7 @@ function diagnostic(): Record<string, string> {
     BLOB_READ_WRITE_TOKEN: oui(BLOB_TOKEN),
     "Identifiants Redis": oui(KV),
     SESSION_SECRET: oui(process.env.SESSION_SECRET),
+    "Accès du store": blobAccessMode(),
     "Version déployée": (process.env.VERCEL_GIT_COMMIT_SHA || "locale").slice(0, 7),
   };
 }

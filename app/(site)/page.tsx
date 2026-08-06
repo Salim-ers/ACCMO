@@ -12,7 +12,6 @@ import EventsAgenda from "@/components/EventsAgenda";
 import SchoolFeature from "@/components/SchoolFeature";
 import VirtualTourSection from "@/components/VirtualTourSection";
 import HeritageChapters from "@/components/HeritageChapters";
-import CommunityActions from "@/components/CommunityActions";
 import DonationPanel from "@/components/DonationPanel";
 import LocationSection from "@/components/LocationSection";
 import { Icon } from "@/components/Icons";
@@ -120,20 +119,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 04 — École Al Ghazali */}
-      <section id="ecole" className="section bg-sand-100" aria-labelledby="h-ecole">
-        <div className="shell">
-          <SectionHead
-            num="04"
-            kicker="Apprendre"
-            title={<span id="h-ecole">Transmettre, dès le plus jeune âge</span>}
-            intro="Le Coran, la langue arabe et les sciences islamiques, enseignés à la mosquée et prolongés par l’école Al Ghazali."
-          />
-          <SchoolFeature />
-        </div>
-      </section>
-
-      {/* 05 — Visite virtuelle immersive */}
+      {/* 04 — Visite virtuelle immersive.
+          Placée avant l'école pour que les deux sections bleu nuit de la
+          page — celle-ci et « Histoire & mission » — restent séparées par
+          un fond clair. */}
       <section
         id="visite-virtuelle"
         className="on-dark section bg-night-900"
@@ -141,7 +130,7 @@ export default async function HomePage() {
       >
         <div className="shell">
           <SectionHead
-            num="05"
+            num="04"
             kicker="Visite 360°"
             invert
             title={<span id="h-visite">Voir la mosquée avant de venir</span>}
@@ -151,46 +140,51 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* 05 — École Al Ghazali */}
+      <section id="ecole" className="section bg-sand-100" aria-labelledby="h-ecole">
+        <div className="shell">
+          <SectionHead
+            num="05"
+            kicker="Apprendre"
+            title={<span id="h-ecole">Transmettre, dès le plus jeune âge</span>}
+            intro="Le Coran, la langue arabe et les sciences islamiques, enseignés à la mosquée et prolongés par l’école Al Ghazali."
+          />
+          <SchoolFeature />
+        </div>
+      </section>
+
       {/* 06 — Histoire et mission.
           `apropos` : ancre héritée de l'ancienne page unique, conservée pour
           que les liens déjà partagés continuent d'atterrir au bon endroit. */}
       <span id="apropos" className="sr-only" aria-hidden />
-      <section id="histoire" className="section" aria-labelledby="h-histoire">
+      <section
+        id="histoire"
+        className="on-dark section bg-night-900"
+        aria-labelledby="h-histoire"
+      >
         <div className="shell">
           <SectionHead
             num="06"
             kicker="Histoire & mission"
+            invert
             title={<span id="h-histoire">Ce que porte l’association</span>}
             intro="La Grande Mosquée de Creil est gérée par l’ACCMO. Voici, en quelques chapitres, ce qui structure son action."
             action={
-              <Link href={ROUTES.mosquee} className="btn btn-outline">
+              <Link href={ROUTES.mosquee} className="btn btn-outline-invert">
                 Découvrir la mosquée
                 <Icon.arrow width={16} height={16} className="arw" />
               </Link>
             }
           />
-          <HeritageChapters />
+          <HeritageChapters invert />
         </div>
       </section>
 
-      {/* 07 — Solidarité et services */}
-      <section id="actions" className="on-dark section bg-night-900" aria-labelledby="h-actions">
-        <div className="shell">
-          <SectionHead
-            num="07"
-            kicker="Solidarité & services"
-            invert
-            title={<span id="h-actions">Quatre engagements, toute l’année</span>}
-          />
-          <CommunityActions />
-        </div>
-      </section>
-
-      {/* 08 — Don et cotisation */}
+      {/* 07 — Don et cotisation */}
       <section id="dons" className="section bg-sand-100" aria-labelledby="h-dons">
         <div className="shell">
           <p className="section-marker border-t border-[var(--rule)] pt-6" data-reveal>
-            <span className="num">08</span>
+            <span className="num">07</span>
             <span id="h-dons">Soutenir</span>
           </p>
           <DonationPanel />
@@ -216,11 +210,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 09 — Localisation */}
+      {/* 08 — Localisation */}
       <section id="contact" className="section" aria-labelledby="h-contact">
         <div className="shell">
           <SectionHead
-            num="09"
+            num="08"
             kicker="Venir à la mosquée"
             title={
               <span id="h-contact">

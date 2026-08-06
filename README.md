@@ -100,12 +100,26 @@ déplacer silencieusement les données. Ordre de priorité :
 | Rang | Support | Condition | Remarques |
 | ---- | ------- | --------- | --------- |
 | 1 | **Redis** (Vercel KV / Upstash) | `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Écriture immédiate, données privées. Le plan gratuit Upstash **archive** une base inutilisée. |
-| 2 | **Vercel Blob** | `BLOB_READ_WRITE_TOKEN` | Ne s'archive pas. Nom de fichier dérivé de `SESSION_SECRET` par HMAC. Propagation publique ≤ 5 min. |
+| 2 | **Vercel Blob** | `BLOB_STORE_ID` (+ OIDC) ou `BLOB_READ_WRITE_TOKEN` | Ne s'archive pas. Nom de fichier dérivé de `SESSION_SECRET` par HMAC. Propagation publique ≤ 1 min. |
 | 3 | **Fichier** `data/*.json` | aucune | Développement seulement : ne persiste pas sur Vercel. |
 
 `lib/kv-env.ts` accepte **n'importe quel préfixe** appliqué par l'intégration
 Vercel (`STORAGE_KV_REST_API_URL`…), à condition que l'URL et le jeton partagent
 le même. Un jeton en lecture seule n'est jamais retenu.
+
+**Authentification du Blob** — deux modes, gérés tous les deux :
+
+- **Identité du déploiement (OIDC)** : l'intégration Vercel actuelle ajoute
+  `BLOB_STORE_ID` et injecte `VERCEL_OIDC_TOKEN` à l'exécution. Aucun jeton à
+  recopier ; il suffit de relier le store au projet. C'est le mode en place.
+- **Jeton d'écriture** `BLOB_READ_WRITE_TOKEN` : l'ancien modèle, toujours
+  accepté. Quand il est présent, il est prioritaire.
+
+`@vercel/blob` doit être en **v2 ou plus** pour l'OIDC : la v0.27 ne connaissait
+que le jeton. Cette montée de version apporte trois ruptures qui sont traitées —
+`allowOverwrite` passe par défaut à `false` (une réécriture au même chemin lèverait
+sans lui), `addRandomSuffix` passe à `false`, et `cacheControlMaxAge` ne peut plus
+descendre sous 60 s.
 
 **Sur le support Blob**, deux points de conception méritent d'être connus :
 

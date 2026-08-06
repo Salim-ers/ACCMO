@@ -23,12 +23,28 @@ export type StoreMode = "kv" | "blob" | "file";
 
 const KV = resolveKvCredentials();
 
+// Deux façons de s'authentifier auprès de Vercel Blob :
+//
+//   • un jeton d'écriture explicite (BLOB_READ_WRITE_TOKEN) — l'ancien modèle ;
+//   • l'identité du déploiement (OIDC) : Vercel injecte VERCEL_OIDC_TOKEN à
+//     l'exécution, et BLOB_STORE_ID désigne le store. C'est ce que crée
+//     l'intégration actuelle, qui ne fournit plus de jeton à recopier.
+//
+// La librairie résout elle-même l'OIDC : il suffit de ne PAS lui passer de
+// jeton. On ne renseigne donc `token` que lorsqu'on en possède réellement un.
 const BLOB_TOKEN =
   process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_READ_WRITE_TOKEN || null;
+const BLOB_OIDC = !!(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
+const BLOB_AVAILABLE = !!BLOB_TOKEN || BLOB_OIDC;
+
+/** Options d'authentification à passer à @vercel/blob. */
+function blobAuth(): { token?: string } {
+  return BLOB_TOKEN ? { token: BLOB_TOKEN } : {};
+}
 
 export function storeMode(): StoreMode {
   if (KV) return "kv";
-  if (BLOB_TOKEN) return "blob";
+  if (BLOB_AVAILABLE) return "blob";
   return "file";
 }
 
@@ -75,13 +91,13 @@ async function kvClient() {
 async function blobRead<T>(key: string): Promise<T | null> {
   const { list } = await import("@vercel/blob");
   const pathname = blobPath(key);
-  const { blobs } = await list({ prefix: pathname, limit: 1, token: BLOB_TOKEN! });
+  const { blobs } = await list({ prefix: pathname, limit: 1, ...blobAuth() });
   const found = blobs.find((b) => b.pathname === pathname);
   if (!found) return null; // jamais écrit : ce n'est pas une erreur
 
-  // Le contenu est servi par un CDN. L'écriture pose déjà `cacheControlMaxAge: 0`,
-  // et on ajoute un paramètre jetable pour ne pas retomber sur une copie gardée
-  // en cache par un intermédiaire.
+  // Le contenu est servi par un CDN, dont la durée de cache ne peut pas
+  // descendre sous une minute. Le paramètre jetable change la clé de cache
+  // à chaque lecture, ce qui garantit d'obtenir la dernière version.
   const res = await fetch(`${found.url}?v=${Date.now()}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Lecture du blob impossible (HTTP ${res.status})`);
   return (await res.json()) as T;
@@ -92,9 +108,10 @@ async function blobWrite(key: string, value: unknown): Promise<void> {
   await put(blobPath(key), JSON.stringify(value), {
     access: "public",
     contentType: "application/json",
-    addRandomSuffix: false, // chemin stable : on écrase la version précédente
-    cacheControlMaxAge: 0, // pas de mise en cache navigateur
-    token: BLOB_TOKEN!,
+    addRandomSuffix: false, // chemin stable, indépendant de la version installée
+    allowOverwrite: true, // sans cela, la 2e écriture lèverait « blob already exists »
+    cacheControlMaxAge: 60, // minimum accepté par Vercel Blob
+    ...blobAuth(),
   });
 }
 
@@ -181,27 +198,28 @@ export async function probeStore(key: string): Promise<StoreStatus> {
   }
 
   if (mode === "blob") {
+    const label = `Vercel Blob (${BLOB_TOKEN ? "jeton d’écriture" : "identité du déploiement"})`;
     if (!process.env.SESSION_SECRET) {
       return {
         mode,
         ok: false,
         serverless,
-        label: "Vercel Blob",
+        label,
         hint: "La variable SESSION_SECRET est absente : elle sert à rendre le nom du fichier de données indevinable. Définissez-la dans Vercel, puis redéployez.",
       };
     }
     try {
       await blobRead(key);
-      return { mode, ok: true, serverless, label: "Vercel Blob", hint: null };
+      return { mode, ok: true, serverless, label, hint: null };
     } catch (e) {
       return {
         mode,
         ok: false,
         serverless,
-        label: "Vercel Blob",
+        label,
         hint: `Le Blob Store ne répond pas (${
           e instanceof Error ? e.message : "cause inconnue"
-        }). Vérifiez que la variable BLOB_READ_WRITE_TOKEN est bien définie dans Vercel et que le store est relié au projet.`,
+        }). Vérifiez que le store est bien relié au projet — la variable BLOB_STORE_ID doit être présente — puis redéployez.`,
       };
     }
   }

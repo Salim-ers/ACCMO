@@ -10,13 +10,17 @@ export async function POST(req: Request) {
   if (!isAuthenticated()) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
+  // Deux modes d'authentification possibles : un jeton d'écriture explicite,
+  // ou l'identité du déploiement (OIDC), que l'intégration Vercel actuelle
+  // fournit via BLOB_STORE_ID sans jeton à recopier. Voir lib/store.ts.
   const token =
     process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
-  if (!token) {
+  const oidc = !!(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
+  if (!token && !oidc) {
     return NextResponse.json(
       {
         error:
-          "Variable BLOB_READ_WRITE_TOKEN manquante sur Vercel. Storage → ton Blob → copie le token (vercel_blob_rw_…) → Settings → Environment Variables → ajoute BLOB_READ_WRITE_TOKEN → Redeploy. En attendant, colle une URL d'image.",
+          "Aucun Blob Store n'est relié à ce projet. Dans Vercel : Storage → votre Blob → Connect Project, puis redéployez. En attendant, vous pouvez coller une URL d'image.",
       },
       { status: 501 }
     );
@@ -40,7 +44,10 @@ export async function POST(req: Request) {
     const blob = await put(`annonces/${crypto.randomUUID()}.${ext}`, file, {
       access: "public",
       contentType: file.type,
-      token,
+      // Le nom porte déjà un identifiant unique ; sans jeton, la librairie
+      // s'authentifie par l'identité du déploiement.
+      addRandomSuffix: false,
+      ...(token ? { token } : {}),
     });
     return NextResponse.json({ url: blob.url });
   } catch (e) {

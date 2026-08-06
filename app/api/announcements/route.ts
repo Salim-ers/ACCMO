@@ -33,6 +33,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ item: result.item, items: result.items }, { status: 201 });
   } catch (e) {
     console.error("create announcement failed:", e);
-    return NextResponse.json({ error: storageError() }, { status: 500 });
+    return NextResponse.json({ error: storageError(e) }, { status: 500 });
   }
 }

@@ -148,28 +148,37 @@ async function blobWrite(key: string, value: unknown): Promise<void> {
 // API publique
 // ---------------------------------------------------------------
 
-/** Lecture tolérante aux pannes : renvoie `fallback` plutôt que de lever. */
+/** Contenu du fichier livré avec le code, s'il existe. */
+async function readLocalFile<T>(key: string): Promise<T | null> {
+  try {
+    return JSON.parse(await fs.readFile(filePath(key), "utf-8")) as T;
+  } catch {
+    return null; // absent : ce n'est pas une anomalie
+  }
+}
+
+/**
+ * Lecture tolérante aux pannes : ne lève jamais.
+ *
+ * Tant que le support distant n'a rien reçu — ou s'il est injoignable — on
+ * retombe sur le fichier `data/*.json` livré avec le code. Il sert ainsi de
+ * GRAINE INITIALE : les annonces déjà présentes dans le dépôt restent
+ * visibles et modifiables, et le premier enregistrement les recopie dans le
+ * support distant, qui fait ensuite autorité.
+ */
 export async function readJson<T>(key: string, fallback: T): Promise<T> {
   const mode = storeMode();
-  try {
-    if (mode === "kv") {
-      const c = await kvClient();
-      const data = await c.get<T>(key);
-      return data ?? fallback;
-    }
-    if (mode === "blob") {
-      const data = await blobRead<T>(key);
-      return data ?? fallback;
-    }
-    const raw = await fs.readFile(filePath(key), "utf-8");
-    return JSON.parse(raw) as T;
-  } catch (e) {
-    // Un fichier local absent est normal au premier lancement : on ne bruite pas.
-    if (mode !== "file") {
+
+  if (mode !== "file") {
+    try {
+      const remote = mode === "kv" ? await (await kvClient()).get<T>(key) : await blobRead<T>(key);
+      if (remote !== null && remote !== undefined) return remote;
+    } catch (e) {
       console.error(`Lecture impossible (${mode}, clé « ${key} ») :`, e);
     }
-    return fallback;
   }
+
+  return (await readLocalFile<T>(key)) ?? fallback;
 }
 
 /** Écriture : lève en cas d'échec, pour que l'appelant puisse le signaler. */

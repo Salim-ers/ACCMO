@@ -28,7 +28,7 @@ export async function PUT(req: Request) {
   } catch (e) {
     console.error("update settings failed:", e);
     return NextResponse.json(
-      { error: storageError() },
+      { error: storageError(e) },
       { status: 500 }
     );
   }

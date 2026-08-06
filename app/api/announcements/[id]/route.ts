@@ -24,7 +24,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ item: result.item, items: result.items });
   } catch (e) {
     console.error("update announcement failed:", e);
-    return NextResponse.json({ error: storageError() }, { status: 500 });
+    return NextResponse.json({ error: storageError(e) }, { status: 500 });
   }
 }
 
@@ -40,6 +40,6 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     return NextResponse.json({ ok: true, items: result.items });
   } catch (e) {
     console.error("delete announcement failed:", e);
-    return NextResponse.json({ error: storageError() }, { status: 500 });
+    return NextResponse.json({ error: storageError(e) }, { status: 500 });
   }
 }

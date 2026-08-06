@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tour appversion="6.1.11" start="node10" apprev="18043">
+  <panorama hideabout="1" id="node10">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node10/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="-47">
+      <start projection="4" pan="177.53" tilt="-2.18" fov="70"/>
+      <flyin projection="12" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Court d'entrée de la Mosquée" datetime="" source="" nodeid="node10" heading="-47" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46289015" altitude="61.99" customnodeid="" description="" latitude="49.24982315" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Entrée de la Mosquée" skinid="ht_node" pan="-182.24" target="0.0/0.0/100.0" tilt="-0.86" url="{node6}" id="Point01" distance="22.215" description=""/>
+      <hotspot title="Court de récréation Ecole Ghazali" skinid="ht_node" pan="-127.76" target="" tilt="-1.26" url="{node4}" id="Point02" distance="24.1152" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node1">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node1/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="-140">
+      <start projection="4" pan="6.27" tilt="-3.12" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Salle d'ablution" datetime="" source="" nodeid="node1" heading="-140" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46296498" altitude="73.77" customnodeid="" description="" latitude="49.24964774" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Entrée de la Mosquée" skinid="ht_node" pan="-238.6" target="" tilt="-7.97" url="{node6}" id="Point01" distance="9.57652" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node2">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node2/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-8" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="-49">
+      <start projection="4" pan="-4.92" tilt="-0.16" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Salle des femmes 1" datetime="" source="" nodeid="node2" heading="-49" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46316641" altitude="72.35" customnodeid="" description="" latitude="49.24956403" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Salle des femmes 2" skinid="ht_node" pan="-5" target="-5.4/1.7/70.0" tilt="-0.96" url="{node9}" id="Point01" distance="8.83366" description=""/>
+      <hotspot title="" skinid="ht_node" pan="-187.51" target="" tilt="-5.98" url="{node5}" id="Point02" distance="4.48467" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node3">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node3/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="43">
+      <start projection="4" pan="-172.17" tilt="0.02" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Fond de la mosquée" datetime="" source="" nodeid="node3" heading="43" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46334964" altitude="73.72" customnodeid="" description="" latitude="49.24957625" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Mihrab" skinid="ht_node" pan="-155.82" target="173.5/-0.9/70.0" tilt="-0.83" url="{node8}" id="Point01" distance="5.20151" description=""/>
+      <hotspot title="Entrée de la Mosquée" skinid="ht_node" pan="-247.44" target="" tilt="-1.34" url="{node6}" id="Point02" distance="21.5945" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node4">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node4/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="-46">
+      <start projection="4" pan="-163.62" tilt="5.01" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Court de récréation Ecole Ghazali" datetime="" source="" nodeid="node4" heading="-46" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46320856" altitude="74.08" customnodeid="" description="" latitude="49.24976123" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Court d'entrée de la Mosquée" skinid="ht_node" pan="-307.42" target="" tilt="-0.61" url="{node10}" id="Point01" distance="24.1152" description=""/>
+      <hotspot title="" skinid="ht_image" pan="-121.18" target="" tilt="7.31" url="images/52956328-652463328518054-4787389647288270848-n_1580983265.jpg" id="Point02" description="HJ"/>
+      <hotspot title="" skinid="ht_image" pan="-179.34" target="" tilt="-1.41" url="images/téléchargement.jpg" id="Point03" description="HJ"/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node5">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node5/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-6.5" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="125">
+      <start projection="4" pan="-1.99" tilt="0.94" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Intérieur Mosquée 2" datetime="" source="" nodeid="node5" heading="125" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46322564" altitude="73.43" customnodeid="" description="" latitude="49.24957551" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Mihrab" skinid="ht_node" pan="-0.67" target="" tilt="-1.38" url="{node8}" id="Point01" distance="6.45462" description=""/>
+      <hotspot title="Intérieur Mosquée 1" skinid="ht_node" pan="-181.41" target="170.1/-4.3/70.0" tilt="-3.28" url="{node7}" id="Point02" distance="3.60338" description=""/>
+      <hotspot title="" skinid="ht_node" pan="-182.5" target="" tilt="19.99" url="{node2}" id="Point03" distance="4.48467" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node6">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node6/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-6" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="125">
+      <start projection="4" pan="0" tilt="0" fov="100"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="1" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Entrée de la Mosquée" datetime="" source="" nodeid="node6" heading="125" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46309131" altitude="74.62" customnodeid="" description="" latitude="49.24967258" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Court d'entrée de la Mosquée" skinid="ht_node" pan="-178.29" target="" tilt="-4.04" url="{node10}" id="Point01" distance="22.215" description=""/>
+      <hotspot title="Salle d'ablution" skinid="ht_node" pan="-136.91" target="" tilt="-3.99" url="{node1}" id="Point02" distance="9.57652" description=""/>
+      <hotspot title="Intérieur Mosquée 1" skinid="ht_node" pan="-3.03" target="-12.7/1.5/70.0" tilt="0.11" url="{node7}" id="Point03" distance="10.9503" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node7">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node7/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="113">
+      <start projection="4" pan="-12.71" tilt="1.47" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Intérieur Mosquée 1" datetime="" source="" nodeid="node7" heading="113" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46319458" altitude="73.32" customnodeid="" description="" latitude="49.24960079" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Entrée de la Mosquée" skinid="ht_node" pan="-190.1" target="178.1/-3.3/100.0" tilt="-1.9" url="{node6}" id="Point01" distance="10.9503" description=""/>
+      <hotspot title="Intérieur Mosquée 2" skinid="ht_node" pan="-11.48" target="-2.0/0.9/70.0" tilt="-1.55" url="{node5}" id="Point02" distance="3.60338" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node8">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node8/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="120">
+      <start projection="4" pan="-9.98" tilt="2.23" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Mihrab" datetime="" source="" nodeid="node8" heading="120" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46329928" altitude="73.69" customnodeid="" description="" latitude="49.24954297" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Fond de la mosquée" skinid="ht_node" pan="-264.36" target="-172.2/0.0/70.0" tilt="-3.34" url="{node3}" id="Point01" distance="5.20151" description=""/>
+      <hotspot title="Intérieur Mosquée 2" skinid="ht_node" pan="-187.55" target="179.5/-0.6/70.0" tilt="-1.87" url="{node5}" id="Point02" distance="6.45462" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <panorama hideabout="1" id="node9">
+    <input width="1520" levelbiashidpi="1.000" levelingpitch="0" levelbias="0.400" leveltilesize="510" leveltileurl="tiles/node9/cf_%c/l_%l/c_%x/tile_%y.jpg" overlap="1" levelingroll="-7" height="1520">
+      <level width="1520" predecode="0" height="1520" preload="0"/>
+      <level width="760" predecode="0" height="760" preload="0"/>
+      <level width="380" predecode="1" height="380" preload="1"/>
+      <preview color="0x808080" strip="1"/>
+    </input>
+    <view fovmode="0" pannorth="124">
+      <start projection="4" pan="-5.36" tilt="1.66" fov="70"/>
+      <flyin projection="9" pan="0" tilt="-90" fov="170"/>
+      <min fovpixel="2" pan="0" tilt="-90"/>
+      <max scaletofit="1" pan="360" fovstereographic="270" tilt="90" fov="120" fovfisheye="360"/>
+    </view>
+    <userdata title="Salle des femmes 2" datetime="" source="" nodeid="node9" heading="124" info="" author="" copyright="copyrightÂ®" comment="" longitude="2.46312753" altitude="72.53" customnodeid="" description="" latitude="49.24963931" tags="panorama mosquée essalam"/>
+    <hotspots width="180" wordwrap="1" height="20">
+      <label width="180" borderradius="1" bordercolor="0x000000" border="1" backgroundcolor="0xffffff" borderalpha="1" textalpha="1" backgroundalpha="1" enabled="1" textcolor="0x000000" background="1" wordwrap="1" height="20"/>
+      <polystyle bordercolor="0x0000ff" backgroundcolor="0x142bff" borderalpha="1" backgroundalpha="0.25098" mode="1" handcursor="1"/>
+      <hotspot title="Salle des femmes 1" skinid="ht_node" pan="-3.22" target="175.5/-2.7/70.0" tilt="-1.76" url="{node2}" id="Point01" distance="8.83366" description=""/>
+      <hotspot title="" skinid="ht_node" pan="-21.83" target="" tilt="6.64" url="" id="Point02" description=""/>
+    </hotspots>
+    <media/>
+    <transition type="crossdissolve" softedge="0" zoomout="2" zoomafterinfov="90" blendcolor="0x000000" zoomin="2" blendtime="1" zoomspeed="2" enabled="1" zoomfov="26" zoomafteroutfov="25" zoomoutpause="1"/>
+    <animation syncanimationwithvideo="0" useinautorotation="0" animsequence="Animation01"/>
+    <control hideabout="1" simulatemass="1" lockedkeyboard="0" contextfullscreen="1" rubberband="0" speedwheel="1" dblclickfullscreen="0" lockedmouse="0" lockedwheel="0" sensitivity="8" invertcontrol="1" invertwheel="0" contextprojections="0" lockedkeyboardzoom="0">
+      <menulink url="https://accmo.org/" text="Mosquée Essalam Creil"/>
+    </control>
+  </panorama>
+  <masternode>
+    <userdata title="" datetime="" source="" nodeid="master" heading="0" info="" author="" copyright="" comment="" longitude="" customnodeid="" description="" latitude="" tags=""/>
+  </masternode>
+</tour>

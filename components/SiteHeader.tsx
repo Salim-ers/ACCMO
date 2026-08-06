@@ -173,12 +173,19 @@ export default function SiteHeader({ prayerDay }: { prayerDay: PrayerDay | null 
         </header>
       </div>
 
-      {/* ---- Menu plein écran (mobile / tablette) ---- */}
+      {/* ---- Menu plein écran (mobile / tablette) ----
+          L'ouverture se joue sur la CLASSE, pas sur l'attribut `hidden` :
+          une classe utilitaire `flex` l'emporte sur `[hidden]` à égalité de
+          spécificité. Le panneau restait donc affiché, plein écran, et
+          recouvrait tout le site sous 1024 px ; seul `lg:hidden` le masquait
+          sur grand écran, ce qui rendait le défaut invisible en test de
+          bureau. */}
       <div
         id="menu-principal"
         ref={panelRef}
-        hidden={!open}
-        className="on-dark fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-night-900 text-sand-50 lg:hidden"
+        className={`on-dark fixed inset-0 z-[60] flex-col overflow-y-auto bg-night-900 text-sand-50 lg:hidden ${
+          open ? "flex" : "hidden"
+        }`}
       >
         <div className="flex h-[var(--header-h)] shrink-0 items-center justify-between border-b border-[var(--rule-invert)] px-[var(--gutter)]">
           <span className="text-[19px] font-extrabold tracking-tightest">ESSALAM</span>

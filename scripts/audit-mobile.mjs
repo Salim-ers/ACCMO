@@ -88,7 +88,20 @@ for (const vp of VIEWPORTS) {
         }
       }
 
+      // Le contenu de la page est-il REELLEMENT atteignable ? Un panneau
+      // ferme mais toujours affiche (menu, bandeau, surcouche) recouvrirait
+      // tout sans qu'aucune mesure de taille ou de debordement ne le voie.
+      const cible = document.elementFromPoint(vw / 2, de.clientHeight / 2);
+      const dansMain = !!cible?.closest("main");
+      const recouvrement = dansMain
+        ? null
+        : {
+            id: cible?.closest("[id]")?.id || "",
+            tag: cible?.tagName?.toLowerCase() || "?",
+          };
+
       return {
+        recouvrement,
         scrollX: de.scrollWidth > vw + 1,
         scrollWidth: de.scrollWidth, vw,
         coupables: coupables.slice(0, 4),
@@ -99,6 +112,7 @@ for (const vp of VIEWPORTS) {
     });
 
     const soucis = [];
+    if (r.recouvrement) soucis.push(`CONTENU RECOUVERT au centre de l ecran par <${r.recouvrement.tag}${r.recouvrement.id ? " #" + r.recouvrement.id : ""}>`);
     if (r.scrollX) soucis.push(`DEBORDEMENT ${r.scrollWidth}px > ${r.vw}px`);
     if (r.coupables.length) soucis.push(`hors cadre: ${r.coupables.map(c=>c.tag+"."+c.cls.split(" ")[0]).join(", ")}`);
     if (r.petites.length) soucis.push(`cible <24px: ${r.petites.map(p=>`${p.tag}(${p.w}x${p.h})"${p.txt}"`).join(", ")}`);

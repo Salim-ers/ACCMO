@@ -98,7 +98,11 @@ export const LINKS = {
   cotisation: "https://donate.stripe.com/aFa14m5MG9ixbT62go2wU01",
   mouton: "https://mosqueedecreil.kebchi.fr/",
   inscriptionCours: "https://inscription-madrassah.web.app/",
-  visiteVirtuelle: "https://accmo.org/virtualtour/mosquee/",
+  // Visite rapatriée dans public/ : elle ne dépend plus du site WordPress.
+  // Le fichier est désigné explicitement — Next ne sert pas d'index.html
+  // pour un chemin de dossier, et le slash final garantit que les chemins
+  // relatifs internes à la visite (moteur, habillage, tuiles) se résolvent.
+  visiteVirtuelle: "/virtualtour/mosquee/index.html",
   ecole: "https://alghazali.org/",
   mawaqit: "https://mawaqit.net/fr/m/essalam-creil",
 } as const;
@@ -346,8 +350,8 @@ export const PHOTOS = {
 } as const;
 
 // Logo officiel (hébergé sur accmo.org, déjà autorisé dans next.config).
-export const LOGO =
-  "https://accmo.org/wp-content/uploads/2023/04/cropped-cropped-logo-creil-150x150-1.webp";
+// Servi par le site : plus aucune dependance a l'hebergement WordPress.
+export const LOGO = "/logo-essalam.webp";
 
 // --- Pied de page organisé par usages ---
 export const FOOTER_GROUPS: {

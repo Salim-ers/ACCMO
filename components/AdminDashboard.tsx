@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Announcement, StoreStatus } from "@/lib/announcements";
 import { CATEGORIES, DEFAULT_CATEGORY, type Category } from "@/lib/categories";
 import { ROUTES } from "@/lib/site";
+import AdminIdleLogout from "@/components/AdminIdleLogout";
 
 type FormState = {
   id: string | null;
@@ -193,6 +194,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
 
   return (
     <div className="shell py-10">
+      <AdminIdleLogout />
       {/* En-tête */}
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--rule)] pb-6">
         <div>

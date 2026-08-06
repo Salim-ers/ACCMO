@@ -9,7 +9,13 @@ import { cookies } from "next/headers";
 // =============================================================
 
 const COOKIE = "accmo_session";
-const MAX_AGE = 60 * 60 * 8; // 8 heures
+
+/**
+ * Durée de validité maximale signée dans le jeton — plafond absolu côté
+ * serveur. Le cookie, lui, est un cookie de SESSION : il disparaît à la
+ * fermeture du navigateur (voir `createSessionCookie`).
+ */
+const MAX_AGE = 60 * 60 * 4; // 4 heures
 
 function secret(): string {
   const s = process.env.SESSION_SECRET;
@@ -59,7 +65,10 @@ export function createSessionCookie() {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax" as const,
       path: "/",
-      maxAge: MAX_AGE,
+      // Ni `maxAge` ni `expires` : c'est ce qui en fait un cookie de
+      // SESSION. Le navigateur l'efface à sa fermeture, la connexion à
+      // l'administration ne survit donc pas à la fin de la journée de
+      // travail. La date signée dans le jeton reste le plafond serveur.
     },
   };
 }

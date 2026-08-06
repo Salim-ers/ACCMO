@@ -12,11 +12,15 @@ export async function POST(req: Request) {
   }
   // Deux modes d'authentification possibles : un jeton d'écriture explicite,
   // ou l'identité du déploiement (OIDC), que l'intégration Vercel actuelle
-  // fournit via BLOB_STORE_ID sans jeton à recopier. Voir lib/store.ts.
+  // fournit via BLOB_STORE_ID sans jeton à recopier.
+  //
+  // On ne vérifie QUE la présence d'un store relié : le jeton OIDC n'arrive
+  // pas dans l'environnement mais en en-tête de requête, et le tester ici
+  // reviendrait à refuser une configuration valide. Si l'authentification
+  // échoue vraiment, c'est `put` qui le dira.
   const token =
     process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
-  const oidc = !!(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
-  if (!token && !oidc) {
+  if (!token && !process.env.BLOB_STORE_ID) {
     return NextResponse.json(
       {
         error:

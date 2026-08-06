@@ -11,7 +11,7 @@ import { kvHost, resolveKvCredentials } from "@/lib/kv-env";
 // silencieusement les données d'un support à l'autre :
 //
 //   1. « kv »   — Vercel KV / Upstash, si des identifiants existent.
-//   2. « blob » — Vercel Blob, si BLOB_READ_WRITE_TOKEN existe.
+//   2. « blob » — Vercel Blob, si un store est relié au projet.
 //   3. « file » — data/*.json, pour le développement local.
 //
 // La LECTURE ne lève jamais : un support injoignable renvoie la valeur
@@ -45,6 +45,30 @@ const BLOB_AVAILABLE = !!BLOB_TOKEN || !!BLOB_STORE_ID;
 /** Options d'authentification à passer à @vercel/blob. */
 function blobAuth(): { token?: string } {
   return BLOB_TOKEN ? { token: BLOB_TOKEN } : {};
+}
+
+/**
+ * Présence du jeton d'identité OIDC, résolue EXACTEMENT comme le fait
+ * @vercel/oidc : sur Vercel il arrive en en-tête de requête
+ * (`x-vercel-oidc-token`) et non dans l'environnement ; `process.env` n'est
+ * que le repli du développement local.
+ *
+ * Cette fonction ne sert qu'au diagnostic : elle ne conditionne aucune
+ * tentative d'écriture, pour ne pas bloquer une configuration valide sur la
+ * foi d'un test maison.
+ */
+export function hasOidcToken(): boolean {
+  try {
+    const ctx = (
+      globalThis as unknown as {
+        [k: symbol]: { get?: () => { headers?: Record<string, string> } };
+      }
+    )[Symbol.for("@vercel/request-context")];
+    const header = ctx?.get?.()?.headers?.["x-vercel-oidc-token"];
+    return !!(header || process.env.VERCEL_OIDC_TOKEN);
+  } catch {
+    return !!process.env.VERCEL_OIDC_TOKEN;
+  }
 }
 
 export function storeMode(): StoreMode {
@@ -191,7 +215,7 @@ function diagnostic(): Record<string, string> {
   const oui = (v: unknown) => (v ? "présente" : "absente");
   return {
     BLOB_STORE_ID: oui(BLOB_STORE_ID),
-    VERCEL_OIDC_TOKEN: oui(process.env.VERCEL_OIDC_TOKEN),
+    "Jeton d'identité OIDC": oui(hasOidcToken()),
     BLOB_READ_WRITE_TOKEN: oui(BLOB_TOKEN),
     "Identifiants Redis": oui(KV),
     SESSION_SECRET: oui(process.env.SESSION_SECRET),
@@ -233,20 +257,10 @@ export async function probeStore(key: string): Promise<StoreStatus> {
         hint: "La variable SESSION_SECRET est absente : elle sert à rendre le nom du fichier de données indevinable. Définissez-la dans Vercel, puis redéployez.",
       };
     }
-    // Sans jeton explicite, l'authentification repose sur l'identité du
-    // déploiement : elle exige que « Secure Backend Access (OIDC) » soit
-    // activé sur le projet, faute de quoi Vercel n'injecte pas de jeton.
-    if (!BLOB_TOKEN && !process.env.VERCEL_OIDC_TOKEN) {
-      return {
-        mode,
-        ok: false,
-        serverless,
-        label,
-        diagnostic: diagnostic(),
-        hint: "Le Blob Store est relié (BLOB_STORE_ID présente) mais Vercel n'injecte aucun jeton d'identité : dans les réglages du projet, section Security, activez « Secure Backend Access (OIDC) », puis redéployez. À défaut, ajoutez un jeton BLOB_READ_WRITE_TOKEN.",
-      };
-    }
-
+    // Aucun test maison ici : on tente réellement l'opération et on rapporte
+    // ce que la librairie répond. C'est elle qui sait résoudre ses
+    // identifiants — un pré-test approximatif bloquerait des configurations
+    // parfaitement valides.
     try {
       await blobRead(key);
       return { mode, ok: true, serverless, label, hint: null, diagnostic: diagnostic() };

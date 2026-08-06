@@ -15,7 +15,8 @@ si tu changes un fichier ici, mets à jour ce seul objet.
 > par `object-[72%_center]` dans `components/HomeHero.tsx`, à ajuster si
 > le sujet principal n'est plus sur la droite du cadre.
 | `salle`     | `mosquee-salle.jpg`       | Vignette carrée du hero, aperçu de la visite 360°, raccourci « Visiter »  |
-| `interieur` | `mosquee-interieur.png`   | Section école, en-tête de la page Annonces, raccourci « École Al Ghazali » |
+| `interieur` | `mosquee-interieur.png`   | En-tête de la page Annonces, raccourci « École Al Ghazali »              |
+| `ecole`     | `ecole-al-ghazali.jpg`    | Section « Apprendre » de l'accueil et de la page École                    |
 
 ## Règles de traitement
 

@@ -19,17 +19,22 @@ export default function SchoolFeature() {
       {/* Photographie documentaire */}
       <div className="group relative" data-reveal>
         <div className="frame frame-shift aspect-[4/3] lg:aspect-[5/6]">
+          {/*
+            Cliché 4:3 en paysage recadré en portrait sur grand écran :
+            le point focal est légèrement à gauche pour garder l'enseigne
+            et l'entrée dans le champ.
+          */}
           <Image
-            src={PHOTOS.interieur.src}
-            alt="Espace d’enseignement de la Mosquée Essalam de Creil"
+            src={PHOTOS.ecole.src}
+            alt={PHOTOS.ecole.alt}
             fill
             quality={78}
             sizes="(max-width: 1023px) 100vw, 47vw"
-            className="object-cover"
+            className="object-cover object-[42%_center]"
           />
         </div>
         <p className="mt-3 text-[12.5px] text-night-600">
-          Les cours se tiennent dans les espaces de la mosquée, à Creil.
+          Le groupe scolaire Al Ghazali, porté par l’association.
         </p>
       </div>
 

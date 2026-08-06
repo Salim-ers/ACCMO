@@ -282,6 +282,10 @@ export const PHOTOS = {
     src: "/photos/mosquee-interieur.png",
     alt: "Intérieur de la Mosquée Essalam de Creil sous la lumière naturelle",
   },
+  ecole: {
+    src: "/photos/ecole-al-ghazali.jpg",
+    alt: "Entrée du groupe scolaire Al Ghazali et son enseigne",
+  },
 } as const;
 
 // Logo officiel (hébergé sur accmo.org, déjà autorisé dans next.config).

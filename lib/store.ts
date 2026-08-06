@@ -190,21 +190,29 @@ async function readLocalFile<T>(key: string): Promise<T | null> {
 /**
  * Lecture tolérante aux pannes : ne lève jamais.
  *
- * Tant que le support distant n'a rien reçu — ou s'il est injoignable — on
- * retombe sur le fichier `data/*.json` livré avec le code. Il sert ainsi de
- * GRAINE INITIALE : les annonces déjà présentes dans le dépôt restent
- * visibles et modifiables, et le premier enregistrement les recopie dans le
- * support distant, qui fait ensuite autorité.
+ * Le fichier `data/*.json` livré avec le code sert de GRAINE INITIALE, mais
+ * UNIQUEMENT tant que le support distant n'a jamais rien reçu. Le premier
+ * enregistrement le recopie, et le support distant fait ensuite autorité.
+ *
+ * Distinction essentielle : « jamais écrit » et « lecture en échec » ne
+ * doivent pas être traités de la même façon. Retomber sur la graine après une
+ * simple erreur de lecture ferait RÉAPPARAÎTRE des annonces supprimées, que
+ * l'administration ne proposerait même plus — introuvables, donc
+ * ineffaçables. En cas d'échec, on renvoie la valeur de repli et on le
+ * signale dans les journaux.
  */
 export async function readJson<T>(key: string, fallback: T): Promise<T> {
   const mode = storeMode();
 
   if (mode !== "file") {
     try {
-      const remote = mode === "kv" ? await (await kvClient()).get<T>(key) : await blobRead<T>(key);
+      const remote =
+        mode === "kv" ? await (await kvClient()).get<T>(key) : await blobRead<T>(key);
       if (remote !== null && remote !== undefined) return remote;
+      // `null` = jamais écrit : la graine initiale a un sens ici.
     } catch (e) {
       console.error(`Lecture impossible (${mode}, clé « ${key} ») :`, e);
+      return fallback; // surtout pas la graine
     }
   }
 

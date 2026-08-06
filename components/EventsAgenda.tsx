@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Announcement } from "@/lib/announcements";
 import { CATEGORIES, CATEGORY_TAG, type Category } from "@/lib/categories";
-import { RECURRING, ROUTES } from "@/lib/site";
+import { recurringFor, ROUTES } from "@/lib/site";
 import { formatDate, splitDate } from "@/lib/format";
 import { Icon } from "@/components/Icons";
 
@@ -25,7 +25,7 @@ type Row = {
   when?: string;
 };
 
-function toRows(items: Announcement[]): Row[] {
+function toRows(items: Announcement[], aidEnabled: boolean): Row[] {
   const announcements: Row[] = items.map((a) => ({
     id: a.id,
     title: a.title,
@@ -37,7 +37,7 @@ function toRows(items: Announcement[]): Row[] {
     date: a.date,
   }));
 
-  const recurring: Row[] = RECURRING.map((e) => ({
+  const recurring: Row[] = recurringFor(aidEnabled).map((e) => ({
     id: `recurring-${e.title}`,
     title: e.title,
     body: e.desc,
@@ -55,8 +55,11 @@ export default function EventsAgenda({
   items,
   featuredId,
   limit,
+  aidEnabled = false,
 }: {
   items: Announcement[];
+  /** Ajoute la demarche saisonniere de l Aid quand elle est activee. */
+  aidEnabled?: boolean;
   /** Identifiant de l'entrée mise en avant (calculée côté serveur). */
   featuredId?: string;
   /** Nombre maximum de lignes dans la colonne de droite. */
@@ -64,7 +67,7 @@ export default function EventsAgenda({
 }) {
   const [filter, setFilter] = useState<Category | "Tous">("Tous");
 
-  const rows = useMemo(() => toRows(items), [items]);
+  const rows = useMemo(() => toRows(items, aidEnabled), [items, aidEnabled]);
   const lead = rows.find((r) => r.id === featuredId) ?? rows[0];
   const rest = rows.filter((r) => r.id !== lead?.id);
 

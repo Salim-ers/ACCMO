@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPublished } from "@/lib/announcements";
+import { getSettings } from "@/lib/settings";
 import { ROUTES } from "@/lib/site";
 import { PhotoHeader } from "@/components/PageHeader";
 import EventsAgenda from "@/components/EventsAgenda";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AnnoncesPage() {
-  const announcements = await getPublished();
+  const [announcements, settings] = await Promise.all([getPublished(), getSettings()]);
   const featured = announcements.find((a) => a.featured) ?? announcements[0];
 
   return (
@@ -30,7 +31,11 @@ export default async function AnnoncesPage() {
           <h2 id="h-agenda-page" className="sr-only">
             Annonces et rendez-vous
           </h2>
-          <EventsAgenda items={announcements} featuredId={featured?.id} />
+          <EventsAgenda
+            items={announcements}
+            featuredId={featured?.id}
+            aidEnabled={settings.aidEnabled}
+          />
         </div>
       </section>
     </main>

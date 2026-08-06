@@ -15,7 +15,14 @@ import { Icon } from "@/components/Icons";
 // Pied de page organisé par intentions d'usage — « je viens prier »,
 // « je souhaite apprendre » — et non par duplication de la navigation.
 
-export default function SiteFooter({ prayerDay }: { prayerDay: PrayerDay | null }) {
+export default function SiteFooter({
+  prayerDay,
+  aidEnabled = false,
+}: {
+  prayerDay: PrayerDay | null;
+  /** Les liens saisonniers (commande de mouton) restent masques hors saison. */
+  aidEnabled?: boolean;
+}) {
   const year = new Date().getFullYear();
 
   // Aplat de bleu nuit franc : aucune trame de fond ici. La respiration
@@ -47,7 +54,9 @@ export default function SiteFooter({ prayerDay }: { prayerDay: PrayerDay | null 
               {group.title}
             </h2>
             <ul className="mt-4 space-y-2.5">
-              {group.links.map((l) => (
+              {group.links
+                .filter((l) => !l.seasonal || aidEnabled)
+                .map((l) => (
                 <li key={`${group.title}-${l.label}`}>
                   {l.external ? (
                     <a

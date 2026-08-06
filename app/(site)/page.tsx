@@ -54,7 +54,12 @@ export default async function HomePage() {
               </Link>
             }
           />
-          <EventsAgenda items={announcements} featuredId={featured?.id} limit={5} />
+          <EventsAgenda
+            items={announcements}
+            featuredId={featured?.id}
+            limit={5}
+            aidEnabled={settings.aidEnabled}
+          />
         </div>
       </section>
 

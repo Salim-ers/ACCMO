@@ -1,5 +1,6 @@
 import { FULL_ADDRESS, LINKS, LOGO, ROUTES, SITE } from "@/lib/site";
 import { getPrayerDay } from "@/lib/prayer";
+import { getSettings } from "@/lib/settings";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import MobileQuickBar from "@/components/MobileQuickBar";
@@ -80,7 +81,7 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const prayerDay = await getPrayerDay();
+  const [prayerDay, settings] = await Promise.all([getPrayerDay(), getSettings()]);
 
   return (
     <div className="pb-[58px] sm:pb-0">
@@ -90,7 +91,7 @@ export default async function SiteLayout({
       />
       <SiteHeader prayerDay={prayerDay} />
       {children}
-      <SiteFooter prayerDay={prayerDay} />
+      <SiteFooter prayerDay={prayerDay} aidEnabled={settings.aidEnabled} />
       <MobileQuickBar />
     </div>
   );

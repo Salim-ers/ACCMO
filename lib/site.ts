@@ -189,15 +189,24 @@ export const RECURRING: {
     cta: "Contribuer",
     category: "Solidarité",
   },
-  {
-    title: "Commande de mouton — Aïd al-Adha",
-    when: "Service saisonnier",
-    desc: "Réservation auprès du service partenaire de la mosquée.",
-    href: LINKS.mouton,
-    cta: "Commander",
-    category: "Événements",
-  },
 ];
+
+// Démarche saisonnière : n'apparaît QUE si l'administration l'a activée.
+// Elle est tenue à l'écart de RECURRING pour qu'aucun affichage ne puisse
+// la faire réapparaître hors saison.
+const AID_RECURRING: (typeof RECURRING)[number] = {
+  title: "Commande de mouton — Aïd al-Adha",
+  when: "Service saisonnier",
+  desc: "Réservation auprès du service partenaire de la mosquée.",
+  href: LINKS.mouton,
+  cta: "Commander",
+  category: "Événements",
+};
+
+/** Démarches à afficher dans l'agenda, selon l'activation du service Aïd. */
+export function recurringFor(aidEnabled: boolean) {
+  return aidEnabled ? [...RECURRING, AID_RECURRING] : RECURRING;
+}
 
 // --- Informations pratiques d'accès ---
 // `null` = information non confirmée par l'association : rien n'est affiché
@@ -295,7 +304,8 @@ export const LOGO =
 // --- Pied de page organisé par usages ---
 export const FOOTER_GROUPS: {
   title: string;
-  links: { label: string; href: string; external?: boolean }[];
+  /** `seasonal` : lien masqué tant que le service Aïd n'est pas activé. */
+  links: { label: string; href: string; external?: boolean; seasonal?: boolean }[];
 }[] = [
   {
     title: "Je viens prier",
@@ -318,7 +328,7 @@ export const FOOTER_GROUPS: {
     title: "Je cherche une démarche",
     links: [
       { label: "Préparer une Janaza", href: ROUTES.contact },
-      { label: "Commande de mouton — Aïd", href: LINKS.mouton, external: true },
+      { label: "Commande de mouton — Aïd", href: LINKS.mouton, external: true, seasonal: true },
       { label: "Visite virtuelle 360°", href: ROUTES.visite },
       { label: "Écrire à l'association", href: ROUTES.contact },
     ],

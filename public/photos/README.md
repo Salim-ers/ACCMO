@@ -37,5 +37,3 @@ si tu changes un fichier ici, mets à jour ce seul objet.
 2. Ajoute une entrée dans `PHOTOS` (`lib/site.ts`) avec un `alt` précis.
 3. Référence-la par sa clé dans le composant voulu.
 
-`mosaique-zellige.png` n'est plus utilisé : la trame géométrique du site est
-désormais construite en CSS (`.mesh-faint`), à très faible opacité.

@@ -12,12 +12,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
-  if (!checkPassword(password)) {
+  if (!(await checkPassword(password))) {
     return NextResponse.json({ error: "Mot de passe incorrect." }, { status: 401 });
   }
 
   const res = NextResponse.json({ ok: true });
-  const c = createSessionCookie();
+  const c = await createSessionCookie();
   res.cookies.set(c.name, c.value, c.options);
   return res;
 }

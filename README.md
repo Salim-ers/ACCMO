@@ -264,3 +264,25 @@ Le script pilote Chrome et parcourt les neuf pages publiques sur cinq formats
 > Tailwind et l'emportent à égalité de spécificité : `.btn { display: inline-flex }`
 > écrasait `.hidden`, et les boutons réservés au grand écran restaient affichés
 > sur mobile en débordant la page. Ce script l'aurait détecté.
+
+## 14. Mot de passe de l'administration
+
+Deux sources, dans cet ordre :
+
+1. le mot de passe **défini depuis `/admin`**, stocké **haché** (scrypt + sel
+   aléatoire, jamais en clair) dans le même support que les annonces ;
+2. à défaut, la variable `ADMIN_PASSWORD`.
+
+Dès qu'un mot de passe a été défini depuis l'interface, `ADMIN_PASSWORD` est
+ignoré. Le changement exige de connaître le mot de passe actuel, refuse les
+mots de passe de moins de 10 caractères et les plus courants.
+
+**Le jeton de session porte une empreinte du mot de passe en vigueur.** Changer
+le mot de passe invalide donc immédiatement toutes les sessions ouvertes — y
+compris un cookie qui aurait été copié ailleurs. Sans cela, effacer le cookie ne
+protégerait que le navigateur qui accepte de l'effacer.
+
+**Oubli du mot de passe** : poser `ADMIN_PASSWORD_RESET=1` dans Vercel neutralise
+le mot de passe enregistré et rend la main à `ADMIN_PASSWORD`, le temps d'en
+définir un nouveau depuis l'interface. **Retirer la variable ensuite** — tant
+qu'elle est là, l'ancien mot de passe d'environnement reste valable.

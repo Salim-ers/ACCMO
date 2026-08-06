@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 // adapte et renvoie, dans le second cas, une URL relayée par le site
 // (/api/photo/…) pour que l'image reste affichable par les visiteurs.
 export async function POST(req: Request) {
-  if (!isAuthenticated()) {
+  if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
 

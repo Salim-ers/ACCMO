@@ -14,7 +14,7 @@ export async function GET() {
 
 // PUT : admin uniquement (modifier les réglages).
 export async function PUT(req: Request) {
-  if (!isAuthenticated()) {
+  if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
   let body: unknown;

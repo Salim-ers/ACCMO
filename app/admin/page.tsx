@@ -6,7 +6,7 @@ import AdminDashboard from "@/components/AdminDashboard";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  if (!isAuthenticated()) {
+  if (!(await isAuthenticated())) {
     redirect("/admin/login");
   }
   const initial = await getAll();

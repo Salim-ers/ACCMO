@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 // GET : public -> annonces publiées ; admin connecté -> toutes.
 export async function GET() {
-  if (isAuthenticated()) {
+  if (await isAuthenticated()) {
     return NextResponse.json(await getAll());
   }
   return NextResponse.json(await getPublished());
@@ -17,7 +17,7 @@ export async function GET() {
 
 // POST : création (admin uniquement).
 export async function POST(req: Request) {
-  if (!isAuthenticated()) {
+  if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
   let body: unknown;

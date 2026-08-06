@@ -6,6 +6,7 @@ import type { Announcement, StoreStatus } from "@/lib/announcements";
 import { CATEGORIES, DEFAULT_CATEGORY, type Category } from "@/lib/categories";
 import { ROUTES } from "@/lib/site";
 import AdminIdleLogout from "@/components/AdminIdleLogout";
+import AdminPassword from "@/components/AdminPassword";
 
 type FormState = {
   id: string | null;
@@ -282,6 +283,8 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
               </span>
             </label>
           </section>
+
+          <AdminPassword />
 
           {/* Formulaire */}
           <form onSubmit={save} className="h-fit border border-[var(--rule)] bg-white p-6">

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSettings, setSettings } from "@/lib/settings";
 import { isAuthenticated } from "@/lib/auth";
 import { storageError } from "@/lib/storage-error";
+import { revalidatePublicPages } from "@/lib/revalidate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,6 +25,7 @@ export async function PUT(req: Request) {
   }
   try {
     const next = await setSettings(body as Record<string, unknown>);
+    revalidatePublicPages();
     return NextResponse.json(next);
   } catch (e) {
     console.error("update settings failed:", e);

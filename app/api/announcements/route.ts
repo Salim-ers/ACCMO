@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAll, getPublished, create } from "@/lib/announcements";
 import { storageError } from "@/lib/storage-error";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import { isAuthenticated } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -30,6 +31,7 @@ export async function POST(req: Request) {
     if (!result.ok) {
       return NextResponse.json({ errors: result.errors }, { status: 422 });
     }
+    revalidatePublicPages();
     return NextResponse.json({ item: result.item, items: result.items }, { status: 201 });
   } catch (e) {
     console.error("create announcement failed:", e);

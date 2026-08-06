@@ -13,6 +13,7 @@ import crypto from "crypto";
 // sans que l'administrateur voie jamais un état périmé.
 // =============================================================
 
+import { unstable_noStore as noStore } from "next/cache";
 import { DEFAULT_CATEGORY, isCategory, type Category } from "@/lib/categories";
 import { probeStore, readJson, storeMode, writeJson, type StoreStatus } from "@/lib/store";
 
@@ -68,14 +69,24 @@ function sortByDateDesc(items: Announcement[]): Announcement[] {
   });
 }
 
-/** Public : uniquement les annonces publiées. */
+/**
+ * Les annonces sont la seule donnée du site qui change à la demande de
+ * l'administrateur : elle ne doit jamais être servie depuis un cache.
+ *
+ * Sans cela, la lecture du support distant passe par un `fetch` que Next
+ * met en cache lors du rendu des pages, et une modification enregistrée
+ * dans l'administration n'apparaît pas sur le site public. Les horaires de
+ * prière, eux, gardent leur cache d'une heure : ils ne dépendent de personne.
+ */
 export async function getPublished(): Promise<Announcement[]> {
+  noStore();
   const items = await readAll();
   return sortByDateDesc(items.filter((a) => a.published));
 }
 
 /** Admin : toutes les annonces. */
 export async function getAll(): Promise<Announcement[]> {
+  noStore();
   return sortByDateDesc(await readAll());
 }
 

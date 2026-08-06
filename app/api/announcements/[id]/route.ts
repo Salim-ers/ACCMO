@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { update, remove } from "@/lib/announcements";
 import { storageError } from "@/lib/storage-error";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import { isAuthenticated } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -21,6 +22,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     if (!result.ok) {
       return NextResponse.json({ errors: result.errors }, { status: 422 });
     }
+    revalidatePublicPages();
     return NextResponse.json({ item: result.item, items: result.items });
   } catch (e) {
     console.error("update announcement failed:", e);
@@ -37,6 +39,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     if (!result.ok) {
       return NextResponse.json({ errors: result.errors }, { status: 404 });
     }
+    revalidatePublicPages();
     return NextResponse.json({ ok: true, items: result.items });
   } catch (e) {
     console.error("delete announcement failed:", e);

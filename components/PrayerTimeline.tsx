@@ -243,7 +243,7 @@ export default function PrayerTimeline({
               href={LINKS.mawaqit}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-night-700 underline underline-offset-4 hover:text-terra-600"
+              className="inline-flex min-h-[26px] items-center font-semibold text-night-700 underline underline-offset-4 hover:text-terra-600"
             >
               Consulter tous les horaires sur Mawaqit
             </a>

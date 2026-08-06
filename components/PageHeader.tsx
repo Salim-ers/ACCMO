@@ -29,7 +29,7 @@ function Breadcrumb({ label, invert = false }: { label: string; invert?: boolean
         }`}
       >
         <li>
-          <Link href={ROUTES.home} className="underline-offset-4 hover:underline">
+          <Link href={ROUTES.home} className="inline-flex min-h-[26px] items-center underline-offset-4 hover:underline">
             Accueil
           </Link>
         </li>

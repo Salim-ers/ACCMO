@@ -19,7 +19,7 @@ export default function NextPrayerCard({ prayerDay }: { prayerDay: PrayerDay | n
         href={ROUTES.horaires}
         className="block bg-night-900 p-5 text-sand-50 shadow-panel"
       >
-        <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-night-300">
+        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-night-300">
           Horaires
         </span>
         <span className="mt-2 block text-[17px] font-bold leading-tight">
@@ -36,7 +36,7 @@ export default function NextPrayerCard({ prayerDay }: { prayerDay: PrayerDay | n
     >
       <span className="flex items-center gap-2">
         <span className="h-1.5 w-1.5 bg-terra-500 animate-beacon" aria-hidden />
-        <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-night-300">
+        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-night-300">
           Prochaine prière
         </span>
       </span>

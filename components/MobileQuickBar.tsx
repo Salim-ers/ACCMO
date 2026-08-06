@@ -47,7 +47,7 @@ export default function MobileQuickBar() {
                 }`}
               >
                 <Ico width={19} height={19} />
-                <span className="text-[10.5px] font-bold tracking-wide">{item.label}</span>
+                <span className="text-[11px] font-bold tracking-wide">{item.label}</span>
               </Link>
             </li>
           );

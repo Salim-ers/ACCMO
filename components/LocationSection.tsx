@@ -77,14 +77,14 @@ export default function LocationSection() {
             <dd className="mt-1.5">
               <a
                 href={`mailto:${SITE.email}`}
-                className="text-[15px] font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
+                className="inline-flex min-h-[28px] items-center text-[15px] font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
               >
                 {SITE.email}
               </a>
               {SITE.phone && (
                 <a
                   href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-                  className="mt-1 block text-[15px] font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
+                  className="mt-1 inline-flex min-h-[28px] items-center text-[15px] font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
                 >
                   {SITE.phone}
                 </a>

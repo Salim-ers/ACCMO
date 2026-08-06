@@ -81,14 +81,14 @@ export default function PrayerStatusBar({ clock }: { clock: PrayerClock }) {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden shrink-0 text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline md:block"
+              className="hidden h-[var(--statusbar-h)] shrink-0 items-center text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline md:flex"
             >
               {item.text}
             </a>
           ) : (
             <Link
               href={item.href}
-              className="hidden shrink-0 text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline md:block"
+              className="hidden h-[var(--statusbar-h)] shrink-0 items-center text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline md:flex"
             >
               {item.text}
             </Link>

@@ -27,7 +27,7 @@ export default async function HorairesPage() {
         meta={
           prayerDay && (
             <div className="border border-[var(--rule-invert)] px-5 py-4">
-              <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-night-300">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-night-300">
                 Aujourd’hui
               </p>
               <p className="mt-1.5 text-[15px] font-semibold capitalize text-sand-50">

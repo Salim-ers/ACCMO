@@ -66,7 +66,7 @@ export default function CommunityShortcuts() {
               item={item}
               className={`${cfg.span} min-h-[190px] justify-between bg-night-900 p-7 text-sand-50 transition-colors hover:bg-night-800`}
             >
-              <span className="flex items-center gap-2.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-terra-300">
+              <span className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.14em] text-terra-300">
                 <Ico width={17} height={17} />
                 Démarche prioritaire
               </span>

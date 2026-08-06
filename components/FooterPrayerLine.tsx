@@ -20,7 +20,7 @@ export default function FooterPrayerLine({ prayerDay }: { prayerDay: PrayerDay |
       className="group flex shrink-0 items-center gap-5 border border-[var(--rule-invert)] px-5 py-4 transition-colors hover:border-sand-50"
     >
       <span>
-        <span className="block text-[10.5px] font-bold uppercase tracking-[0.16em] text-night-300">
+        <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-night-300">
           {next ? "Prochaine prière" : "Horaires du jour"}
         </span>
         {next ? (

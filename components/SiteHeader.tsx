@@ -108,7 +108,7 @@ export default function SiteHeader({ prayerDay }: { prayerDay: PrayerDay | null 
                 <span className="text-[19px] font-extrabold tracking-tightest text-night-900 md:text-[21px]">
                   ESSALAM
                 </span>
-                <span className="mt-[3px] text-[9.5px] font-semibold uppercase tracking-[0.14em] text-night-600">
+                <span className="mt-[3px] text-[11px] font-semibold uppercase tracking-[0.1em] text-night-600">
                   {SITE.tagline}
                 </span>
               </span>

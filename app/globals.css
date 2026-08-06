@@ -72,256 +72,269 @@ body {
   background: var(--color-ink);
   color: var(--color-sand);
 }
-
 /* =============================================================
-   Grille éditoriale
+   Composants — DANS @layer components, impérativement.
+
+   Déclarées hors couche, ces règles seraient injectées APRÈS les
+   utilitaires Tailwind et gagneraient à égalité de spécificité :
+   `.btn { display: inline-flex }` écrasait `.hidden`, et les boutons
+   réservés au grand écran restaient affichés sur mobile, débordant
+   la page. Dans la couche, Tailwind les ordonne avant les
+   utilitaires, qui redeviennent prioritaires comme attendu.
    ============================================================= */
-.shell {
-  width: 100%;
-  max-width: var(--container-width);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
+@layer components {
+
+  /* =============================================================
+     Grille éditoriale
+     ============================================================= */
+  .shell {
+    width: 100%;
+    max-width: var(--container-width);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .section {
+    padding-block: var(--space-section);
+  }
+  .section-tight {
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+
+  /* Filet horizontal fin — séparateur signature du site. */
+  .rule {
+    border-top: 1px solid var(--rule);
+  }
+  .rule-invert {
+    border-top: 1px solid var(--rule-invert);
+  }
+
+  /* Marqueur de section numéroté (00 — Intitulé). */
+  .section-marker {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+  }
+  .section-marker .num {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-terracotta-deep);
+  }
+
+  /* Titres : expressifs par la taille et la graisse, sans lettrage espacé. */
+  .title-xl {
+    font-size: clamp(2.5rem, 6.4vw, 4.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+  }
+  .title-lg {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+  }
+  .title-md {
+    font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+    line-height: 1.14;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
+
+  /* Arabe : lisible et digne, jamais décoratif. */
+  .arabic {
+    font-family: var(--font-arabic), system-ui, sans-serif;
+    direction: rtl;
+    line-height: 1.9;
+    font-weight: 400;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* =============================================================
+     Boutons — langage propre à Essalam :
+     rectangle à angle court, flèche directionnelle, aucune capsule.
+     ============================================================= */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding: 0.75rem 1.35rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    font-weight: 650;
+    line-height: 1.2;
+    text-align: center;
+    transition: background-color 0.22s ease, color 0.22s ease,
+      border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+  .btn .arw {
+    transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .btn:hover .arw {
+    transform: translateX(4px);
+  }
+
+  /* Principal : bleu nuit plein → terre cuite au survol. */
+  .btn-primary {
+    background: var(--color-ink);
+    color: var(--color-sand);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+  .btn-primary:hover {
+    background: var(--color-terracotta-deep);
+    box-shadow: inset 0 0 0 1px var(--color-terracotta-deep);
+  }
+
+  /* Accent : terre cuite pleine (usage ponctuel : don). */
+  .btn-accent {
+    background: var(--color-terracotta-deep);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-terracotta-deep);
+  }
+  .btn-accent:hover {
+    background: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+
+  /* Secondaire : contour, se remplit depuis le bas au survol. */
+  .btn-outline {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--rule-strong);
+    isolation: isolate;
+  }
+  .btn-outline::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-ink);
+    transform: translateY(101%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .btn-outline:hover {
+    color: var(--color-sand);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+  .btn-outline:hover::before {
+    transform: translateY(0);
+  }
+
+  /* Contour sur fond sombre. */
+  .btn-outline-invert {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    color: var(--color-mist);
+    box-shadow: inset 0 0 0 1px var(--rule-invert);
+    isolation: isolate;
+  }
+  .btn-outline-invert::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-mist);
+    transform: translateY(101%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .btn-outline-invert:hover {
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-mist);
+  }
+  .btn-outline-invert:hover::before {
+    transform: translateY(0);
+  }
+
+  /* Lien textuel : soulignement qui se déroule + flèche. */
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 650;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    padding-block: 0.35rem;
+    background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 2px;
+    transition: background-size 0.3s cubic-bezier(0.2, 0.7, 0.3, 1), color 0.2s ease;
+  }
+  .link-arrow:hover,
+  .link-arrow:focus-visible {
+    background-size: 100% 2px;
+    color: var(--color-terracotta-deep);
+  }
+  .link-arrow .arw {
+    transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .link-arrow:hover .arw {
+    transform: translateX(4px);
+  }
+  .on-dark .link-arrow {
+    color: var(--color-mist);
+    background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
+  }
+  .on-dark .link-arrow:hover,
+  .on-dark .link-arrow:focus-visible {
+    color: var(--color-terracotta);
+  }
+
+  /* Étiquette (catégorie, statut) — rectangle net, pas de pilule. */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 2px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+
+  /* Aucune trame de fond sur ce site : les respirations viennent des
+     filets, des aplats et de l'espacement. La grille géométrique qui
+     existait ici a été retirée, elle lisait comme un quadrillage. */
+
+  /* =============================================================
+     Photographies — cadrage architectural, découpes franches.
+     ============================================================= */
+  .frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-night, #16263d);
+  }
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Léger déplacement de l'image au survol (jamais de zoom brutal). */
+  .frame-shift img {
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .group:hover .frame-shift img {
+    transform: scale(1.035);
+  }
 }
 
-.section {
-  padding-block: var(--space-section);
-}
-.section-tight {
-  padding-block: clamp(3rem, 6vw, 5rem);
-}
-
-/* Filet horizontal fin — séparateur signature du site. */
-.rule {
-  border-top: 1px solid var(--rule);
-}
-.rule-invert {
-  border-top: 1px solid var(--rule-invert);
-}
-
-/* Marqueur de section numéroté (00 — Intitulé). */
-.section-marker {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-slate);
-}
-.section-marker .num {
-  font-variant-numeric: tabular-nums;
-  color: var(--color-terracotta-deep);
-}
-
-/* Titres : expressifs par la taille et la graisse, sans lettrage espacé. */
-.title-xl {
-  font-size: clamp(2.5rem, 6.4vw, 4.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.045em;
-  font-weight: 800;
-}
-.title-lg {
-  font-size: clamp(1.9rem, 4vw, 3rem);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  font-weight: 800;
-}
-.title-md {
-  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
-  line-height: 1.14;
-  letter-spacing: -0.025em;
-  font-weight: 700;
-}
-
-/* Arabe : lisible et digne, jamais décoratif. */
-.arabic {
-  font-family: var(--font-arabic), system-ui, sans-serif;
-  direction: rtl;
-  line-height: 1.9;
-  font-weight: 400;
-}
-
-.tabular {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-}
-
-/* =============================================================
-   Boutons — langage propre à Essalam :
-   rectangle à angle court, flèche directionnelle, aucune capsule.
-   ============================================================= */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  min-height: 48px;
-  padding: 0.75rem 1.35rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.9375rem;
-  font-weight: 650;
-  line-height: 1.2;
-  text-align: center;
-  transition: background-color 0.22s ease, color 0.22s ease,
-    border-color 0.22s ease, box-shadow 0.22s ease;
-}
-.btn .arw {
-  transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.btn:hover .arw {
-  transform: translateX(4px);
-}
-
-/* Principal : bleu nuit plein → terre cuite au survol. */
-.btn-primary {
-  background: var(--color-ink);
-  color: var(--color-sand);
-  box-shadow: inset 0 0 0 1px var(--color-ink);
-}
-.btn-primary:hover {
-  background: var(--color-terracotta-deep);
-  box-shadow: inset 0 0 0 1px var(--color-terracotta-deep);
-}
-
-/* Accent : terre cuite pleine (usage ponctuel : don). */
-.btn-accent {
-  background: var(--color-terracotta-deep);
-  color: #fff;
-  box-shadow: inset 0 0 0 1px var(--color-terracotta-deep);
-}
-.btn-accent:hover {
-  background: var(--color-ink);
-  box-shadow: inset 0 0 0 1px var(--color-ink);
-}
-
-/* Secondaire : contour, se remplit depuis le bas au survol. */
-.btn-outline {
-  position: relative;
-  overflow: hidden;
-  background: transparent;
-  color: var(--color-ink);
-  box-shadow: inset 0 0 0 1px var(--rule-strong);
-  isolation: isolate;
-}
-.btn-outline::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--color-ink);
-  transform: translateY(101%);
-  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.btn-outline:hover {
-  color: var(--color-sand);
-  box-shadow: inset 0 0 0 1px var(--color-ink);
-}
-.btn-outline:hover::before {
-  transform: translateY(0);
-}
-
-/* Contour sur fond sombre. */
-.btn-outline-invert {
-  position: relative;
-  overflow: hidden;
-  background: transparent;
-  color: var(--color-mist);
-  box-shadow: inset 0 0 0 1px var(--rule-invert);
-  isolation: isolate;
-}
-.btn-outline-invert::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--color-mist);
-  transform: translateY(101%);
-  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.btn-outline-invert:hover {
-  color: var(--color-ink);
-  box-shadow: inset 0 0 0 1px var(--color-mist);
-}
-.btn-outline-invert:hover::before {
-  transform: translateY(0);
-}
-
-/* Lien textuel : soulignement qui se déroule + flèche. */
-.link-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-weight: 650;
-  font-size: 0.9375rem;
-  color: var(--color-ink);
-  padding-block: 0.35rem;
-  background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0% 2px;
-  transition: background-size 0.3s cubic-bezier(0.2, 0.7, 0.3, 1), color 0.2s ease;
-}
-.link-arrow:hover,
-.link-arrow:focus-visible {
-  background-size: 100% 2px;
-  color: var(--color-terracotta-deep);
-}
-.link-arrow .arw {
-  transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.link-arrow:hover .arw {
-  transform: translateX(4px);
-}
-.on-dark .link-arrow {
-  color: var(--color-mist);
-  background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
-}
-.on-dark .link-arrow:hover,
-.on-dark .link-arrow:focus-visible {
-  color: var(--color-terracotta);
-}
-
-/* Étiquette (catégorie, statut) — rectangle net, pas de pilule. */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.55rem;
-  border-radius: 2px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  line-height: 1.35;
-}
-
-/* Aucune trame de fond sur ce site : les respirations viennent des
-   filets, des aplats et de l'espacement. La grille géométrique qui
-   existait ici a été retirée, elle lisait comme un quadrillage. */
-
-/* =============================================================
-   Photographies — cadrage architectural, découpes franches.
-   ============================================================= */
-.frame {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-sm);
-  background: var(--color-night, #16263d);
-}
-.frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-/* Léger déplacement de l'image au survol (jamais de zoom brutal). */
-.frame-shift img {
-  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.group:hover .frame-shift img {
-  transform: scale(1.035);
-}
 
 /* =============================================================
    Révélation au défilement (IntersectionObserver, sans librairie).

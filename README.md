@@ -240,3 +240,27 @@ ressemble au même gabarit avec un titre différent :
 - Un seul appel à Mawaqit par rendu, mis en cache 1 h ; pages régénérées toutes les 60 s.
 - Visite 360° et carte chargées **à la demande** ; photo du hero prioritaire, le reste différé.
 - Aucune police décorative : deux familles, `display: swap`, auto-hébergées.
+
+## 13. Vérification mobile et tablette
+
+```bash
+npm run build && npm run start      # dans un terminal
+npm run audit:mobile                # dans un autre
+```
+
+Le script pilote Chrome et parcourt les neuf pages publiques sur cinq formats
+(360, 390, 430, 768 portrait, 1024 paysage). Il signale :
+
+- tout **débordement horizontal**, en nommant l'élément fautif ;
+- les **cibles tactiles** sous 24 px — hors liens en plein texte, exemptés par
+  WCAG 2.2, et hors lien d'évitement qui n'apparaît qu'au focus ;
+- tout **texte sous 11 px** ;
+- le **contenu rogné** par un parent — une image en `object-fit: cover` étant
+  volontairement plus grande que son cadre, elle est ignorée ;
+- les **erreurs JavaScript** de la console.
+
+> ⚠️ Les règles de composants de `globals.css` doivent rester dans
+> `@layer components`. Hors couche, elles sont injectées après les utilitaires
+> Tailwind et l'emportent à égalité de spécificité : `.btn { display: inline-flex }`
+> écrasait `.hidden`, et les boutons réservés au grand écran restaient affichés
+> sur mobile en débordant la page. Ce script l'aurait détecté.

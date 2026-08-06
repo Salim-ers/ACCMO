@@ -183,7 +183,7 @@ export default function EventsAgenda({
                       <span className="tabular text-[22px] font-extrabold leading-none text-night-900">
                         {d.day}
                       </span>
-                      <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-night-500">
+                      <span className="mt-1 text-[11px] font-bold uppercase tracking-[0.08em] text-night-500">
                         {d.month}
                       </span>
                     </>

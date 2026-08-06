@@ -63,7 +63,7 @@ export default function SiteFooter({
                       href={l.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[14.5px] text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline"
+                      className="inline-flex min-h-[26px] items-center gap-1.5 py-0.5 text-[14.5px] text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline"
                     >
                       {l.label}
                       <Icon.arrowUpRight width={13} height={13} className="text-night-400" />
@@ -71,7 +71,7 @@ export default function SiteFooter({
                   ) : (
                     <Link
                       href={l.href}
-                      className="text-[14.5px] text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline"
+                      className="inline-flex min-h-[26px] items-center py-0.5 text-[14.5px] text-night-200 underline-offset-4 transition-colors hover:text-white hover:underline"
                     >
                       {l.label}
                     </Link>
@@ -105,14 +105,14 @@ export default function SiteFooter({
               href={DIRECTIONS_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-[13.5px] text-night-200 underline-offset-4 hover:text-white hover:underline"
+              className="mt-2 inline-flex min-h-[26px] items-center gap-1.5 py-0.5 text-[13.5px] text-night-200 underline-offset-4 hover:text-white hover:underline"
             >
               <Icon.pin width={14} height={14} />
               {FULL_ADDRESS}
             </a>
             <a
               href={`mailto:${SITE.email}`}
-              className="mt-1 block text-[13.5px] text-night-200 underline-offset-4 hover:text-white hover:underline"
+              className="mt-1 inline-flex min-h-[26px] items-center py-0.5 text-[13.5px] text-night-200 underline-offset-4 hover:text-white hover:underline"
             >
               {SITE.email}
             </a>
@@ -150,17 +150,17 @@ export default function SiteFooter({
           <nav aria-label="Informations légales">
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
               <li>
-                <Link href={ROUTES.mentions} className="underline-offset-4 hover:text-white hover:underline">
+                <Link href={ROUTES.mentions} className="inline-flex min-h-[26px] items-center underline-offset-4 hover:text-white hover:underline">
                   Mentions légales
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.confidentialite} className="underline-offset-4 hover:text-white hover:underline">
+                <Link href={ROUTES.confidentialite} className="inline-flex min-h-[26px] items-center underline-offset-4 hover:text-white hover:underline">
                   Politique de confidentialité
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.admin} className="text-night-300 underline-offset-4 hover:text-white hover:underline">
+                <Link href={ROUTES.admin} className="inline-flex min-h-[26px] items-center text-night-300 underline-offset-4 hover:text-white hover:underline">
                   Administration
                 </Link>
               </li>

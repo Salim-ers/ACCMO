@@ -29,7 +29,12 @@ export default function VirtualTourSection() {
         ref={frameRef}
         onMouseMove={onMove}
         onMouseLeave={() => setShift(0)}
-        className="relative aspect-[16/10] w-full overflow-hidden bg-night-950 sm:aspect-[16/9]"
+        // Tant que la visite n'est pas lancée, la hauteur suit le CONTENU :
+        // un ratio fixe rognait le bouton et le texte sur petit écran. Une fois
+        // l'expérience chargée, le ratio reprend, l'iframe en ayant besoin.
+        className={`relative w-full overflow-hidden bg-night-950 ${
+          active ? "aspect-[16/10] sm:aspect-[16/9]" : "lg:aspect-[16/9]"
+        }`}
       >
         {active ? (
           <iframe
@@ -54,8 +59,8 @@ export default function VirtualTourSection() {
                 bouton par-dessus la photographie, sans aucune texture. */}
             <div className="absolute inset-0 bg-night-950/55" aria-hidden />
 
-            <div className="on-dark absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-sand-50">
-              <span className="flex items-center gap-2.5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-terra-300">
+            <div className="on-dark relative flex flex-col items-center justify-center px-6 py-16 text-center text-sand-50 sm:py-20">
+              <span className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-terra-300">
                 <span className="h-px w-7 bg-terra-500" aria-hidden />
                 Expérience 360°
                 <span className="h-px w-7 bg-terra-500" aria-hidden />

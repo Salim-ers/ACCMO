@@ -95,7 +95,7 @@ export default function ContactPage() {
             Les liens ci-dessus ouvrent votre logiciel de messagerie avec l’adresse{" "}
             <a
               href={`mailto:${SITE.email}`}
-              className="font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
+              className="inline-flex min-h-[26px] items-center font-semibold text-night-900 underline underline-offset-4 hover:text-terra-600"
             >
               {SITE.email}
             </a>

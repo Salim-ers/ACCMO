@@ -70,19 +70,19 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
             style={{ ["--reveal-delay" as string]: "240ms" }}
           >
             <div>
-              <dt className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-night-500">
+              <dt className="text-[11px] font-bold uppercase tracking-[0.12em] text-night-500">
                 Adresse
               </dt>
               <dd className="mt-1 font-medium text-night-800">{FULL_ADDRESS}</dd>
             </div>
             <div className="border-l border-[var(--rule)] pl-5">
-              <dt className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-night-500">
+              <dt className="text-[11px] font-bold uppercase tracking-[0.12em] text-night-500">
                 Association
               </dt>
               <dd className="mt-1 font-medium text-night-800">{SITE.association}</dd>
             </div>
             <div className="col-span-2 mt-4 border-t border-[var(--rule)] pt-4 sm:col-span-1 sm:mt-0 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
-              <dt className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-night-500">
+              <dt className="text-[11px] font-bold uppercase tracking-[0.12em] text-night-500">
                 Ouvert à
               </dt>
               <dd className="mt-1 font-medium text-night-800">

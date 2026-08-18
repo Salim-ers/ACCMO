@@ -79,7 +79,7 @@ export default function EcolePage() {
             {FAQ.map((f) => (
               <div
                 key={f.q}
-                className="grid gap-2 border-b border-[var(--rule)] py-6 md:grid-cols-[minmax(0,340px)_1fr] md:gap-10"
+                className="grid grid-cols-1 gap-2 border-b border-[var(--rule)] py-6 md:grid-cols-[minmax(0,340px)_1fr] md:gap-10"
                 data-reveal
               >
                 <dt className="text-[17px] font-extrabold leading-snug tracking-tight text-night-900">
@@ -94,7 +94,7 @@ export default function EcolePage() {
 
       {/* Passage à l'action */}
       <section className="section-tight bg-sand-100">
-        <div className="shell grid gap-3 md:grid-cols-2">
+        <div className="shell grid grid-cols-1 gap-3 md:grid-cols-2">
           <a
             href={LINKS.inscriptionCours}
             target="_blank"

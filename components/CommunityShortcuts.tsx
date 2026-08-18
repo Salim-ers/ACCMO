@@ -53,7 +53,7 @@ function Shell({
 
 export default function CommunityShortcuts() {
   return (
-    <div className="mt-10 grid gap-3 md:grid-cols-12">
+    <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-12">
       {SHORTCUTS.map((item) => {
         const cfg = LAYOUT[item.key];
         const Ico = Icon[item.icon as IconName] ?? Icon.arrow;

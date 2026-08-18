@@ -15,7 +15,7 @@ const TEACHING = [
 
 export default function SchoolFeature() {
   return (
-    <div className="mt-12 grid gap-10 lg:grid-cols-[47fr_53fr] lg:items-center lg:gap-14">
+    <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[47fr_53fr] lg:items-center lg:gap-14">
       {/* Photographie documentaire */}
       <div className="group relative" data-reveal>
         <div className="frame frame-shift aspect-[4/3] lg:aspect-[5/6]">
@@ -57,7 +57,7 @@ export default function SchoolFeature() {
               key={t.title}
               className="flex flex-col gap-1 border-b border-[var(--rule)] py-3.5 sm:flex-row sm:items-baseline sm:gap-6"
             >
-              <dt className="w-44 shrink-0 text-[15px] font-bold text-night-900">
+              <dt className="text-[15px] font-bold text-night-900 sm:w-44 sm:shrink-0">
                 {t.title}
               </dt>
               <dd className="text-[14.5px] leading-relaxed text-night-600">{t.desc}</dd>
@@ -67,13 +67,13 @@ export default function SchoolFeature() {
             id="adultes"
             className="flex flex-col gap-1 border-b border-[var(--rule)] py-3.5 sm:flex-row sm:items-baseline sm:gap-6"
           >
-            <dt className="w-44 shrink-0 text-[15px] font-bold text-night-900">Publics</dt>
+            <dt className="text-[15px] font-bold text-night-900 sm:w-44 sm:shrink-0">Publics</dt>
             <dd className="text-[14.5px] leading-relaxed text-night-600">
               Cours pour les enfants et cours pour les adultes.
             </dd>
           </div>
           <div className="flex flex-col gap-1 border-b border-[var(--rule)] py-3.5 sm:flex-row sm:items-baseline sm:gap-6">
-            <dt className="w-44 shrink-0 text-[15px] font-bold text-night-900">
+            <dt className="text-[15px] font-bold text-night-900 sm:w-44 sm:shrink-0">
               Inscriptions
             </dt>
             <dd className="text-[14.5px] leading-relaxed text-night-600">

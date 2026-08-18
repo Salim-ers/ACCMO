@@ -61,7 +61,7 @@ export default async function HorairesPage() {
             intro="La Jumu‘a rassemble la communauté chaque semaine. Prévoyez d’arriver en avance : la salle se remplit vite."
           />
 
-          <div className="mt-10 grid gap-3 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-3">
             <div className="bg-terra-600 p-7 text-white">
               <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white">
                 Heure de la Jumu‘a
@@ -118,7 +118,7 @@ export default async function HorairesPage() {
             title={<span id="h-place">Ce que vous trouverez à la mosquée</span>}
             intro="Équipements déclarés par l’association sur sa fiche officielle."
           />
-          <ul className="mt-10 grid gap-px border border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-10 grid grid-cols-1 gap-px border border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-2 lg:grid-cols-4">
             {FACILITIES.map((f) => (
               <li key={f.label} className="bg-white p-5" data-reveal>
                 <p className="text-[15.5px] font-bold tracking-tight text-night-900">

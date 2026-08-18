@@ -41,7 +41,7 @@ export default function MentionsPage() {
             ].map((row) => (
               <div
                 key={row.t}
-                className="grid gap-1 border-b border-[var(--rule)] py-4 sm:grid-cols-[minmax(0,260px)_1fr] sm:gap-8"
+                className="grid grid-cols-1 gap-1 border-b border-[var(--rule)] py-4 sm:grid-cols-[minmax(0,260px)_1fr] sm:gap-8"
               >
                 <dt className="text-[14px] font-bold text-night-900">{row.t}</dt>
                 <dd className="text-[15px] leading-relaxed text-night-700">{row.d}</dd>

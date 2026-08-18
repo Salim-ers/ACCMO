@@ -48,7 +48,7 @@ export default function SiteFooter({
       </div>
 
       {/* ---- Liens par usages ---- */}
-      <div className="shell grid gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="shell grid grid-cols-1 gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         {FOOTER_GROUPS.map((group) => (
           <nav key={group.title} aria-label={group.title}>
             <h2 className="text-[12px] font-bold uppercase tracking-[0.14em] text-terra-400">
@@ -85,7 +85,7 @@ export default function SiteFooter({
       </div>
 
       {/* ---- Identité de l'association ---- */}
-      <div className="shell grid gap-8 border-t border-[var(--rule-invert)] py-10 md:grid-cols-[1fr_auto] md:items-start">
+      <div className="shell grid grid-cols-1 gap-8 border-t border-[var(--rule-invert)] py-10 md:grid-cols-[1fr_auto] md:items-start">
         <div className="flex items-start gap-4">
           <Image
             src={LOGO}

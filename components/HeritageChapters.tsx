@@ -9,7 +9,7 @@ import { CHAPTERS } from "@/lib/site";
 
 export default function HeritageChapters({ invert = false }: { invert?: boolean }) {
   return (
-    <ol className="mt-12 grid gap-x-12 gap-y-0 md:grid-cols-2">
+    <ol className="mt-12 grid grid-cols-1 gap-x-12 gap-y-0 md:grid-cols-2">
       {CHAPTERS.map((c, i) => (
         <li
           key={c.num}

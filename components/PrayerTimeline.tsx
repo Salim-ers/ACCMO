@@ -63,7 +63,7 @@ export default function PrayerTimeline({
 
   return (
     <div className="mt-10">
-      <div className={compact ? "" : "grid gap-8 lg:grid-cols-[1fr_300px] lg:gap-10"}>
+      <div className={compact ? "" : "grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-10"}>
         {/* ============ La frise ============ */}
         <div>
           {/* -- Desktop : ligne de temps horizontale -- */}

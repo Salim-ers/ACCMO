@@ -10,7 +10,7 @@ export default function CommunityActions() {
       {ACTIONS.map((a, i) => (
         <li
           key={a.num}
-          className="group grid gap-3 border-b border-[var(--rule-invert)] py-7 md:grid-cols-[auto_minmax(0,240px)_1fr] md:items-baseline md:gap-8 md:py-8"
+          className="group grid grid-cols-1 gap-3 border-b border-[var(--rule-invert)] py-7 md:grid-cols-[auto_minmax(0,240px)_1fr] md:items-baseline md:gap-8 md:py-8"
           data-reveal
           style={{ ["--reveal-delay" as string]: `${i * 60}ms` }}
         >

@@ -56,6 +56,10 @@ body {
   @apply font-sans antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  /* Un mot trop long est coupe plutot que de deborder. Sans effet en taille
+     normale : la coupure ne se declenche que si le mot ne rentre pas. C est
+     ce qui tient la mise en page quand le visiteur agrandit le texte. */
+  overflow-wrap: break-word;
 }
 
 /* Focus visible franc, jamais masqué. */
@@ -111,6 +115,7 @@ body {
 
   /* Marqueur de section numéroté (00 — Intitulé). */
   .section-marker {
+    flex-wrap: wrap;
     display: flex;
     align-items: baseline;
     gap: 0.75rem;
@@ -295,9 +300,12 @@ body {
 
   /* Étiquette (catégorie, statut) — rectangle net, pas de pilule. */
   .tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
+    max-width: 100%;
+    /* inline-block et non inline-flex : en flex, le texte forme un
+       element dont la largeur ne descend pas sous son min-content, et
+       l etiquette debordait des que le visiteur agrandissait le texte. */
+    display: inline-block;
+    vertical-align: middle;
     padding: 0.25rem 0.55rem;
     border-radius: 2px;
     font-size: 0.6875rem;

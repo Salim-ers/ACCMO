@@ -46,7 +46,7 @@ const WAYS = [
 
 export default function DonationPanel() {
   return (
-    <div className="mt-10 grid gap-10 lg:grid-cols-[52fr_48fr] lg:gap-16">
+    <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[52fr_48fr] lg:gap-16">
       {/* ---- Pourquoi ---- */}
       <div data-reveal>
         <h2 className="title-lg text-night-900">

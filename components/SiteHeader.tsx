@@ -93,7 +93,7 @@ export default function SiteHeader({ prayerDay }: { prayerDay: PrayerDay | null 
             {/* ---- Zone 1 : identité ---- */}
             <Link
               href={ROUTES.home}
-              className="group flex shrink-0 items-center gap-3"
+              className="group flex min-w-0 items-center gap-3"
               aria-label={`${SITE.shortName} — ${SITE.tagline}, accueil`}
             >
               <Image
@@ -102,13 +102,13 @@ export default function SiteHeader({ prayerDay }: { prayerDay: PrayerDay | null 
                 width={38}
                 height={38}
                 priority
-                className="h-[34px] w-[34px] object-contain md:h-[38px] md:w-[38px]"
+                className="h-[34px] w-[34px] shrink-0 object-contain md:h-[38px] md:w-[38px]"
               />
-              <span className="flex flex-col leading-none">
+              <span className="flex min-w-0 flex-col leading-none">
                 <span className="text-[19px] font-extrabold tracking-tightest text-night-900 md:text-[21px]">
                   ESSALAM
                 </span>
-                <span className="mt-[3px] text-[11px] font-semibold uppercase tracking-[0.1em] text-night-600">
+                <span className="mt-[3px] truncate text-[11px] font-semibold uppercase tracking-[0.1em] text-night-600">
                   {SITE.tagline}
                 </span>
               </span>

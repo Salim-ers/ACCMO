@@ -14,7 +14,7 @@ import { Icon } from "@/components/Icons";
 
 export default function LocationSection() {
   return (
-    <div className="mt-10 grid gap-px overflow-hidden border border-[var(--rule)] bg-[var(--rule)] lg:grid-cols-[40fr_60fr]">
+    <div className="mt-10 grid grid-cols-1 gap-px overflow-hidden border border-[var(--rule)] bg-[var(--rule)] lg:grid-cols-[40fr_60fr]">
       {/* ---- Informations ---- */}
       <div className="bg-white p-7 sm:p-9" data-reveal>
         <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] text-night-500">

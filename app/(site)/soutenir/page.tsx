@@ -49,7 +49,7 @@ export default function SoutenirPage() {
 
       {/* Transparence */}
       <section className="section-tight bg-sand-100" aria-labelledby="h-transparence">
-        <div className="shell grid gap-8 md:grid-cols-[minmax(0,380px)_1fr] md:gap-14">
+        <div className="shell grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,380px)_1fr] md:gap-14">
           <h2 id="h-transparence" className="title-md text-night-900">
             Ce que nous pouvons vous garantir
           </h2>

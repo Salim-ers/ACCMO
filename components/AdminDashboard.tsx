@@ -238,7 +238,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
           {/* Ce que le serveur voit réellement : présence des variables et
               version déployée. Aucune valeur secrète n'est exposée. */}
           {store.diagnostic && (
-            <dl className="tabular mt-4 grid gap-x-6 gap-y-1 border-t border-terra-500/30 pt-3 text-[12.5px] sm:grid-cols-2">
+            <dl className="tabular mt-4 grid grid-cols-1 gap-x-6 gap-y-1 border-t border-terra-500/30 pt-3 text-[12.5px] sm:grid-cols-2">
               {Object.entries(store.diagnostic).map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-3">
                   <dt className="text-night-600">{k}</dt>
@@ -261,7 +261,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
         </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
         <div className="flex flex-col gap-6">
           {/* Réglages du site */}
           <section className="border border-[var(--rule)] bg-white p-6">
@@ -322,7 +322,7 @@ export default function AdminDashboard({ initial }: { initial: Announcement[] })
                 />
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="date" className={label}>
                     Date

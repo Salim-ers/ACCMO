@@ -40,7 +40,7 @@ export default function VisitePage() {
       </section>
 
       <section className="section-tight" aria-labelledby="h-conseils">
-        <div className="shell grid gap-8 md:grid-cols-[minmax(0,420px)_1fr] md:gap-14">
+        <div className="shell grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,420px)_1fr] md:gap-14">
           <h2 id="h-conseils" className="title-md text-night-900">
             Comment se déplacer dans la visite
           </h2>

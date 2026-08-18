@@ -248,22 +248,44 @@ npm run build && npm run start      # dans un terminal
 npm run audit:mobile                # dans un autre
 ```
 
-Le script pilote Chrome et parcourt les neuf pages publiques sur cinq formats
-(360, 390, 430, 768 portrait, 1024 paysage). Il signale :
+Le script pilote Chrome et parcourt les onze pages sur **treize formats**, du
+Galaxy Fold fermé (280 px) à l'ordinateur, en passant par le mode paysage à
+faible hauteur et les tablettes. Il vérifie aussi le **texte agrandi à 200 %**,
+exigence WCAG et usage courant chez les personnes âgées.
 
+Il signale :
+
+- le **contenu recouvert** par une surcouche — c'est ce contrôle qui a révélé
+  qu'un menu mobile fermé masquait tout le site sous 1024 px ;
 - tout **débordement horizontal**, en nommant l'élément fautif ;
-- les **cibles tactiles** sous 24 px — hors liens en plein texte, exemptés par
-  WCAG 2.2, et hors lien d'évitement qui n'apparaît qu'au focus ;
+- un **texte plus large que son bloc** (mot long, étiquette qui ne se replie pas) ;
+- les **cibles tactiles** sous 24 px, hors liens en plein texte (exemptés par
+  WCAG 2.2) et hors lien d'évitement, visible au focus seulement ;
 - tout **texte sous 11 px** ;
 - le **contenu rogné** par un parent — une image en `object-fit: cover` étant
   volontairement plus grande que son cadre, elle est ignorée ;
-- les **erreurs JavaScript** de la console.
+- le **menu plein écran** : ouverture, défilement quand il ne tient pas à
+  l'écran, fermeture par Échap ;
+- les **erreurs de console** et les requêtes en échec.
 
-> ⚠️ Les règles de composants de `globals.css` doivent rester dans
-> `@layer components`. Hors couche, elles sont injectées après les utilitaires
-> Tailwind et l'emportent à égalité de spécificité : `.btn { display: inline-flex }`
-> écrasait `.hidden`, et les boutons réservés au grand écran restaient affichés
-> sur mobile en débordant la page. Ce script l'aurait détecté.
+### Trois pièges à ne pas réintroduire
+
+**Les règles de composants restent dans `@layer components`.** Hors couche,
+elles sont injectées après les utilitaires Tailwind et l'emportent à égalité de
+spécificité : `.btn { display: inline-flex }` écrasait `.hidden`, et les boutons
+réservés au grand écran débordaient la page sur mobile.
+
+**Une grille définit toujours sa piste de base.** Sans `grid-cols-1`, la piste
+implicite vaut `auto`, dont le plancher est le *min-content* : un seul texte en
+`truncate` (donc `nowrap`) élargissait toute la grille au-delà de l'écran.
+`grid-cols-1` vaut `minmax(0,1fr)` chez Tailwind et supprime ce plancher.
+
+**Un panneau se masque par une CLASSE, pas par l'attribut `hidden`.** Une classe
+utilitaire `flex` l'emporte sur `[hidden]` à égalité de spécificité.
+
+**Les unités `rem` doublent quand le visiteur agrandit le texte, pas les `px`.**
+Une largeur fixe en `rem` (`w-44`) ou une étiquette en `inline-flex` — dont le
+texte ne descend pas sous son min-content — débordent alors leur conteneur.
 
 ## 14. Mot de passe de l'administration
 

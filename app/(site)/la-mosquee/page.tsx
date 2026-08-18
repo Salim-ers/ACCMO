@@ -39,7 +39,7 @@ export default function MosqueePage() {
 
       {/* Diptyque photographique */}
       <section className="section-tight" aria-label="La mosquée en images">
-        <div className="shell grid gap-3 md:grid-cols-[3fr_2fr]">
+        <div className="shell grid grid-cols-1 gap-3 md:grid-cols-[3fr_2fr]">
           <div className="group" data-reveal>
             <div className="frame frame-shift aspect-[16/10]">
               <Image
@@ -96,7 +96,7 @@ export default function MosqueePage() {
             title={<span id="h-espaces">Ce que la mosquée met à disposition</span>}
             intro="Équipements déclarés par l’association sur sa fiche officielle de mosquée."
           />
-          <ul className="mt-10 grid gap-px border border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-10 grid grid-cols-1 gap-px border border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-2 lg:grid-cols-4">
             {FACILITIES.map((f) => (
               <li key={f.label} className="bg-white p-6" data-reveal>
                 <p className="text-[16px] font-bold tracking-tight text-night-900">

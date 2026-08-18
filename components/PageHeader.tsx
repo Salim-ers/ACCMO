@@ -56,7 +56,7 @@ export function EditorialHeader({
     <header className="border-b border-[var(--rule)] bg-[var(--color-surface)]">
       <div className="shell py-10 sm:py-14">
         <Breadcrumb label={crumb} />
-        <div className="mt-8 grid gap-8 lg:grid-cols-[58fr_42fr] lg:items-end lg:gap-14">
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[58fr_42fr] lg:items-end lg:gap-14">
           <div>
             <p className="flex items-center gap-3 text-[11.5px] font-bold uppercase tracking-[0.15em] text-night-600">
               <span className="h-px w-8 bg-terra-500" aria-hidden />

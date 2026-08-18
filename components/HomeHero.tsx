@@ -17,7 +17,7 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
       className="relative overflow-hidden bg-[var(--color-surface)]"
       aria-labelledby="hero-title"
     >
-      <div className="shell relative grid items-center gap-12 pb-16 pt-12 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:pb-24 lg:pt-20">
+      <div className="shell relative grid grid-cols-1 items-center gap-12 pb-16 pt-12 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:pb-24 lg:pt-20">
         {/* ================= Discours ================= */}
         <div>
           <p

@@ -71,7 +71,7 @@ export default function ContactPage() {
             intro="Un seul e-mail de contact, mais des objets distincts pour que votre message arrive au bon interlocuteur."
           />
 
-          <ul className="mt-10 grid gap-px border border-[var(--rule)] bg-[var(--rule)] md:grid-cols-2">
+          <ul className="mt-10 grid grid-cols-1 gap-px border border-[var(--rule)] bg-[var(--rule)] md:grid-cols-2">
             {REQUESTS.map((r) => (
               <li key={r.subject} data-reveal>
                 <a
@@ -130,7 +130,7 @@ export default function ContactPage() {
           <h2 id="h-directes" className="title-md text-night-900">
             Ces démarches se font en ligne
           </h2>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+          <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {[
               { label: "Inscriptions aux cours", href: LINKS.inscriptionCours, external: true },
               { label: "Faire un don", href: ROUTES.don, external: false },

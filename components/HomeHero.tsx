@@ -7,17 +7,25 @@ import { Icon } from "@/components/Icons";
 
 // Hero asymétrique composé comme une couverture de magazine :
 // 55 % de discours à gauche, 45 % de composition photographique à droite.
-// Aucune photo plein écran, aucun titre posé au milieu d'une façade,
-// aucune hauteur de 100vh.
+// Aucune photo plein écran, aucun titre posé au milieu d'une façade.
+//
+// La composition occupe la hauteur utile de l'écran (`.hero-fill`) : au
+// premier regard on ne voit que le hero, et la section « 01 — Vie de la
+// mosquée » se découvre au défilement. Un repère animé en bas de section
+// annonce ce qui suit, pour que le plein écran n'enferme personne.
+//
+// L'entrée en scène est un lever de rideau terre cuite sur les deux
+// photographies : l'image est peinte tout de suite et n'est pas animée,
+// seul l'aplat qui la couvre se retire.
 
 export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null }) {
   return (
     <section
       id="accueil"
-      className="relative overflow-hidden bg-[var(--color-surface)]"
+      className="hero-fill relative flex flex-col justify-center overflow-hidden bg-[var(--color-surface)]"
       aria-labelledby="hero-title"
     >
-      <div className="shell relative grid grid-cols-1 items-center gap-12 pb-16 pt-12 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:pb-24 lg:pt-20">
+      <div className="shell relative grid w-full grid-cols-1 items-center gap-12 pb-16 pt-12 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:pb-28 lg:pt-16">
         {/* ================= Discours ================= */}
         <div>
           <p
@@ -93,9 +101,18 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
         </div>
 
         {/* ================= Composition photographique ================= */}
-        <div className="relative" data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
+        {/*
+          Pas de `data-reveal` ici : le rideau assure déjà l'entrée en scène,
+          et deux animations superposées se contrarieraient (le fondu retarde
+          l'affichage pendant que le rideau, lui, est déjà en train de se lever).
+        */}
+        <div className="relative">
           {/* Détail typographique arabe, en filet au-dessus de la photographie. */}
-          <div className="mb-3 hidden items-center gap-4 lg:flex">
+          <div
+            className="mb-3 hidden items-center gap-4 lg:flex"
+            data-reveal
+            style={{ ["--reveal-delay" as string]: "620ms" }}
+          >
             <span className="h-px flex-1 bg-[var(--rule)]" aria-hidden />
             <p className="arabic text-[15px] leading-none text-night-600" lang="ar">
               مسجد السلام
@@ -120,6 +137,7 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
               sizes="(max-width: 1023px) 100vw, 45vw"
               className="object-cover object-[72%_center]"
             />
+            <span className="hero-curtain" aria-hidden />
           </div>
 
           {/* Seconde image, carrée, en superposition maîtrisée. */}
@@ -132,13 +150,44 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
               sizes="160px"
               className="object-cover"
             />
+            <span
+              className="hero-curtain"
+              style={{ ["--curtain-delay" as string]: "260ms" }}
+              aria-hidden
+            />
           </div>
 
           {/* Encart superposé : prochaine prière. */}
-          <div className="relative -mt-10 ml-auto w-full max-w-[280px] sm:absolute sm:bottom-6 sm:right-0 sm:mt-0 sm:translate-x-4 lg:translate-x-8">
+          <div
+            className="relative -mt-10 ml-auto w-full max-w-[280px] sm:absolute sm:bottom-6 sm:right-0 sm:mt-0 sm:translate-x-4 lg:translate-x-8"
+            data-reveal
+            style={{ ["--reveal-delay" as string]: "520ms" }}
+          >
             <NextPrayerCard prayerDay={prayerDay} />
           </div>
         </div>
+      </div>
+
+      {/*
+        Repère de défilement — grand écran uniquement : c'est là que le hero
+        remplit exactement la fenêtre. Sur mobile la composition dépasse déjà
+        l'écran, l'invitation n'aurait aucun sens.
+        C'est un vrai lien vers l'ancre de la section suivante : au clavier il
+        est atteignable, et il annonce le numéro et le titre de ce qui vient.
+      */}
+      <div className="shell pointer-events-none absolute inset-x-0 bottom-7 hidden lg:block">
+        <a href="#annonces" className="hero-cue pointer-events-auto w-fit">
+          <span className="hero-cue-rail" aria-hidden>
+            <span className="hero-cue-dot" />
+          </span>
+          <span>
+            <span className="tabular text-terra-700">01</span>
+            <span className="mx-2 text-night-400" aria-hidden>
+              /
+            </span>
+            Vie de la mosquée
+          </span>
+        </a>
       </div>
     </section>
   );

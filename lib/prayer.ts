@@ -38,12 +38,12 @@ export type PrayerDay = {
   /** Fajr du lendemain — sert au décompte après la ‘Icha. */
   tomorrowFajr: { time: string; minutes: number } | null;
   /**
-   * Heure de Paris au moment du rendu serveur, en minutes depuis minuit.
+   * Heure de Paris au moment du rendu serveur, en secondes depuis minuit.
    * Elle sert d'état initial à l'horloge du client : le HTML envoyé affiche
    * déjà la bonne prochaine prière, et l'hydratation ne provoque aucun écart
    * puisque la valeur vient des props. Le client la remplace dès son premier tic.
    */
-  serverMinutes: number;
+  serverSeconds: number;
   fetchedAt: string;
 };
 
@@ -112,6 +112,7 @@ function parisParts(date = new Date()) {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
   const p = Object.fromEntries(fmt.formatToParts(date).map((x) => [x.type, x.value]));
@@ -121,13 +122,14 @@ function parisParts(date = new Date()) {
     day: Number(p.day),
     hour: Number(p.hour === "24" ? "0" : p.hour),
     minute: Number(p.minute),
+    second: Number(p.second),
   };
 }
 
-/** Minutes écoulées depuis minuit, heure de Paris. */
-export function nowMinutesInParis(date = new Date()): number {
+/** Secondes écoulées depuis minuit, heure de Paris. */
+export function nowSecondsInParis(date = new Date()): number {
   const p = parisParts(date);
-  return p.hour * 60 + p.minute;
+  return p.hour * 3600 + p.minute * 60 + p.second;
 }
 
 /** Date du jour à Paris, au format AAAA-MM-JJ. */
@@ -266,7 +268,7 @@ export async function getPrayerDay(): Promise<PrayerDay | null> {
     jumua,
     prayers,
     tomorrowFajr,
-    serverMinutes: p.hour * 60 + p.minute,
+    serverSeconds: p.hour * 3600 + p.minute * 60 + p.second,
     fetchedAt: new Date().toISOString(),
   };
 }
@@ -277,48 +279,54 @@ export async function getPrayerDay(): Promise<PrayerDay | null> {
 
 export type NextPrayer = {
   entry: PrayerEntry;
-  /** Minutes restantes avant l'adhan. */
+  /** Secondes restantes avant l'adhan. */
   remaining: number;
   /** Vrai lorsqu'il s'agit du Fajr du lendemain. */
   tomorrow: boolean;
 };
 
-/** Prochaine prière (Chourouq exclu) à partir de l'heure de Paris. */
-export function nextPrayerAt(day: PrayerDay, nowMin: number): NextPrayer | null {
+/** Prochaine prière (Chourouq exclu), à partir de l'heure de Paris en secondes. */
+export function nextPrayerAt(day: PrayerDay, nowSec: number): NextPrayer | null {
   const list = day.prayers.filter((p) => p.isPrayer);
-  const upcoming = list.find((p) => p.minutes > nowMin);
+  const upcoming = list.find((p) => p.minutes * 60 > nowSec);
   if (upcoming) {
-    return { entry: upcoming, remaining: upcoming.minutes - nowMin, tomorrow: false };
+    return { entry: upcoming, remaining: upcoming.minutes * 60 - nowSec, tomorrow: false };
   }
   const fajr = day.tomorrowFajr;
   if (!fajr) return null;
   return {
     entry: { ...list[0], time: fajr.time, minutes: fajr.minutes, iqama: null },
-    remaining: 1440 - nowMin + fajr.minutes,
+    remaining: 86400 - nowSec + fajr.minutes * 60,
     tomorrow: true,
   };
 }
 
 /** Prière en cours (celle dont l'heure vient de passer), pour l'état « en cours ». */
-export function currentPrayerAt(day: PrayerDay, nowMin: number): PrayerKey | null {
-  const passed = day.prayers.filter((p) => p.isPrayer && p.minutes <= nowMin);
+export function currentPrayerAt(day: PrayerDay, nowSec: number): PrayerKey | null {
+  const passed = day.prayers.filter((p) => p.isPrayer && p.minutes * 60 <= nowSec);
   return passed.length ? passed[passed.length - 1].key : null;
 }
 
-/** « dans 47 minutes », « dans 2 h 05 ». */
-export function formatCountdown(minutes: number): string {
-  if (minutes <= 0) return "maintenant";
-  if (minutes < 60) return `dans ${minutes} min`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m === 0 ? `dans ${h} h` : `dans ${h} h ${String(m).padStart(2, "0")}`;
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/**
+ * Décompte à la seconde : « 45 s », « 20 min 45 s », « 1 h 23 min 05 s ».
+ *
+ * Les unités sont écrites plutôt qu'affichées en 01:23:45 : un horaire de
+ * prière n'est pas un chronomètre, et la lecture doit rester immédiate.
+ */
+export function formatDelay(seconds: number): string {
+  if (seconds <= 0) return "maintenant";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h} h ${pad(m)} min ${pad(s)} s`;
+  if (m > 0) return `${m} min ${pad(s)} s`;
+  return `${s} s`;
 }
 
-/** Format court sans le mot « dans » (barres compactes). */
-export function formatDelay(minutes: number): string {
-  if (minutes <= 0) return "maintenant";
-  if (minutes < 60) return `${minutes} min`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m === 0 ? `${h} h` : `${h} h ${String(m).padStart(2, "0")}`;
+/** Même décompte, précédé de « dans ». */
+export function formatCountdown(seconds: number): string {
+  if (seconds <= 0) return "maintenant";
+  return `dans ${formatDelay(seconds)}`;
 }

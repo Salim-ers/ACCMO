@@ -4,6 +4,7 @@ import { getSettings } from "@/lib/settings";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import MobileQuickBar from "@/components/MobileQuickBar";
+import SiteLoader from "@/components/SiteLoader";
 
 // Habillage public commun à toutes les pages du site.
 // Les horaires sont lus une seule fois par rendu puis partagés par l'en-tête,
@@ -93,6 +94,7 @@ export default async function SiteLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <SiteLoader />
       <SiteHeader prayerDay={prayerDay} />
       {children}
       <SiteFooter prayerDay={prayerDay} aidEnabled={settings.aidEnabled} />

@@ -76,6 +76,28 @@ body {
   background: var(--color-ink);
   color: var(--color-sand);
 }
+
+/* =============================================================
+   Retour au toucher
+
+   Sur téléphone, l'appui doit répondre tout de suite, même quand la page
+   demandée met un instant à arriver. Deux réglages y suffisent :
+
+   - une teinte terre cuite en place du rectangle gris du navigateur, qui
+     apparaît avec un retard perceptible et jure avec la palette ;
+   - `touch-action: manipulation`, qui supprime l'attente du double-appui
+     pour zoomer — c'est ce délai que l'on ressent comme un décalage
+     entre le doigt et l'écran.
+   ============================================================= */
+a,
+button,
+summary,
+label,
+[role="button"] {
+  -webkit-tap-highlight-color: rgba(198, 111, 78, 0.18);
+  touch-action: manipulation;
+}
+
 /* =============================================================
    Composants — DANS @layer components, impérativement.
 
@@ -341,6 +363,132 @@ body {
   .group:hover .frame-shift img {
     transform: scale(1.035);
   }
+
+  /* =============================================================
+     Hero d'accueil — plein écran et lever de rideau
+
+     La composition occupe toute la hauteur utile (écran moins les deux
+     barres fixes) : la section « 01 — Vie de la mosquée » ne se découvre
+     qu'au défilement. `svh` évite que la barre d'adresse mobile ne
+     tronque la mise en page ; la ligne `vh` reste en repli.
+     ============================================================= */
+  .hero-fill {
+    min-height: calc(100vh - var(--sticky-h));
+    min-height: calc(100svh - var(--sticky-h));
+  }
+
+  /*
+    Lever de rideau sur la photographie : un aplat terre cuite couvre le
+    cadre puis se rétracte vers le bas, découvrant la photographie du haut
+    vers le bas — le minaret apparaît en premier. L'image elle-même n'est ni animée
+    ni transformée — elle est peinte immédiatement, ce qui préserve la
+    mesure du plus grand rendu (LCP).
+  */
+  .hero-curtain {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: var(--color-terracotta);
+    transform-origin: bottom;
+    animation: curtain-lift 0.95s cubic-bezier(0.66, 0, 0.24, 1) var(--curtain-delay, 0ms) both;
+    pointer-events: none;
+  }
+
+  /* Invitation à faire défiler, en bas du hero (grand écran seulement :
+     sur mobile le hero dépasse déjà largement la hauteur de l'écran). */
+  .hero-cue {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+    transition: color 0.2s ease;
+  }
+  .hero-cue:hover {
+    color: var(--color-ink);
+  }
+  .hero-cue-rail {
+    position: relative;
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--rule);
+    overflow: hidden;
+  }
+  .hero-cue-dot {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    width: 1px;
+    height: 14px;
+    background: var(--color-terracotta);
+    animation: cue-travel 2.1s cubic-bezier(0.55, 0, 0.45, 1) infinite;
+  }
+
+  /* =============================================================
+     Écran de chargement
+
+     Voile sable, logo, nom court et un indicateur indéterminé. Il ne
+     s'affiche que si JavaScript est disponible — sans JS, rien ne
+     pourrait le retirer et il emprisonnerait le visiteur.
+
+     `aria-hidden` sur le voile n'est pas souhaitable ici : c'est une
+     zone `role="status"`, les lecteurs d'écran doivent l'annoncer.
+     ============================================================= */
+  .site-loader {
+    display: none;
+  }
+  .js .site-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.15rem;
+    background: var(--color-surface);
+    opacity: 1;
+    transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+  }
+  /* Le voile se retire : fondu, puis retrait des interactions. */
+  .js .site-loader.is-done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .site-loader-logo {
+    width: 84px;
+    height: auto;
+    animation: loader-breathe 1.9s ease-in-out infinite;
+  }
+  .site-loader-name {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+  }
+  /* Rail indéterminé : une barre qui traverse, sans pourcentage. */
+  .site-loader-rail {
+    position: relative;
+    display: block;
+    width: 108px;
+    height: 2px;
+    overflow: hidden;
+    background: var(--rule);
+  }
+  .site-loader-bar {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 42%;
+    background: var(--color-terracotta);
+    animation: loader-sweep 1.15s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
 }
 
 
@@ -393,4 +541,61 @@ body {
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* =============================================================
+   Animations du hero d'accueil
+
+   Deux gestes seulement, et aucun ne bloque la lecture : le rideau ne
+   joue qu'une fois au chargement, le point de défilement est une boucle
+   d'un pixel de large. Le bloc « prefers-reduced-motion » ci-dessus les
+   neutralise tous les deux.
+   ============================================================= */
+@keyframes curtain-lift {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes cue-travel {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(285%);
+    opacity: 0;
+  }
+}
+
+/* Respiration très légère du logo pendant le chargement, et barre qui
+   traverse le rail. Les deux sont neutralisés par « prefers-reduced-motion ». */
+@keyframes loader-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(0.965);
+  }
+}
+
+@keyframes loader-sweep {
+  from {
+    transform: translateX(-115%);
+  }
+  to {
+    transform: translateX(275%);
+  }
 }

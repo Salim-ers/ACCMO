@@ -56,8 +56,10 @@ export default function PrayerStatusBar({ clock }: { clock: PrayerClock }) {
                 aria-hidden
               />
               <span className="truncate">
+                {/* Le décompte à la seconde est long : sur petit écran on
+                    laisse la place à l'heure et au compte à rebours, le point
+                    clignotant suffit à signaler l'information temps réel. */}
                 <span className="hidden sm:inline">Prochaine prière : </span>
-                <span className="sm:hidden">Prochaine : </span>
                 <strong className="font-semibold text-white">
                   {next.entry.label} à {toFrenchTime(next.entry.time)}
                 </strong>

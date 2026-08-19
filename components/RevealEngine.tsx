@@ -6,6 +6,14 @@ import { useEffect } from "react";
 // composants serveur et se contentent de porter l'attribut `data-reveal`.
 // Sans JavaScript ou en « mouvement réduit », le contenu reste visible
 // (la règle CSS est neutralisée par la media query correspondante).
+//
+// Nuance importante pour la navigation interne : au premier chargement, tout
+// le monde se révèle, y compris ce qui est déjà à l'écran — c'est l'entrée en
+// scène du site. Mais lors d'un changement de page, le contenu inséré qui se
+// trouve déjà dans la fenêtre est affiché SANS animation. Sinon chaque appui
+// sur la barre d'accès rapide donnait une page vide pendant une fraction de
+// seconde, puis un fondu de 0,65 s : sur téléphone, cela se ressent comme une
+// lenteur alors que la page est déjà là.
 
 export default function RevealEngine() {
   useEffect(() => {
@@ -26,19 +34,36 @@ export default function RevealEngine() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
     );
 
-    const observe = (root: ParentNode) =>
-      root.querySelectorAll?.("[data-reveal]:not(.is-in)").forEach((el) => io.observe(el));
+    /**
+     * Affiche immédiatement, sans transition : la classe est posée avant que
+     * le navigateur ne calcule le style du nœud fraîchement inséré, il n'y a
+     * donc pas d'état intermédiaire à animer.
+     */
+    const afficherDirect = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      if (r.top >= window.innerHeight || r.bottom <= 0) return false;
+      el.classList.add("is-in");
+      return true;
+    };
 
-    observe(document);
+    const observe = (root: ParentNode, direct: boolean) =>
+      root.querySelectorAll?.("[data-reveal]:not(.is-in)").forEach((el) => {
+        if (direct && afficherDirect(el)) return;
+        io.observe(el);
+      });
 
-    // Les annonces arrivent après le premier rendu : on surveille le DOM.
+    // Premier rendu : animation complète, c'est l'arrivée sur le site.
+    observe(document, false);
+
+    // Contenu inséré ensuite (changement de page, annonces chargées après
+    // coup) : ce qui est déjà visible s'affiche sans fondu.
     const mo = new MutationObserver((records) => {
       for (const r of records) {
         r.addedNodes.forEach((n) => {
           if (n.nodeType !== 1) return;
           const el = n as Element;
-          if (el.hasAttribute("data-reveal")) io.observe(el);
-          observe(el);
+          if (el.hasAttribute("data-reveal") && !afficherDirect(el)) io.observe(el);
+          observe(el, true);
         });
       }
     });

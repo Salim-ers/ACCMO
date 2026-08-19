@@ -91,6 +91,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: "document.documentElement.classList.add('js')",
           }}
         />
+        {/*
+          Le logo est la toute première image visible : écran de chargement,
+          puis en-tête. On le demande dès la lecture du <head>, avant même
+          que le corps de page ne soit analysé, pour qu'il soit déjà là quand
+          le voile s'affiche.
+        */}
+        <link rel="preload" as="image" href={LOGO} />
       </head>
       <body>
         <RevealEngine />

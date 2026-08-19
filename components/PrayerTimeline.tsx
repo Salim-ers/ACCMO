@@ -19,11 +19,11 @@ type Status = "passed" | "next" | "upcoming";
 
 function statusOf(
   entry: PrayerEntry,
-  nowMin: number,
+  nowSec: number,
   nextKey: string | null
 ): Status {
   if (entry.key === nextKey) return "next";
-  return entry.minutes <= nowMin ? "passed" : "upcoming";
+  return entry.minutes * 60 <= nowSec ? "passed" : "upcoming";
 }
 
 export default function PrayerTimeline({
@@ -34,7 +34,7 @@ export default function PrayerTimeline({
   /** Version resserrée (pages intérieures) : sans le grand encart latéral. */
   compact?: boolean;
 }) {
-  const { day, next, nowMinutes } = usePrayerClock(prayerDay);
+  const { day, next, nowSeconds } = usePrayerClock(prayerDay);
 
   if (!day) {
     return (
@@ -72,7 +72,7 @@ export default function PrayerTimeline({
             aria-label="Horaires des prières du jour"
           >
             {day.prayers.map((p, i) => {
-              const status = statusOf(p, nowMinutes, nextKey);
+              const status = statusOf(p, nowSeconds, nextKey);
               const passed = status === "passed";
               const isNext = status === "next";
               return (
@@ -178,7 +178,7 @@ export default function PrayerTimeline({
             aria-label="Horaires des prières du jour"
           >
             {day.prayers.map((p, i) => {
-              const status = statusOf(p, nowMinutes, nextKey);
+              const status = statusOf(p, nowSeconds, nextKey);
               const passed = status === "passed";
               const isNext = status === "next";
               return (

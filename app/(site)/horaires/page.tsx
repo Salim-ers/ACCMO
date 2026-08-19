@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPrayerDay } from "@/lib/prayer";
-import { ACCESS, FACILITIES, LINKS, ROUTES, SITE } from "@/lib/site";
+import { ACCESS, FACILITIES, ROUTES, SITE } from "@/lib/site";
 import { toFrenchTime } from "@/lib/format";
 import { FunctionalHeader } from "@/components/PageHeader";
 import PrayerTimeline from "@/components/PrayerTimeline";
@@ -131,28 +131,6 @@ export default async function HorairesPage() {
         </div>
       </section>
 
-      {/* Calendrier complet */}
-      <section className="section" aria-labelledby="h-calendrier">
-        <div className="shell">
-          <SectionHead
-            num="03"
-            kicker="Calendrier"
-            title={<span id="h-calendrier">Le mois et l’année complets</span>}
-            intro="Le calendrier annuel de la mosquée est publié sur Mawaqit, la plateforme utilisée par l’association. Il y reste consultable mois par mois et téléchargeable."
-            action={
-              <a
-                href={LINKS.mawaqit}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary"
-              >
-                Ouvrir le calendrier Mawaqit
-                <Icon.arrowUpRight width={16} height={16} className="arw" />
-              </a>
-            }
-          />
-        </div>
-      </section>
     </main>
   );
 }

@@ -11,7 +11,6 @@ import CommunityShortcuts from "@/components/CommunityShortcuts";
 import EventsAgenda from "@/components/EventsAgenda";
 import SchoolFeature from "@/components/SchoolFeature";
 import VirtualTourSection from "@/components/VirtualTourSection";
-import HeritageChapters from "@/components/HeritageChapters";
 import DonationPanel from "@/components/DonationPanel";
 import LocationSection from "@/components/LocationSection";
 import { Icon } from "@/components/Icons";
@@ -158,38 +157,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 06 — Histoire et mission.
-          `apropos` : ancre héritée de l'ancienne page unique, conservée pour
-          que les liens déjà partagés continuent d'atterrir au bon endroit. */}
-      <span id="apropos" className="sr-only" aria-hidden />
-      <section
-        id="histoire"
-        className="on-dark section bg-night-900"
-        aria-labelledby="h-histoire"
-      >
-        <div className="shell">
-          <SectionHead
-            num="06"
-            kicker="Histoire & mission"
-            invert
-            title={<span id="h-histoire">Ce que porte l’association</span>}
-            intro="La Grande Mosquée de Creil est gérée par l’ACCMO. Voici, en quelques chapitres, ce qui structure son action."
-            action={
-              <Link href={ROUTES.mosquee} className="btn btn-outline-invert">
-                Découvrir la mosquée
-                <Icon.arrow width={16} height={16} className="arw" />
-              </Link>
-            }
-          />
-          <HeritageChapters invert />
-        </div>
-      </section>
-
-      {/* 07 — Don et cotisation */}
-      <section id="dons" className="section bg-sand-100" aria-labelledby="h-dons">
+      {/* 06 — Don et cotisation */}
+      <section id="dons" className="section" aria-labelledby="h-dons">
         <div className="shell">
           <p className="section-marker border-t border-[var(--rule)] pt-6" data-reveal>
-            <span className="num">07</span>
+            <span className="num">06</span>
             <span id="h-dons">Soutenir</span>
           </p>
           <DonationPanel />
@@ -215,11 +187,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 08 — Localisation */}
-      <section id="contact" className="section" aria-labelledby="h-contact">
+      {/* 07 — Localisation */}
+      <section id="contact" className="section bg-sand-100" aria-labelledby="h-contact">
         <div className="shell">
           <SectionHead
-            num="08"
+            num="07"
             kicker="Venir à la mosquée"
             title={
               <span id="h-contact">

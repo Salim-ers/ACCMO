@@ -11,8 +11,9 @@ import { Icon } from "@/components/Icons";
 //
 // La composition occupe la hauteur utile de l'écran (`.hero-fill`) : au
 // premier regard on ne voit que le hero, et la section « 01 — Vie de la
-// mosquée » se découvre au défilement. Un repère animé en bas de section
-// annonce ce qui suit, pour que le plein écran n'enferme personne.
+// mosquée » se découvre au défilement. Pas de repère « 01 » ici : le titre
+// de section porte déjà ce numéro, l'afficher deux fois brouillait le
+// repérage au lieu de l'aider.
 //
 // L'entrée en scène est un lever de rideau terre cuite sur les deux
 // photographies : l'image est peinte tout de suite et n'est pas animée,
@@ -166,28 +167,6 @@ export default function HomeHero({ prayerDay }: { prayerDay: PrayerDay | null })
             <NextPrayerCard prayerDay={prayerDay} />
           </div>
         </div>
-      </div>
-
-      {/*
-        Repère de défilement — grand écran uniquement : c'est là que le hero
-        remplit exactement la fenêtre. Sur mobile la composition dépasse déjà
-        l'écran, l'invitation n'aurait aucun sens.
-        C'est un vrai lien vers l'ancre de la section suivante : au clavier il
-        est atteignable, et il annonce le numéro et le titre de ce qui vient.
-      */}
-      <div className="shell pointer-events-none absolute inset-x-0 bottom-7 hidden lg:block">
-        <a href="#annonces" className="hero-cue pointer-events-auto w-fit">
-          <span className="hero-cue-rail" aria-hidden>
-            <span className="hero-cue-dot" />
-          </span>
-          <span>
-            <span className="tabular text-terra-700">01</span>
-            <span className="mx-2 text-night-400" aria-hidden>
-              /
-            </span>
-            Vie de la mosquée
-          </span>
-        </a>
       </div>
     </section>
   );
